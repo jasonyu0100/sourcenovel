@@ -1,0 +1,47 @@
+[
+  {
+    "name": "senna-hungry-eyes",
+    "prompt": "Extreme close-up on eyes. Lidded green bedroom eyes with long lashes, narrowing with frustrated hunger. Predatory intensity. Warm amber lighting reflecting in irises. Dark radiating lines behind \u2014 desire visible as pressure. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/senna-vale.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Senna",
+        "text": "You can't stay frozen forever, Rei. Eventually you'll want to feel something.",
+        "voice_id": "XB0fDUnXU5powFXDhCwa"
+      }
+    ],
+    "pause_after": 0.5
+  },
+  {
+    "name": "rei-lie",
+    "prompt": "Medium close-up. Silver-haired woman, face perfectly neutral, ice-blue eyes cold and distant. Voice like ice. Academy uniform pristine. Cold blue lighting from left casting sharp shadows. Composure as armor. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Rei",
+        "text": "I feel plenty.",
+        "voice_id": "pFZP5JQG7iQjIQuC4Bku"
+      }
+    ],
+    "pause_after": 0.5
+  },
+  {
+    "name": "senna-sharp-smile",
+    "prompt": "Close-up on face. Red-haired woman with sharp knowing smile, green eyes narrowed with confidence. Challenging expression. Warm lighting, dark background. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/senna-vale.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Senna",
+        "text": "Liar.",
+        "voice_id": "XB0fDUnXU5powFXDhCwa"
+      }
+    ],
+    "pause_after": 1.2
+  }
+]

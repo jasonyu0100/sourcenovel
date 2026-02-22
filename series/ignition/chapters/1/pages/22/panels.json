@@ -1,0 +1,25 @@
+[
+  {
+    "name": "senna-fury",
+    "prompt": "Close-up. Red-haired woman, heat blazing \u2014 corona effect, hair lifted slightly by own power. Green eyes fierce with possessive fury. Red-orange glow intensifying. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/senna-vale.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Senna",
+        "text": "I'll destroy you. I'll make sure you never get close to her again. She's mine.",
+        "voice_id": "XB0fDUnXU5powFXDhCwa"
+      }
+    ],
+    "pause_after": 0.8
+  },
+  {
+    "name": "kade-laughs",
+    "prompt": "Medium shot. Dark-haired young man actually laughing \u2014 head slightly back, genuine amusement. Low warm laugh. Heat shimmer around him, unbothered, completely unafraid. Storage room behind him. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/kade-morrow.jpg"
+    ],
+    "silence": 2.0
+  }
+]

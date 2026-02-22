@@ -1,0 +1,26 @@
+[
+  {
+    "name": "something-forming",
+    "prompt": "Close-up on young woman with green hair. Golden eyes soft, genuine warmth in expression. Looking at someone off-frame with real interest, not performance. Greenhouse plants blurred behind. Natural, unguarded moment. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, green color palette, high contrast, cel shading",
+    "ref": [
+      "world/characters/ivy-thornwood.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Ivy",
+        "text": "Maybe I'll see you around, Kade Morrow.",
+        "voice_id": "EXAVITQu4vr4xnSDxMaL"
+      }
+    ],
+    "bubble": "Speech from Ivy, close-up on face, place bubble TOP avoiding face",
+    "pause_after": 1.0
+  },
+  {
+    "name": "two-burnouts",
+    "prompt": "Wide shot greenhouse interior from above. Two small figures among the plants — man LEFT walking toward exit, woman RIGHT still seated. Night sky visible through glass ceiling. Sense of parting but something begun. | anime style, modern anime aesthetic, clean linework, mature shading, dramatic lighting, green color palette, high contrast, cel shading",
+    "ref": [
+      "world/locations/greenhouse-wing.jpg"
+    ],
+    "silence": 2.5
+  }
+]

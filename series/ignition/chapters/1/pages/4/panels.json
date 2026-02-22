@@ -1,0 +1,50 @@
+[
+  {
+    "name": "senna-breath-jaw",
+    "prompt": "Two-shot close-up. Red-haired woman leaning close to silver-haired woman, confident smirk. Heat-shimmer around her contrasting with cool frost around the other. Split lighting \u2014 warm amber vs cold blue. Tension visible between them. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/senna-vale.jpg",
+      "world/characters/rei-ashford.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Senna",
+        "text": "But I'm patient. I've been melting you for two years. I can wait a little longer.",
+        "voice_id": "XB0fDUnXU5powFXDhCwa"
+      }
+    ],
+    "pause_after": 0.8
+  },
+  {
+    "name": "senna-withdraws",
+    "prompt": "Medium shot. Red-haired woman stepping back, smoothing modified uniform with one hand. Confident smirk, heat-shimmer fading. Self-assured posture. Corridor behind her \u2014 glass windows, morning light. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/senna-vale.jpg",
+      "world/locations/s-class-corridor.jpg"
+    ],
+    "silence": 1.0
+  },
+  {
+    "name": "senna-walks-away",
+    "prompt": "Medium wide shot. View past silver-haired woman's shoulder watching red-haired woman walking away down pristine corridor. Glass windows left, morning light streaming in. Confident stride, already victorious. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/senna-vale.jpg",
+      "world/locations/s-class-corridor.jpg"
+    ],
+    "silence": 1.5
+  },
+  {
+    "name": "rei-frost-exhale",
+    "prompt": "Close-up profile. Silver-haired woman exhaling, breath crystallizing into visible frost in the air. Relief and suppression. Ice-blue eyes forward. Cold blue lighting. Alone now. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg"
+    ],
+    "silence": 2.0,
+    "sfx": [
+      {
+        "description": "crystalline frost forming on breath, delicate ice crackling",
+        "duration": 1.5
+      }
+    ]
+  }
+]

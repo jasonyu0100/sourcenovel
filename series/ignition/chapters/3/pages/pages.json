@@ -1,0 +1,50 @@
+[
+  {
+    "page": 1,
+    "layout": "impact2"
+  },
+  {
+    "page": 2,
+    "layout": "cinematic3"
+  },
+  {
+    "page": 3,
+    "layout": "hero"
+  },
+  {
+    "page": 4,
+    "layout": "story4"
+  },
+  {
+    "page": 5,
+    "layout": "cinematic3"
+  },
+  {
+    "page": 6,
+    "layout": "story4"
+  },
+  {
+    "page": 7,
+    "layout": "2x2"
+  },
+  {
+    "page": 8,
+    "layout": "impact2"
+  },
+  {
+    "page": 9,
+    "layout": "hero"
+  },
+  {
+    "page": 10,
+    "layout": "focus4"
+  },
+  {
+    "page": 11,
+    "layout": "cinematic3"
+  },
+  {
+    "page": 12,
+    "layout": "cinematic3"
+  }
+]

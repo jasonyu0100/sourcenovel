@@ -1,0 +1,18 @@
+[
+  {
+    "name": "temperature-war",
+    "prompt": "Wide two-shot. Silver-haired woman RIGHT of frame facing LEFT, cold flaring \u2014 frost visible around her, ice-blue eyes intense. Dark-haired young man LEFT of frame facing RIGHT, heat pushing back \u2014 amber glow, heat shimmer. Air between them crackling with visible temperature collision \u2014 frost meeting heat, steam rising. Storage room shelving around them. Charged confrontation. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg",
+      "world/characters/kade-morrow.jpg",
+      "world/locations/storage-room.jpg"
+    ],
+    "silence": 3.0,
+    "sfx": [
+      {
+        "description": "steam hissing where hot and cold air collide, pressure building",
+        "duration": 2.5
+      }
+    ]
+  }
+]

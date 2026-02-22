@@ -1,0 +1,33 @@
+[
+  {
+    "name": "despair-to-calculation",
+    "prompt": "Medium shot. Young woman with deep red wavy disheveled hair, white shirt rebuttoned with one button missed. Standing at vanity, straightening up from braced position. Expression shifting from anguish to sharp calculation. Green eyes hardening. Chin lifting. Dormitory room, fogged mirror behind. Warm amber lighting. Heat shimmer thinning slightly. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/senna-vale.jpg",
+      "world/locations/senna-quarters.jpg"
+    ],
+    "silence": 2.0
+  },
+  {
+    "name": "the-text",
+    "prompt": "Close-up of young woman with deep red wavy hair, wearing ONLY a white shirt messily rebuttoned, no blazer, no jacket. Face illuminated by smartphone screen glow in dim room. Green eyes lit by cold blue-white phone light against warm amber room. Expression determined, calculating. Fingers on screen composing a message. One side of face in phone light, other side in warm shadow. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/senna-vale.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Senna",
+        "text": "He's not special. He's not mine. He's everyone's.",
+        "voice_id": "XB0fDUnXU5powFXDhCwa"
+      }
+    ],
+    "bubble": "Internal thought from Senna, her face is in CENTER-BOTTOM of frame lit by phone, place thought bubble in TOP-RIGHT corner far away from face, small text, do NOT cover face",
+    "pause_after": 1.2,
+    "sfx": [
+      {
+        "description": "soft phone screen tap, electronic message sending in quiet room",
+        "duration": 1.5
+      }
+    ]
+  }
+]

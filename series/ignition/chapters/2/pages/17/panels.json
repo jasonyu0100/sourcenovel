@@ -1,0 +1,38 @@
+[
+  {
+    "name": "nothing-between-them",
+    "prompt": "Two-shot across greenhouse. Dark-haired man LEFT, green-haired woman RIGHT lounging among plants. Clear air between them — no green mist, no manipulation. Stone bench visible. Just two people meeting without chemical influence. | anime style, modern anime aesthetic, clean linework, mature shading, dramatic lighting, green amber color palette, high contrast, cel shading",
+    "ref": [
+      "world/characters/kade-morrow.jpg",
+      "world/characters/ivy-thornwood.jpg",
+      "world/locations/greenhouse-wing.jpg"
+    ],
+    "silence": 1.5
+  },
+  {
+    "name": "ivy-surprised",
+    "prompt": "Close-up on young woman with green hair. Golden eyes widening with genuine surprise. Expression shifting from lazy sensuality to sharp interest. Eyebrows lifting. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/ivy-thornwood.jpg"
+    ],
+    "silence": 1.0
+  },
+  {
+    "name": "acknowledgment",
+    "prompt": "Two-shot Ivy and Kade. Green-haired woman RIGHT studying dark-haired man LEFT with sharp interest. Head tilted, assessing. Greenhouse glass walls showing night behind them, dense plants around. | anime style, modern anime aesthetic, clean linework, mature shading, dramatic lighting, green color palette, high contrast, cel shading",
+    "ref": [
+      "world/characters/kade-morrow.jpg",
+      "world/characters/ivy-thornwood.jpg",
+      "world/locations/greenhouse-wing.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Ivy",
+        "text": "You're immune. That's new.",
+        "voice_id": "EXAVITQu4vr4xnSDxMaL"
+      }
+    ],
+    "bubble": "Speech from Ivy on RIGHT studying Kade on LEFT, place bubble TOP-RIGHT with tail pointing right toward Ivy",
+    "pause_after": 0.8
+  }
+]

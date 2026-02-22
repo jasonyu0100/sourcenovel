@@ -1,0 +1,46 @@
+{
+  "chapterNum": 1,
+  "arcNum": 1,
+  "defaultCharacter": "Kade Morrow",
+  "startingLocation": "s-class-corridor",
+  "characters": [
+    {
+      "name": "Kade Morrow",
+      "slug": "kade-morrow"
+    },
+    {
+      "name": "Rei Ashford",
+      "slug": "rei-ashford"
+    },
+    {
+      "name": "Senna Vale",
+      "slug": "senna-vale"
+    },
+    {
+      "name": "Theo Chen",
+      "slug": "theo-chen"
+    }
+  ],
+  "locations": [
+    {
+      "name": "Assembly Hall Back",
+      "slug": "assembly-hall-back"
+    },
+    {
+      "name": "D Class Block",
+      "slug": "d-class-block"
+    },
+    {
+      "name": "Rei Quarters Window",
+      "slug": "rei-quarters-window"
+    },
+    {
+      "name": "S Class Corridor",
+      "slug": "s-class-corridor"
+    },
+    {
+      "name": "Storage Room",
+      "slug": "storage-room"
+    }
+  ]
+}

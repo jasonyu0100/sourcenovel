@@ -1,0 +1,44 @@
+[
+  {
+    "name": "family-eyes",
+    "prompt": "Close-up on sharp green eyes — matching Senna's color exactly. Auburn hair across one eye. Cold intensity. Family connection visible in the color. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/jace-delacroix.jpg"
+    ],
+    "silence": 1.5
+  },
+  {
+    "name": "the-message",
+    "prompt": "Two-shot in corridor. Dark-haired man LEFT facing androgynous auburn-haired figure RIGHT. Warm amber lighting between them. Confrontation framing, neither backing down. Tension in both postures. | anime style, modern anime aesthetic, clean linework, mature shading, dramatic lighting, warm amber color palette, high contrast, cel shading",
+    "ref": [
+      "world/characters/kade-morrow.jpg",
+      "world/characters/jace-delacroix.jpg",
+      "world/locations/d-class-hallway.jpg"
+    ],
+    "silence": 1.0
+  },
+  {
+    "name": "the-threat",
+    "prompt": "Close-up on androgynous face with auburn hair. Cold precision in expression. Jaw set, eyes hard. Dark radiating lines behind — impact moment. Stark contrast. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/jace-delacroix.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Jace",
+        "text": "Stay away from Rei Ashford. Or face destruction.",
+        "voice_id": "CYw3kZ02Hs0563khs1Fj"
+      }
+    ],
+    "bubble": "Speech from Jace, close-up on face center of frame, place bubble TOP avoiding face",
+    "pause_after": 1.2
+  },
+  {
+    "name": "kade-laughs",
+    "prompt": "Close-up on young man with dark messy hair. Amber eyes warm with amusement. Low laugh visible in expression — unafraid, unbothered. The same expression from the storage room. Completely unconcerned by the threat. Warm amber tones. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, warm amber color palette, high contrast, cel shading",
+    "ref": [
+      "world/characters/kade-morrow.jpg"
+    ],
+    "silence": 1.5
+  }
+]

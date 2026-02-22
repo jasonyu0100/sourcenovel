@@ -1,0 +1,13 @@
+[
+  {
+    "name": "loaded-triangle",
+    "prompt": "Wide shot infirmary interior. Three women in frame — silver-haired woman LEFT near bed, brown-haired woman with glasses CENTER still flushed, platinum-haired nurse RIGHT at doorway. Medical equipment around them. Cool clinical lighting but pink warmth bleeding in. All three holding secrets. Loaded silence visible in composition. | anime style, modern anime aesthetic, clean linework, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/rei-ashford.jpg",
+      "world/characters/mira-chen.jpg",
+      "world/characters/nina-volkov.jpg",
+      "world/locations/infirmary.jpg"
+    ],
+    "silence": 3.0
+  }
+]

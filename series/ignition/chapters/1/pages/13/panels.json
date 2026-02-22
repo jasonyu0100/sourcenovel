@@ -1,0 +1,49 @@
+[
+  {
+    "name": "kade-hand-rises",
+    "prompt": "Medium close-up two-shot. Dark-haired young man reaching toward silver-haired woman's face, burn-scarred hand hovering near her cheek without touching. She faces him, ice-blue eyes wide, lips parted. Heat from his hand meeting cold from her skin, visible steam between them. Intimate tension. Storage room background. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/kade-morrow.jpg",
+      "world/characters/rei-ashford.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Kade",
+        "text": "You're exhausted. You're empty. And the girl who wants you doesn't actually see you \u2014 she just wants to own you.",
+        "voice_id": "IKne3meq5aSn9XLyUdCD"
+      }
+    ],
+    "pause_after": 0.5
+  },
+  {
+    "name": "rei-stop",
+    "prompt": "Extreme close-up on lips and throat. Pale pink lips slightly parted, breath visible as melting frost. Throat visible \u2014 the swallow before speaking. Barely a whisper escaping. Vulnerable, wanting. Soft warm lighting creeping in. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Rei",
+        "text": "Stop.",
+        "voice_id": "pFZP5JQG7iQjIQuC4Bku"
+      }
+    ],
+    "pause_after": 1.2
+  },
+  {
+    "name": "kade-make-me",
+    "prompt": "Close-up on eyes. Amber eyes now burning gold, intense, challenging but gentle. Heat visible as glow. Not backing down. Dim storage room, concrete wall behind. Intimate confrontation. Warm lighting, dramatic. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/kade-morrow.jpg",
+      "world/locations/storage-room.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Kade",
+        "text": "Make me.",
+        "voice_id": "IKne3meq5aSn9XLyUdCD"
+      }
+    ],
+    "pause_after": 1.5
+  }
+]

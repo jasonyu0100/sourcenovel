@@ -1,0 +1,45 @@
+[
+  {
+    "name": "rei-at-window",
+    "prompt": "Medium shot from behind. Silver-haired woman standing at large window at night, palm pressed to glass. S-Class room interior visible \u2014 minimalist, pristine. Outside: night cityscape, D-Class Block visible in distance glowing warm amber. Her silhouette against the view. Cool blue interior, warm amber distant. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg",
+      "world/locations/rei-quarters-window.jpg"
+    ],
+    "silence": 2.0
+  },
+  {
+    "name": "palm-warm",
+    "prompt": "Close-up. Pale hand pressed against window glass at night. The glass should frost over \u2014 but stays warm. Fog spreading from palm instead of ice. Heat she can't suppress. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg"
+    ],
+    "silence": 1.5
+  },
+  {
+    "name": "datapad-buzzing",
+    "prompt": "Close-up. Silver-haired woman glancing down at glowing device in her hand, expression cold and dismissive. Notification light reflecting blue on her face. She is choosing to ignore it. Dark minimalist room, moonlight from window behind her. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg",
+      "world/locations/rei-quarters-window.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Senna",
+        "text": "We need to talk.",
+        "voice_id": "XB0fDUnXU5powFXDhCwa"
+      },
+      {
+        "speaker": "Senna",
+        "text": "He's dangerous, Rei.",
+        "voice_id": "XB0fDUnXU5powFXDhCwa"
+      },
+      {
+        "speaker": "Senna",
+        "text": "You don't know what you're doing.",
+        "voice_id": "XB0fDUnXU5powFXDhCwa"
+      }
+    ],
+    "pause_after": 0.5
+  }
+]

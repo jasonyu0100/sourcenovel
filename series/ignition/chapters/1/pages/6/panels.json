@@ -1,0 +1,69 @@
+[
+  {
+    "name": "theo-grabs-wrist",
+    "prompt": "Medium close-up. Shorter young man with glasses gripping taller dark-haired young man's shoulder urgently from behind. Assembly hall back wall visible. Worried expression on the shorter one, the taller one not turning around. Heat shimmer emanating from the taller man's body. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/kade-morrow.jpg",
+      "world/characters/theo-chen.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Theo",
+        "text": "Stop. Your temperature's spiking.",
+        "voice_id": "ErXwobaYiN019PkySvjV",
+        "placement": "positioned in upper-left area of the image with tail pointing down toward the boy with glasses on the left"
+      }
+    ],
+    "pause_after": 0.3
+  },
+  {
+    "name": "kade-theo-twoshot",
+    "prompt": "Two-shot from side. Dark-haired young man LEFT, amber eyes still looking forward at crowd, sharp jaw set. Shorter young man with glasses RIGHT gripping his wrist, worried expression. Back wall behind them. Warm amber lighting. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/kade-morrow.jpg",
+      "world/characters/theo-chen.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Kade",
+        "text": "Who is she?",
+        "voice_id": "IKne3meq5aSn9XLyUdCD"
+      },
+      {
+        "speaker": "Theo",
+        "text": "Which one?",
+        "voice_id": "ErXwobaYiN019PkySvjV"
+      },
+      {
+        "speaker": "Kade",
+        "text": "Silver hair.",
+        "voice_id": "IKne3meq5aSn9XLyUdCD"
+      }
+    ],
+    "pause_after": 0.5
+  },
+  {
+    "name": "theo-worried",
+    "prompt": "Close-up. Young man with glasses and soft features, expression worried and earnest. Dark hair, slightly flushed. Concerned friend warning against danger. Neutral lighting. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/theo-chen.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Theo",
+        "text": "Rei Ashford. S-1. Untouchable. The redhead is Senna Vale. A-2. She's been hunting Rei for two years.",
+        "voice_id": "ErXwobaYiN019PkySvjV"
+      }
+    ],
+    "pause_after": 0.3
+  },
+  {
+    "name": "kade-pov-senna-touch",
+    "prompt": "POV shot. Red-haired woman's hand sliding up silver-haired woman's arm in middle distance. The silver-haired woman's cold visibly flaring \u2014 frost effect, resisting the touch. Not welcoming. Pushing away. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg",
+      "world/characters/senna-vale.jpg"
+    ],
+    "silence": 1.5
+  }
+]

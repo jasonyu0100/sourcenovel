@@ -1,0 +1,38 @@
+[
+  {
+    "name": "kade-walking",
+    "prompt": "Medium shot young man walking down corridor. Dark messy hair, amber golden eyes, academy uniform disheveled with open collar. Confident unhurried stride. Concrete hallway with scorch marks on walls, warm amber industrial lighting. Finding his way back. | anime style, modern anime aesthetic, clean linework, mature shading, dramatic lighting, warm amber orange color palette, high contrast, cel shading",
+    "ref": [
+      "world/characters/kade-morrow.jpg",
+      "world/locations/d-class-hallway.jpg"
+    ],
+    "silence": 2.0
+  },
+  {
+    "name": "blocked",
+    "prompt": "Wide shot D-class dormitory hallway. Dark-haired man CENTER walking RIGHT, stopped. Androgynous figure with auburn hair blocking path at RIGHT of frame. Concrete corridor, scorch marks, warm amber lighting. Someone intercepting. | anime style, modern anime aesthetic, clean linework, mature shading, dramatic lighting, warm amber color palette, high contrast, cel shading",
+    "ref": [
+      "world/characters/kade-morrow.jpg",
+      "world/characters/jace-delacroix.jpg",
+      "world/locations/d-class-hallway.jpg"
+    ],
+    "silence": 1.5
+  },
+  {
+    "name": "jace-introduction",
+    "prompt": "Medium shot androgynous young person with dark auburn hair swept across one eye. Sharp green eyes, pretty dangerous features. Fitted vest no blazer, collar artfully undone. Silver rings visible on every finger. Cold precision in stance. Concrete hallway with scorch marks behind, warm amber lighting. Enforcer revealed. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/jace-delacroix.jpg",
+      "world/locations/d-class-hallway.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Jace",
+        "text": "Kade Morrow. My cousin sends a message.",
+        "voice_id": "CYw3kZ02Hs0563khs1Fj"
+      }
+    ],
+    "bubble": "Speech from Jace, medium shot face center of frame, place bubble TOP avoiding face",
+    "pause_after": 1.0
+  }
+]

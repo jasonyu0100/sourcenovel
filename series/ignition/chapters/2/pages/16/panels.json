@@ -1,0 +1,23 @@
+[
+  {
+    "name": "ivy-revealed",
+    "prompt": "Medium-wide shot young woman seated among dense tropical plants in greenhouse. Emerald green wavy hair, golden eyes watching with lazy confidence. Casual academy uniform, relaxed posture. Botanical expert in her element. Vine patterns on arm visible. Plants surrounding her like old friends. Greenhouse glass walls behind showing night sky, green mist from plants around her. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, green color palette, high contrast, cel shading",
+    "ref": [
+      "world/characters/ivy-thornwood.jpg",
+      "world/locations/greenhouse-wing.jpg"
+    ],
+    "silence": 2.5
+  },
+  {
+    "name": "pheromones-reach",
+    "prompt": "Abstract effects panel. Green mist and swirling energy tendrils reaching from RIGHT to LEFT across frame. No figures visible, pure energy visualization. Ethereal green light streaming through darkness. Pheromone power visualized as glowing green particles and wisps. | anime style, modern anime aesthetic, dramatic lighting, green color palette, high contrast, cel shading",
+    "ref": [],
+    "silence": 1.0
+  },
+  {
+    "name": "heat-burns-it",
+    "prompt": "Abstract effects panel. Amber heat waves and orange flame energy radiating from LEFT, meeting green mist from RIGHT. The amber burning through and dispersing the green. No figures visible, pure energy collision. Fire consuming fog. Two powers meeting at center of frame. | anime style, modern anime aesthetic, dramatic lighting, amber orange green color palette, high contrast, cel shading",
+    "ref": [],
+    "silence": 1.5
+  }
+]

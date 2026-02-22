@@ -1,0 +1,19 @@
+[
+  {
+    "name": "door-slams-senna",
+    "prompt": "Wide shot. Storage room door slamming open \u2014 light flooding in. Red-haired woman standing in threshold, blazing with heat-haze corona around her, green eyes seeing everything. Dark-haired man and silver-haired woman CENTER of room, caught \u2014 his hands on her face, close together. Ice crystals scattered on floor. Two caught. One furious. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/senna-vale.jpg",
+      "world/characters/kade-morrow.jpg",
+      "world/characters/rei-ashford.jpg",
+      "world/locations/storage-room.jpg"
+    ],
+    "silence": 3.0,
+    "sfx": [
+      {
+        "description": "metal door slamming open violently, sharp impact echoing in concrete room",
+        "duration": 2.0
+      }
+    ]
+  }
+]

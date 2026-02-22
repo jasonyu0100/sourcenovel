@@ -1,0 +1,43 @@
+[
+  {
+    "name": "scarf-breathe",
+    "prompt": "Close-up of young woman with deep red wavy hair pressing a pale blue silk scarf against her face. Wearing ONLY a white shirt hanging open unbuttoned, no blazer, no jacket. Eyes half-closed, expression intense and longing. Cold silk fabric against her mouth and nose. Frost traces visible on scarf melting slightly. Warm amber side lighting. Dark background with heat shimmer. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/senna-vale.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Senna",
+        "text": "That clean frost-and-nothing scent I've been chasing for two years.",
+        "voice_id": "XB0fDUnXU5powFXDhCwa"
+      }
+    ],
+    "bubble": "Internal thought from Senna, face fills frame CENTER, place thought bubble TOP as internal monologue",
+    "pause_after": 1.2
+  },
+  {
+    "name": "tracing-photo",
+    "prompt": "Extreme close-up on feminine fingertips tracing along the collarbones of a girl in a glossy photograph. The photo shows a silver-haired girl at a podium, composed expression. Heat marks visible where fingertips touch the glossy surface. Warm amber lighting on hands. Slow possessive gesture. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/rei-ashford.jpg"
+    ],
+    "silence": 2.0
+  },
+  {
+    "name": "collar-memory",
+    "prompt": "Close-up memory flash panel. A feminine thumb pressing against a high uniform collar at the neck, finding the pulse point through fabric. Morning light, warm golden tones. Soft dreamlike edges. Intimate close gesture. Pale skin at the collar. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/senna-vale.jpg",
+      "world/characters/rei-ashford.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Senna",
+        "text": "Let me warm you up.",
+        "voice_id": "XB0fDUnXU5powFXDhCwa"
+      }
+    ],
+    "bubble": "Speech from Senna (memory), place bubble BOTTOM as remembered words, whisper style",
+    "pause_after": 1.0
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "chapterNumber": 2,
+  "arcId": "1",
+  "status": "in_progress",
+  "wordCount": 1543,
+  "beatCount": 72,
+  "steps": {
+    "concept": { "completed": true, "timestamp": "2026-02-19T10:00:00Z" },
+    "memory": { "completed": true, "timestamp": "2026-02-19T10:05:00Z" },
+    "route": { "completed": true, "timestamp": "2026-02-19T10:10:00Z" },
+    "compose": { "completed": true, "timestamp": "2026-02-19T10:15:00Z" },
+    "review": { "completed": true, "timestamp": "2026-02-19T10:20:00Z" },
+    "web": { "completed": true, "timestamp": "2026-02-19T10:25:00Z" },
+    "model": { "completed": true, "timestamp": "2026-02-19T10:30:00Z" },
+    "set": { "completed": true, "timestamp": "2026-02-19T10:35:00Z" },
+    "world": { "completed": true, "timestamp": "2026-02-19T10:40:00Z" },
+    "staging": { "completed": true, "timestamp": "2026-02-19T10:45:00Z" },
+    "pages": { "completed": false }
+  }
+}

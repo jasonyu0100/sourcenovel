@@ -1,0 +1,64 @@
+[
+  {
+    "name": "rei-freeze-threat",
+    "prompt": "Close-up. Silver-haired woman, ice-blue eyes fierce, cold intensifying \u2014 frost spreading on earring, visible breath. Threat in her expression. Ice-cold lighting, blue dominant. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Rei",
+        "text": "Then you know I can freeze you where you stand.",
+        "voice_id": "pFZP5JQG7iQjIQuC4Bku"
+      }
+    ],
+    "pause_after": 0.5
+  },
+  {
+    "name": "kade-closer",
+    "prompt": "Close-up. Dark-haired young man in dim storage room, amber eyes warm and challenging, slight smile. Heat shimmer intensifying. Unfazed by threat. Moving closer. Concrete walls and metal shelving behind him. Warm amber lighting. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/kade-morrow.jpg",
+      "world/locations/storage-room.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Kade",
+        "text": "You could. But you won't.",
+        "voice_id": "IKne3meq5aSn9XLyUdCD"
+      }
+    ],
+    "pause_after": 0.5
+  },
+  {
+    "name": "rei-composure",
+    "prompt": "Medium close-up. Silver-haired woman, composure straining \u2014 eyes flickering with something beneath the ice. Controlling reaction. Conflict visible. Cold blue lighting warring with warm. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Rei",
+        "text": "You don't know what I'll do.",
+        "voice_id": "pFZP5JQG7iQjIQuC4Bku"
+      }
+    ],
+    "pause_after": 0.3
+  },
+  {
+    "name": "kade-sees-her",
+    "prompt": "Close-up. Dark-haired young man in dim storage room, amber eyes soft but intense, expression knowing. Voice rough and warm. Seeing through her. Concrete wall behind him. Warm amber lighting, intimate. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/kade-morrow.jpg",
+      "world/locations/storage-room.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Kade",
+        "text": "I know you're hiding. I know that redhead's been touching you all morning and your cold keeps pushing her away. I know you came here to feel something other than hunted.",
+        "voice_id": "IKne3meq5aSn9XLyUdCD"
+      }
+    ],
+    "pause_after": 1.0
+  }
+]

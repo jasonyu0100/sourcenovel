@@ -1,0 +1,148 @@
+{
+  "pages": {
+    "1": {
+      "fogged-mirror": {
+        "silence": 2.5,
+        "sfx": [{"description": "heavy humid atmosphere, muffled room ambience with faint condensation dripping", "duration": 2.5}]
+      },
+      "pacing": {
+        "pause_after": 1.0
+      }
+    },
+    "2": {
+      "storage-room-flash": {
+        "silence": 1.5
+      },
+      "opening-drawer": {
+        "silence": 2.0,
+        "sfx": [{"description": "wooden drawer sliding open slowly, intimate quiet room", "duration": 2.0}]
+      },
+      "altar-contents": {
+        "silence": 2.5
+      }
+    },
+    "3": {
+      "scarf-breathe": {
+        "pause_after": 1.2
+      },
+      "tracing-photo": {
+        "silence": 2.0
+      },
+      "collar-memory": {
+        "pause_after": 1.0
+      }
+    },
+    "4": {
+      "realization-hits": {
+        "pause_after": 1.2
+      },
+      "but-his-did": {
+        "pause_after": 1.5
+      },
+      "distorted-loop": {
+        "silence": 2.0
+      },
+      "watching-her-own-imagination": {
+        "pause_after": 1.0
+      }
+    },
+    "5": {
+      "thrall-activates": {
+        "pause_after": 1.0,
+        "sfx": [{"description": "low warm resonance building, like a body radiating heat, muffled heartbeat", "duration": 2.5}]
+      },
+      "scarf-lower": {
+        "silence": 2.0
+      },
+      "fantasy-dissolve": {
+        "pause_after": 1.2
+      }
+    },
+    "6": {
+      "catching-herself": {
+        "pause_after": 1.0
+      },
+      "slam-drawer": {
+        "pause_after": 0.8,
+        "sfx": [{"description": "wooden drawer slamming shut, sharp decisive impact in quiet room", "duration": 1.5}]
+      },
+      "buttoning-up": {
+        "silence": 1.5
+      },
+      "braced-at-vanity": {
+        "silence": 2.5
+      }
+    },
+    "7": {
+      "fogged-mirror-face": {
+        "pause_after": 1.0
+      },
+      "nails-in-palms": {
+        "silence": 1.5
+      },
+      "trophy-wound": {
+        "pause_after": 1.2
+      },
+      "sick-realization": {
+        "pause_after": 1.5
+      }
+    },
+    "8": {
+      "despair-to-calculation": {
+        "silence": 2.0
+      },
+      "the-text": {
+        "pause_after": 1.2,
+        "sfx": [{"description": "soft phone screen tap, electronic message sending in quiet room", "duration": 1.5}]
+      }
+    },
+    "9": {
+      "dante-doorway": {
+        "pause_after": 0.8
+      },
+      "dante-pov": {
+        "silence": 2.0
+      },
+      "stepping-close": {
+        "silence": 2.0
+      }
+    },
+    "10": {
+      "charged-air": {
+        "silence": 2.0
+      },
+      "whats-in-it": {
+        "pause_after": 1.0
+      },
+      "promise-threat": {
+        "silence": 1.5
+      },
+      "dante-reads-her": {
+        "pause_after": 1.5
+      }
+    },
+    "11": {
+      "tomorrow-then": {
+        "pause_after": 1.0,
+        "sfx": [{"description": "quiet door latch clicking closed, metallic and final", "duration": 1.5}]
+      },
+      "wrong-heat": {
+        "pause_after": 1.5
+      },
+      "drawer-again": {
+        "silence": 2.0
+      }
+    },
+    "12": {
+      "tracing-jawline": {
+        "silence": 2.5
+      },
+      "shes-mine": {
+        "pause_after": 2.5
+      },
+      "alone-at-vanity": {
+        "silence": 3.5
+      }
+    }
+  }
+}

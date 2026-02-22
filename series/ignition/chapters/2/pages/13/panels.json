@@ -1,0 +1,44 @@
+[
+  {
+    "name": "sensations-tangling",
+    "prompt": "Medium shot from waist up, androgynous figure with auburn hair positioned in LOWER HALF of frame. Green eyes wide with shock, amber warmth flooding into them. Expression of overwhelming realization. Silver rings on trembling hands. Warm auburn and amber energy swirling around. Corridor ceiling and walls visible in UPPER HALF of frame providing large empty space above head. Low camera angle looking slightly up. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, auburn amber color palette, high contrast, cel shading",
+    "ref": [
+      "world/characters/jace-delacroix.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Jace",
+        "text": "This is what she feels for you?",
+        "voice_id": "CYw3kZ02Hs0563khs1Fj"
+      }
+    ],
+    "bubble": "Internal thought from Jace, close-up with space above head, place thought bubble in empty space TOP far above face",
+    "pause_after": 1.0
+  },
+  {
+    "name": "split-mirrored-overwhelm",
+    "prompt": "Split panel vertical divide. LEFT: dark-haired man's face, amber eyes wide with foreign sensation. RIGHT: auburn-haired figure's face, green eyes flooded with amber heat. Neither knows whose feelings are whose anymore. Mirror composition. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/kade-morrow.jpg",
+      "world/characters/jace-delacroix.jpg"
+    ],
+    "silence": 2.0
+  },
+  {
+    "name": "release",
+    "prompt": "Medium shot androgynous figure with auburn hair releasing grip. Stumbling back, hand pulled away. Expression shattered. Silver rings visible on trembling fingers. Concrete corridor behind, warm amber lighting. Breaking contact desperately. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/jace-delacroix.jpg",
+      "world/locations/d-class-hallway.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Jace",
+        "text": "Too much—",
+        "voice_id": "CYw3kZ02Hs0563khs1Fj"
+      }
+    ],
+    "bubble": "Speech from Jace (auburn hair), medium shot face center of frame, place bubble TOP avoiding face",
+    "pause_after": 0.8
+  }
+]

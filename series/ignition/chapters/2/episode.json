@@ -1,0 +1,58 @@
+{
+  "chapterNum": 2,
+  "arcNum": 1,
+  "defaultCharacter": "Kade Morrow",
+  "startingLocation": "infirmary",
+  "characters": [
+    {
+      "name": "Ivy Thornwood",
+      "slug": "ivy-thornwood"
+    },
+    {
+      "name": "Jace Delacroix",
+      "slug": "jace-delacroix"
+    },
+    {
+      "name": "Kade Morrow",
+      "slug": "kade-morrow"
+    },
+    {
+      "name": "Mira Chen",
+      "slug": "mira-chen"
+    },
+    {
+      "name": "Nina Volkov",
+      "slug": "nina-volkov"
+    },
+    {
+      "name": "Professor Cross",
+      "slug": "professor-cross"
+    },
+    {
+      "name": "Professor Vance",
+      "slug": "professor-vance"
+    },
+    {
+      "name": "Rei Ashford",
+      "slug": "rei-ashford"
+    }
+  ],
+  "locations": [
+    {
+      "name": "Administrative Wing",
+      "slug": "administrative-wing"
+    },
+    {
+      "name": "D Class Hallway",
+      "slug": "d-class-hallway"
+    },
+    {
+      "name": "Greenhouse Wing",
+      "slug": "greenhouse-wing"
+    },
+    {
+      "name": "Infirmary",
+      "slug": "infirmary"
+    }
+  ]
+}

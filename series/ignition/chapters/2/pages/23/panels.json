@@ -1,0 +1,35 @@
+[
+  {
+    "name": "fifteen-years-ago",
+    "prompt": "Stylized memory panel in sepia tones. Silhouettes of a man and woman in an embrace, their auras merging together. Warm amber and cool blue colors bleeding together. Academy corridor background faded. A forbidden connection from the past. Dreamy, faded quality suggesting old memory. | anime style, modern anime aesthetic, dramatic lighting, sepia warm color palette, high contrast, cel shading",
+    "ref": [
+      "world/characters/professor-vance.jpg",
+      "world/characters/professor-cross.jpg"
+    ],
+    "silence": 2.5
+  },
+  {
+    "name": "consequence",
+    "prompt": "Dark memory panel. Older man with grey-streaked hair, face turned away in shadow. Expression of regret and distance. Dark desaturated tones, heavy shadows. The aftermath of being discovered. Cold clinical lighting. Separation visualized. | anime style, modern anime aesthetic, clean linework, mature shading, dramatic noir lighting, dark desaturated color palette, high contrast, cel shading",
+    "ref": [
+      "world/characters/professor-vance.jpg"
+    ],
+    "silence": 2.0
+  },
+  {
+    "name": "never-again",
+    "prompt": "Medium close-up on woman with severe black bob haircut from chest up. Vivid red lipstick, only color in dark frame. Dark eyes reflecting internal conflict and determination. Strong jaw set with resolve. Heavy shadows across half her face. Plenty of dark empty space above her head. Noir lighting, dramatic contrast. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic noir lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/professor-cross.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Cross",
+        "text": "Never again. I told myself never again.",
+        "voice_id": "XrExE9yKIg1WjnnlVkGX"
+      }
+    ],
+    "bubble": "Internal thought from Cross, medium close-up with space above head, place thought bubble in empty space TOP far above face",
+    "pause_after": 1.5
+  }
+]

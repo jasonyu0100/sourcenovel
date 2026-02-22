@@ -1,0 +1,30 @@
+{
+  "chapterNum": 3,
+  "arcNum": 1,
+  "defaultCharacter": "Senna Vale",
+  "startingLocation": "senna-quarters",
+  "characters": [
+    {
+      "name": "Dante Reyes",
+      "slug": "dante-reyes"
+    },
+    {
+      "name": "Kade Morrow",
+      "slug": "kade-morrow"
+    },
+    {
+      "name": "Rei Ashford",
+      "slug": "rei-ashford"
+    },
+    {
+      "name": "Senna Vale",
+      "slug": "senna-vale"
+    }
+  ],
+  "locations": [
+    {
+      "name": "Senna Quarters",
+      "slug": "senna-quarters"
+    }
+  ]
+}

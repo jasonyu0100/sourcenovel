@@ -1,0 +1,59 @@
+[
+  {
+    "name": "realization-hits",
+    "prompt": "Close-up of young woman with deep red wavy disheveled hair. Wearing ONLY a white shirt hanging open unbuttoned, no blazer, no jacket. Expression shifting from certainty to something sick and poisoned. Green eyes widening with unwanted realization. Jaw tightening. Warm amber lighting from one side. Dark background. Flushed skin. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/senna-vale.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Senna",
+        "text": "She was resisting because my touch didn't make her want to stop.",
+        "voice_id": "XB0fDUnXU5powFXDhCwa"
+      }
+    ],
+    "bubble": "Internal thought from Senna, face fills frame CENTER, place thought bubble TOP as internal monologue",
+    "pause_after": 1.2
+  },
+  {
+    "name": "but-his-did",
+    "prompt": "Extreme close-up on a young woman's eyes. Sharp predatory green eyes now wounded and furious. Lashes catching warm amber light. Glistening with unshed emotion. Dark shadows under eyes. Intense expression. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/senna-vale.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Senna",
+        "text": "But his did.",
+        "voice_id": "XB0fDUnXU5powFXDhCwa"
+      }
+    ],
+    "bubble": "Internal thought from Senna, eyes fill frame, place thought bubble TOP-CENTER as internal monologue",
+    "pause_after": 1.5
+  },
+  {
+    "name": "distorted-loop",
+    "prompt": "Close-up memory flash panel, slightly tilted camera angle. Male hands sliding into silver hair, tilting a girl's head back, throat exposed. Expression of surrender on pale face. Amber warmth radiating from the hands. Frost crystals shattering. Dreamlike distorted edges, color bleeding. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/kade-morrow.jpg",
+      "world/characters/rei-ashford.jpg"
+    ],
+    "silence": 2.0
+  },
+  {
+    "name": "watching-her-own-imagination",
+    "prompt": "Close-up of young woman with deep red wavy hair. Wearing ONLY a white shirt hanging open unbuttoned, no blazer, no jacket. Jaw clenched tight, green eyes glistening with tears forming. Expression of anguish watching something unbearable. Warm amber lighting. Heat shimmer visible around her face. Flushed damp skin. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/senna-vale.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Senna",
+        "text": "He did it in thirty seconds with his bare hands on her face and a voice that said there you are.",
+        "voice_id": "XB0fDUnXU5powFXDhCwa"
+      }
+    ],
+    "bubble": "Internal thought from Senna, face fills frame CENTER, place thought bubble TOP as internal monologue",
+    "pause_after": 1.0
+  }
+]

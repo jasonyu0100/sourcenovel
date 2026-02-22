@@ -1,0 +1,39 @@
+[
+  {
+    "name": "cross-observing",
+    "prompt": "Medium shot woman with severe black bob in dark administrative corridor. Vivid red lipstick. Arms crossed, leaning against wall. Watching through window at distant warm glow. Observing without being seen. Cold blue moonlight on her face. Noir atmosphere. | anime style, modern anime aesthetic, clean linework, mature shading, dramatic noir lighting, dark blue grey color palette, high contrast, cel shading",
+    "ref": [
+      "world/characters/professor-cross.jpg",
+      "world/locations/administrative-wing.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Cross",
+        "text": "They're all making the same mistake I made.",
+        "voice_id": "XrExE9yKIg1WjnnlVkGX"
+      }
+    ],
+    "bubble": "Internal thought from Cross, medium shot face visible, place thought bubble TOP as internal monologue",
+    "pause_after": 1.2
+  },
+  {
+    "name": "seeing-the-infirmary",
+    "prompt": "View through window into infirmary. Two feminine figures visible inside - one with silver hair, one with brown hair and glasses. Pink and blue energy faintly glowing around them. Seen from outside looking in. Window frame visible. | anime style, modern anime aesthetic, clean linework, mature shading, dramatic lighting, pink blue color palette, high contrast, cel shading",
+    "ref": [
+      "world/characters/rei-ashford.jpg",
+      "world/characters/mira-chen.jpg",
+      "world/locations/infirmary.jpg"
+    ],
+    "silence": 2.0
+  },
+  {
+    "name": "seeing-the-corridor",
+    "prompt": "View down corridor showing distant figures. Two silhouettes facing each other in warm amber light. One dark-haired, one auburn-haired. Energy crackling between them. Seen from far distance. Cross's POV from shadows. | anime style, modern anime aesthetic, clean linework, mature shading, dramatic lighting, amber auburn color palette, high contrast, cel shading",
+    "ref": [
+      "world/characters/kade-morrow.jpg",
+      "world/characters/jace-delacroix.jpg",
+      "world/locations/d-class-hallway.jpg"
+    ],
+    "silence": 2.0
+  }
+]

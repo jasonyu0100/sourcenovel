@@ -1,0 +1,58 @@
+[
+  {
+    "name": "catching-herself",
+    "prompt": "Medium shot. Young woman with deep red wavy disheveled hair, pale blue scarf clutched against her chest. White shirt open, skin flushed and damp. Breathing hard, posture wrecked. Heat shimmer radiating to an empty dimly lit bedroom. Alone. Warm amber lighting. Expression of hollow realization. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/senna-vale.jpg",
+      "world/locations/senna-quarters.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Senna",
+        "text": "Wanting in the dark. Touching fabric instead of skin.",
+        "voice_id": "XB0fDUnXU5powFXDhCwa"
+      }
+    ],
+    "bubble": "Internal thought from Senna, figure CENTER, place thought bubble TOP-LEFT as internal monologue",
+    "pause_after": 1.0
+  },
+  {
+    "name": "slam-drawer",
+    "prompt": "Close-up of a feminine hand slamming a wooden vanity drawer shut. Motion blur on the drawer. Violent decisive gesture. Items glimpsed inside before closing. Warm amber lighting. Dark wood surface. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/senna-vale.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Senna",
+        "text": "The only person I'm making desperate is myself.",
+        "voice_id": "XB0fDUnXU5powFXDhCwa"
+      }
+    ],
+    "bubble": "Internal thought from Senna (off-panel, hand visible), place thought bubble TOP as internal monologue",
+    "pause_after": 0.8,
+    "sfx": [
+      {
+        "description": "wooden drawer slamming shut, sharp decisive impact in quiet room",
+        "duration": 1.5
+      }
+    ]
+  },
+  {
+    "name": "buttoning-up",
+    "prompt": "Close-up of feminine hands buttoning a white academy shirt. Fingers trembling, struggling with buttons. One button missed in the sequence. Damp fabric. Warm amber lighting on hands and shirt. Shaking unsteady gesture. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/senna-vale.jpg"
+    ],
+    "silence": 1.5
+  },
+  {
+    "name": "braced-at-vanity",
+    "prompt": "Medium shot from behind and side angle. Young woman with deep red wavy disheveled hair, wearing ONLY a white shirt messily rebuttoned with one button missed, no blazer, no jacket, standing at wooden vanity table. Both hands braced on vanity surface, head bowed. Fogged mirror reflecting blurred shape. Heat shimmer in air. Dormitory room at night, warm amber lighting. Exhausted tense posture. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/senna-vale.jpg",
+      "world/locations/senna-quarters.jpg"
+    ],
+    "silence": 2.5
+  }
+]

@@ -1,0 +1,25 @@
+[
+  {
+    "name": "rei-eyes-close",
+    "prompt": "Close-up. Silver-haired woman's eyes closing, lashes lowering. Remembering. Letting herself feel. No longer fighting. Surrender to memory. Soft lighting, intimate. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg"
+    ],
+    "silence": 2.5
+  },
+  {
+    "name": "rei-silhouette-burn",
+    "prompt": "Wide shot final. Silver-haired woman silhouetted at large window, alone in dark minimalist room. D-Class Block glowing warm amber in the distance through glass. Cool blue interior, warm amber calling from outside. She's going to burn. End image. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg",
+      "world/locations/rei-quarters-window.jpg"
+    ],
+    "silence": 3.5,
+    "sfx": [
+      {
+        "description": "distant city hum through glass, quiet night, faint warmth lingering",
+        "duration": 3.0
+      }
+    ]
+  }
+]

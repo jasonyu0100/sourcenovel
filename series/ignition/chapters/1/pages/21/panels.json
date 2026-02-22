@@ -1,0 +1,58 @@
+[
+  {
+    "name": "rei-passes-senna",
+    "prompt": "Medium shot. Silver-haired woman walking past red-haired woman in doorway, not looking at her. Ice queen posture restored. Red-haired woman's heat flaring as she passes. Neither making eye contact. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg",
+      "world/characters/senna-vale.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Rei",
+        "text": "Professor Vance needs me.",
+        "voice_id": "pFZP5JQG7iQjIQuC4Bku"
+      }
+    ],
+    "pause_after": 0.5
+  },
+  {
+    "name": "senna-faces-kade",
+    "prompt": "Two-shot. Red-haired woman RIGHT facing LEFT, stepped into room, heat flaring aggressively. Dark-haired young man LEFT facing RIGHT, relaxed posture, lazy smile. Powers clashing between them \u2014 heat vs heat. Storage room around them. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/senna-vale.jpg",
+      "world/characters/kade-morrow.jpg",
+      "world/locations/storage-room.jpg"
+    ],
+    "silence": 1.5
+  },
+  {
+    "name": "senna-threat",
+    "prompt": "Close-up. Red-haired woman, green bedroom eyes narrowed, voice soft and vicious. Possessive fury barely contained. Heat-shimmer around her. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/senna-vale.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Senna",
+        "text": "Stay away from her, burnout.",
+        "voice_id": "XB0fDUnXU5powFXDhCwa"
+      }
+    ],
+    "pause_after": 0.8
+  },
+  {
+    "name": "kade-or-what",
+    "prompt": "Close-up. Dark-haired young man, easy charming smile, completely unafraid. Amber eyes amused. Heat rolling off him. Not intimidated. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/kade-morrow.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Kade",
+        "text": "Or what?",
+        "voice_id": "IKne3meq5aSn9XLyUdCD"
+      }
+    ],
+    "pause_after": 0.8
+  }
+]

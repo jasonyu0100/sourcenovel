@@ -1,0 +1,34 @@
+[
+  {
+    "name": "fogged-mirror",
+    "prompt": "Close-up of a fogged mirror surface. Thick condensation coating the glass, heat distortion visible. A blurred female silhouette with deep red wavy hair barely visible through the fog. Warm amber lighting reflecting off wet glass surface. Intimate claustrophobic atmosphere. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/senna-vale.jpg",
+      "world/locations/senna-quarters.jpg"
+    ],
+    "silence": 2.5,
+    "sfx": [
+      {
+        "description": "heavy humid atmosphere, muffled room ambience with faint condensation dripping",
+        "duration": 2.5
+      }
+    ]
+  },
+  {
+    "name": "pacing",
+    "prompt": "Medium shot, slight low angle. Young woman with deep red wavy messy hair, wearing a loose white shirt and skirt, no blazer, no jacket. Pacing restlessly in dimly lit bedroom. Heat shimmer visible in air around her body. Vanity with fogged mirror visible behind. Warm amber lighting from bedside lamp. Tense agitated posture. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/senna-vale.jpg",
+      "world/locations/senna-quarters.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Senna",
+        "text": "I can't stop.",
+        "voice_id": "XB0fDUnXU5powFXDhCwa"
+      }
+    ],
+    "bubble": "Internal thought from Senna, figure CENTER of frame, place thought bubble TOP-LEFT as internal monologue",
+    "pause_after": 1.0
+  }
+]

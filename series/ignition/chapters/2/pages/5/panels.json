@@ -1,0 +1,54 @@
+[
+  {
+    "name": "the-want-floods-in",
+    "prompt": "Close-up on young woman with glasses. Eyes wide with shock, glasses slightly fogged. Pink energy radiating around her face. Power absorption overwhelming her. Expression of intense concentration. Medical professional processing unexpected input. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/mira-chen.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Mira",
+        "text": "This is what she feels...",
+        "voice_id": "ThT5KcBeYPX3keUQqHPh"
+      }
+    ],
+    "bubble": "Internal thought from Mira, close-up on face, place thought bubble TOP as internal monologue",
+    "pause_after": 1.0
+  },
+  {
+    "name": "mira-overwhelmed",
+    "prompt": "Medium shot young woman with cardigan and glasses leaning over patient on medical bed. One hand hovering over silver-haired woman lying down, pink healing energy glowing at her palm. Other hand pressed to her own chest. Flush spreading across cheeks. Body trembling while maintaining the healing connection. Pink magenta warmth bleeding into frame. Clinical infirmary behind her. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/mira-chen.jpg",
+      "world/characters/rei-ashford.jpg",
+      "world/locations/infirmary.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Mira",
+        "text": "For him. She wants him this badly.",
+        "voice_id": "ThT5KcBeYPX3keUQqHPh"
+      }
+    ],
+    "bubble": "Internal thought from Mira, medium shot face visible, place thought bubble TOP as internal monologue",
+    "pause_after": 1.2
+  },
+  {
+    "name": "eyes-meet",
+    "prompt": "Two-shot tight framing. Silver-haired woman LEFT and brown-haired woman with glasses RIGHT. Intense eye contact between them. Recognition passing between them. Cool blue meeting pink warmth. Clinical white infirmary soft focus behind. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/rei-ashford.jpg",
+      "world/characters/mira-chen.jpg",
+      "world/locations/infirmary.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Rei",
+        "text": "Now you know.",
+        "voice_id": "pFZP5JQG7iQjIQuC4Bku"
+      }
+    ],
+    "bubble": "Speech from Rei on LEFT facing Mira on RIGHT, place bubble TOP-LEFT with tail pointing to Rei",
+    "pause_after": 1.0
+  }
+]

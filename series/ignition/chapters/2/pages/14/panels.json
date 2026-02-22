@@ -1,0 +1,53 @@
+[
+  {
+    "name": "shaking-hands",
+    "prompt": "Close-up on trembling hands with silver rings. Rings clinking together. Grounding technique failing. Echo still resonating through body. Unsteady. | anime style, modern anime aesthetic, clean linework, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/jace-delacroix.jpg"
+    ],
+    "silence": 1.5
+  },
+  {
+    "name": "broken-warning",
+    "prompt": "Medium shot androgynous figure with auburn hair. Breathing hard, voice cracking visible in expression. Composure shattered. Amber still bleeding into green eyes. Concrete corridor behind, warm amber lighting. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/jace-delacroix.jpg",
+      "world/locations/d-class-hallway.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Jace",
+        "text": "The warning is delivered. Stay away from her.",
+        "voice_id": "CYw3kZ02Hs0563khs1Fj"
+      }
+    ],
+    "bubble": "Speech from Jace, medium shot face center of frame, place bubble TOP avoiding face",
+    "pause_after": 1.0
+  },
+  {
+    "name": "retreat",
+    "prompt": "Medium shot from behind androgynous figure walking away quickly. Auburn hair, fitted vest visible from back. Walking too fast, fleeing before having to process. Corridor stretching ahead. | anime style, modern anime aesthetic, clean linework, mature shading, dramatic lighting, warm amber color palette, high contrast, cel shading",
+    "ref": [
+      "world/characters/jace-delacroix.jpg",
+      "world/locations/d-class-hallway.jpg"
+    ],
+    "silence": 1.5
+  },
+  {
+    "name": "kade-alone",
+    "prompt": "Medium shot young man with dark messy hair standing alone in corridor. Amber eyes thoughtful, processing the exchange. Something changed. Warm amber lighting around him. | anime style, modern anime aesthetic, clean linework, mature shading, dramatic lighting, warm amber color palette, high contrast, cel shading",
+    "ref": [
+      "world/characters/kade-morrow.jpg",
+      "world/locations/d-class-hallway.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Kade",
+        "text": "They love her too. All of them.",
+        "voice_id": "IKne3meq5aSn9XLyUdCD"
+      }
+    ],
+    "bubble": "Internal thought from Kade, medium shot face visible, place thought bubble TOP as internal monologue",
+    "pause_after": 1.2
+  }
+]

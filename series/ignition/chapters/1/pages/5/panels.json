@@ -1,0 +1,28 @@
+[
+  {
+    "name": "assembly-back",
+    "prompt": "Wide shot from back of assembly hall. Crowd visible from behind, segregated sections, tiered seating toward front where elite students sit. Back standing area dimmer, industrial. Cool neutral lighting with warmer amber bleeding from back. Hierarchical space visible. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/locations/assembly-hall-back.jpg"
+    ],
+    "silence": 2.0
+  },
+  {
+    "name": "kade-leans",
+    "prompt": "Medium shot inside assembly hall. Dark-haired young man leaning against back wall of large tiered auditorium, arms crossed, heat shimmer rolling off him. Sharp jawline, amber eyes scanning crowd, charming confident posture. Academy uniform disheveled \u2014 open collar showing collarbone, rolled sleeves. Burn scars visible on hands. Unbothered. Assembly hall seating and crowd visible behind him. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/kade-morrow.jpg",
+      "world/locations/assembly-hall-back.jpg"
+    ],
+    "silence": 1.5
+  },
+  {
+    "name": "kade-pov-rei",
+    "prompt": "POV shot into crowd. Silver-haired woman visible in middle distance \u2014 perfect posture, ice-blue eyes staring forward. Red-haired woman beside her, touching her arm, leaning close. Possessive claim visible. Crowd blurred around the focal figures. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg",
+      "world/characters/senna-vale.jpg"
+    ],
+    "silence": 1.5
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "name": "senna-touch",
+    "prompt": "Close-up, camera looking down at collar. Feminine fingers with red nail polish resting on white uniform collar, heat-shimmer visible around fingers. Academy uniform fabric crisp. Tension in the gesture. Warm lighting on hand against cool blue uniform. | anime manga, MAPPA studio style, cel shading, clean linework, dramatic lighting, high contrast",
+    "ref": [
+      "world/characters/senna-vale.jpg"
+    ],
+    "silence": 2.5,
+    "sfx": [
+      {
+        "description": "soft fabric sliding against skin, intimate rustle",
+        "duration": 2.0
+      }
+    ]
+  }
+]

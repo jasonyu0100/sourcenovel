@@ -1,0 +1,49 @@
+[
+  {
+    "name": "senna-whisper",
+    "prompt": "Close-up. Red-haired woman's face very close to frame, lidded green bedroom eyes, full lips parted near unseen ear. Heat-shimmer aura around her. Seductive predatory expression, possessive hunger. Morning light from left. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/senna-vale.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Senna",
+        "text": "You're so cold this morning. Let me warm you up.",
+        "voice_id": "XB0fDUnXU5powFXDhCwa"
+      }
+    ],
+    "pause_after": 0.5
+  },
+  {
+    "name": "rei-profile-frost",
+    "prompt": "Close-up profile. Silver-haired woman, ice-blue eyes staring straight ahead, expression utterly composed and neutral. Crystalline earring visible in left ear with frost spreading across its surface. Cold blue ambient lighting. Controlled, untouchable. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg",
+      "world/elements/rei-earring.jpg"
+    ],
+    "silence": 1.0
+  },
+  {
+    "name": "rei-deflects",
+    "prompt": "Medium close-up. Silver-haired woman in pristine academy uniform buttoned to collar. Expression neutral, slightly dismissive. Crystalline earring with frost patterns visible. Cold blue lighting. Controlled distance. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Rei",
+        "text": "We have assembly.",
+        "voice_id": "pFZP5JQG7iQjIQuC4Bku"
+      }
+    ],
+    "pause_after": 0.3
+  },
+  {
+    "name": "senna-hand-chest",
+    "prompt": "Close-up. Feminine hand with red nails placed on white uniform shoulder, heat-shimmer emanating from the fingertips. Possessive gesture. Warm amber glow from hand against cool blue fabric. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/senna-vale.jpg"
+    ],
+    "silence": 1.0
+  }
+]

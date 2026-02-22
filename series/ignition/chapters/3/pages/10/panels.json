@@ -1,0 +1,48 @@
+[
+  {
+    "name": "charged-air",
+    "prompt": "Abstract effects panel. Warm shimmer and heat distortion overlapping, air thickening visibly. Two warm glows meeting — deep amber and golden warmth pressing against each other. Radiating energy waves. No figures visible. No people. Abstract heat effects only. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "silence": 2.0
+  },
+  {
+    "name": "whats-in-it",
+    "prompt": "Two-shot close-up. Young man with tan skin and messy black hair LEFT, mouth curved in an amused expression, dark eyes half-lidded. Young woman with deep red wavy hair wearing ONLY white shirt messily rebuttoned no blazer no jacket RIGHT, face close and deliberate, green eyes intent. Faces near each other. Warm shimmer in air between them. Warm amber lighting. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/dante-reyes.jpg",
+      "world/characters/senna-vale.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Dante",
+        "text": "What's in it for me?",
+        "voice_id": "IKne3meq5aSn9XLyUdCD"
+      }
+    ],
+    "bubble": "Speech from Dante on LEFT, place bubble TOP-LEFT with tail pointing left to speaker",
+    "pause_after": 1.0
+  },
+  {
+    "name": "promise-threat",
+    "prompt": "Close-up of young woman with deep red wavy hair. Wearing ONLY a white shirt messily rebuttoned, no blazer, no jacket. Expression combining promise and threat — lips curved in a sharp knowing look, green lidded eyes holding steady. Flushed skin. Warm amber lighting. Confident dangerous expression. Heat shimmer around her. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/senna-vale.jpg"
+    ],
+    "silence": 1.5
+  },
+  {
+    "name": "dante-reads-her",
+    "prompt": "Close-up of young man with tan skin and messy black hair. Expression shifting — amusement fading from his face, replaced by something more guarded underneath. Dark eyes reading carefully. Silver chain necklace visible at collar. Warm amber lighting. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/dante-reyes.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Dante",
+        "text": "She's past the point where plans work.",
+        "voice_id": "IKne3meq5aSn9XLyUdCD"
+      }
+    ],
+    "bubble": "Internal thought from Dante, face fills frame CENTER, place thought bubble TOP as internal monologue",
+    "pause_after": 1.5
+  }
+]

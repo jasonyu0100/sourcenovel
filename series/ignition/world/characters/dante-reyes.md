@@ -1,0 +1,11 @@
+# Dante Reyes
+
+The A-Class heartbreaker whose power is **Pulse** — he can feel and manipulate heartbeats through touch. Knows exactly when someone's pulse quickens for him. Can nudge it faster, make attraction feel like destiny. Uses it constantly. Has hooked up with half the academy regardless of class. The rules don't seem to apply to him — or he's just never been caught.
+
+**Connections:** Senna used him last year. She needed Rei to see her with someone, feel jealousy, crack her ice. Dante played along — he'll play along with anyone attractive who asks. It didn't work. Rei felt nothing. Senna was furious. He still has the scratch marks. Mira Chen is the one person who saw through him immediately. When he tried his pulse manipulation on her, she felt the artificial acceleration and pulled away with a look of disgust that still bothers him. He's used to being wanted. Being *seen* is different. Ivy Thornwood in the greenhouse is the only hookup where neither of them has power — her pheromones and his pulse cancel out. It's the most honest sex he's ever had. He keeps going back.
+
+Tan skin with a natural warmth that photographs like honey. Messy black hair with an undercut, always falling into his dark bedroom eyes. Sharp jaw, full lips that curve into lazy confident smiles. Tall and lean with defined muscles visible through his always-too-tight uniform shirt, top buttons undone showing his chest. Silver chain necklace that rests against his collarbone. Sleeves rolled up revealing forearms and a geometric tattoo on his inner wrist. Moves like he knows you're watching.
+
+```
+young man, 18 years old, tall lean muscular build, tan honey skin, messy black hair with undercut falling into eyes, dark bedroom eyes, sharp jawline, full lips lazy confident smile, tight academy uniform shirt top buttons undone showing chest, silver chain necklace on collarbone, rolled up sleeves showing forearms, geometric tattoo on inner wrist, confident seductive pose, effortless heartthrob energy, anime style, highly stylized illustration, bold graphic shapes, cel shaded, warm tan and gold color palette, amber gradient background, modern anime aesthetic, clean bold linework, dramatic sensual lighting, high contrast
+```

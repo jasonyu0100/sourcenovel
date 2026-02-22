@@ -1,0 +1,42 @@
+[
+  {
+    "name": "kade-walks-toward",
+    "prompt": "Two-shot. Dark-haired young man walking toward door, toward red-haired woman in his path. Powers clashing as he approaches \u2014 heat meeting heat, sparks visible. She won't step aside. He won't stop. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/kade-morrow.jpg",
+      "world/characters/senna-vale.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Kade",
+        "text": "She's not anyone's.",
+        "voice_id": "IKne3meq5aSn9XLyUdCD"
+      }
+    ],
+    "pause_after": 0.5
+  },
+  {
+    "name": "kade-close-senna",
+    "prompt": "Close-up. Dark-haired young man, close enough to red-haired woman that their powers spark. Amber eyes steady, delivering truth. No anger \u2014 worse, pity. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/kade-morrow.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Kade",
+        "text": "But if she was going to be someone's? She wouldn't choose the girl who makes her feel like a trophy.",
+        "voice_id": "IKne3meq5aSn9XLyUdCD"
+      }
+    ],
+    "pause_after": 1.2
+  },
+  {
+    "name": "kade-brushes-past",
+    "prompt": "Medium shot from behind. Dark-haired young man walking away through storage room doorway alone, back to camera, heat trailing from him. Red-haired woman visible in foreground, frozen in place, stunned. He's leaving. She can't move. Dismissal. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/kade-morrow.jpg",
+      "world/characters/senna-vale.jpg"
+    ],
+    "silence": 2.0
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "name": "senna-alone",
+    "prompt": "Wide shot. Red-haired woman standing alone in dim storage room. Scattered ice crystals on floor around her \u2014 remnants of broken earring. Ghost of warmth in the air that doesn't belong to her. Her hands trembling. Her power burning unchecked around her. Empty space. Lost. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/senna-vale.jpg",
+      "world/locations/storage-room.jpg"
+    ],
+    "silence": 3.5,
+    "sfx": [
+      {
+        "description": "quiet empty room, fading warmth, distant ventilation hum",
+        "duration": 3.0
+      }
+    ]
+  }
+]

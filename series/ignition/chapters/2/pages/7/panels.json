@@ -1,0 +1,40 @@
+[
+  {
+    "name": "ninas-state",
+    "prompt": "Close-up on young woman with platinum bob haircut. Pale blue eyes dreamy, distant. Relaxed expression, knowing smile. Confident composure. Nurse uniform collar visible. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/nina-volkov.jpg"
+    ],
+    "silence": 1.5
+  },
+  {
+    "name": "the-question",
+    "prompt": "Medium shot interior of infirmary room. Medical bed center, clinical white walls. Soft warm glow visible in the air. Empty space waiting to be read. | anime style, modern anime aesthetic, clean linework, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/locations/infirmary.jpg"
+    ],
+    "silence": 1.0
+  },
+  {
+    "name": "nina-remembers",
+    "prompt": "Flash panel stylized memory. Hand touching skin, pale blue energy flowing. Abstract silhouettes only, no detailed faces. Pale blue and pink colors merging softly. No figures visible, just energy effect. | anime style, modern anime aesthetic, dramatic lighting, high contrast, cel shading",
+    "ref": [],
+    "silence": 1.0
+  },
+  {
+    "name": "knowing-smile",
+    "prompt": "Close-up on young woman with platinum bob. Pale blue eyes bright with recognition. Knowing smile spreading. She recognizes the signs. Amused expression. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/nina-volkov.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Nina",
+        "text": "Oh. Someone had fun.",
+        "voice_id": "MF3mGyEYCl7XYWbV9V6O"
+      }
+    ],
+    "bubble": "Speech from Nina, close-up on face, place bubble TOP avoiding her face",
+    "pause_after": 1.0
+  }
+]

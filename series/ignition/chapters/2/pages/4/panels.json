@@ -1,0 +1,55 @@
+[
+  {
+    "name": "the-touch",
+    "prompt": "Extreme close-up on two hands making contact. Pale frost-touched fingers being held by warmer hands. Moment of connection. Soft pink light beginning to emanate from contact point. Shallow depth of field, everything else abstracted. | anime style, modern anime aesthetic, clean linework, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/rei-ashford.jpg",
+      "world/characters/mira-chen.jpg"
+    ],
+    "silence": 2.0,
+    "sfx": [
+      {
+        "description": "soft warmth pulsing, gentle energy hum beginning, like a heartbeat amplifying",
+        "duration": 2.5
+      }
+    ]
+  },
+  {
+    "name": "transfer-activates",
+    "prompt": "Close-up on young woman with glasses. Eyes widening in shock, glasses beginning to fog. Lips parting. Pink warmth flooding into her expression. Body tensing visibly. Heavy shadows behind, dark vignette closing in. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, high contrast, cel shading",
+    "ref": [
+      "world/characters/mira-chen.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Mira",
+        "text": "Oh—",
+        "voice_id": "ThT5KcBeYPX3keUQqHPh"
+      }
+    ],
+    "bubble": "Speech from Mira, close-up on face, place bubble TOP-RIGHT avoiding face",
+    "pause_after": 0.8
+  },
+  {
+    "name": "memory-transfer",
+    "prompt": "Split flash panel. LEFT half: warm amber heat, male hands cupping face, soft orange glow. RIGHT half: crystalline shatter, ice blue fragments, cold breaking apart. Two sensations colliding in one frame. Stylized memory panel, no figures visible, pure color and energy. | anime style, modern anime aesthetic, dramatic lighting, amber orange and ice blue split color palette, high contrast, cel shading",
+    "ref": [],
+    "silence": 1.5
+  },
+  {
+    "name": "rei-watching",
+    "prompt": "Close-up on young woman with long silver hair. Ice blue eyes watching intently, expression carefully neutral but something vulnerable beneath. Observing Mira's reaction to the transfer. Clinical infirmary lighting, pale background. | anime style, modern anime aesthetic, clean linework, bold expressions, mature shading, dramatic lighting, cool blue color palette, high contrast, cel shading",
+    "ref": [
+      "world/characters/rei-ashford.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Rei",
+        "text": "Now you understand.",
+        "voice_id": "pFZP5JQG7iQjIQuC4Bku"
+      }
+    ],
+    "bubble": "Internal thought from Rei, close-up on face, place thought bubble TOP as internal monologue",
+    "pause_after": 1.0
+  }
+]

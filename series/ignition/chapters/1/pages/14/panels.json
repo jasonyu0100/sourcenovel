@@ -1,0 +1,48 @@
+[
+  {
+    "name": "two-shot-close",
+    "prompt": "Wide two-shot. Silver-haired woman RIGHT facing LEFT, dark-haired young man LEFT facing RIGHT. Space between them nearly gone \u2014 arms length or less. Heat and cold visible colliding where they almost touch. She should freeze him. She doesn't. Steam and mist between them. Storage room dim around them. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg",
+      "world/characters/kade-morrow.jpg",
+      "world/locations/storage-room.jpg"
+    ],
+    "silence": 2.0
+  },
+  {
+    "name": "rei-lips-name",
+    "prompt": "Extreme close-up on lips. Pale lips forming words, frost melting on breath. Surrender in the shape. Whisper. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Rei",
+        "text": "What's your name?",
+        "voice_id": "pFZP5JQG7iQjIQuC4Bku"
+      }
+    ],
+    "pause_after": 0.8
+  },
+  {
+    "name": "kade-touch-jaw",
+    "prompt": "Close-up. Male fingers with burn scars finally making contact with pale jaw. Heat blooming where skin touches skin. First contact. Electric. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/kade-morrow.jpg"
+    ],
+    "dialogue": [
+      {
+        "speaker": "Kade",
+        "text": "Kade. Kade Morrow.",
+        "voice_id": "IKne3meq5aSn9XLyUdCD"
+      }
+    ],
+    "pause_after": 1.0,
+    "sfx": [
+      {
+        "description": "soft warm breath, gentle skin contact, faint sizzle of heat meeting cold",
+        "duration": 1.5
+      }
+    ]
+  }
+]

@@ -1,0 +1,33 @@
+[
+  {
+    "name": "rei-ignores",
+    "prompt": "Medium shot from side. Silver-haired woman at window, back to glowing datapad on surface. Not looking at it. Eyes on the city outside. Choosing not to respond. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg",
+      "world/locations/rei-quarters-window.jpg"
+    ],
+    "silence": 1.5
+  },
+  {
+    "name": "rei-pov-dclass",
+    "prompt": "Night cityscape through window glass. No people visible. D-Class Block building in the distance glowing with warm amber light against dark sky. Other buildings around it. Window frame visible at edges. Lonely distant view. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/locations/d-class-block.jpg"
+    ],
+    "silence": 1.5
+  },
+  {
+    "name": "rei-calculating",
+    "prompt": "Close-up. Silver-haired woman's face reflected in window glass, ice-blue eyes distant, calculating. Thinking. A hundred touches that never cracked her. Thirty seconds that broke her. The math is wrong. Or it's finally right. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg"
+    ],
+    "silence": 2.0
+  },
+  {
+    "name": "glass-fogs",
+    "prompt": "Extreme close-up. Window glass fogging beneath palm \u2014 warm, wanting. Condensation spreading. Heat she can't freeze. Evidence of something changed. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [],
+    "silence": 2.5
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "name": "rei-pov-split",
+    "prompt": "Split POV. LEFT side: dark-haired man close, warm, amber eyes, heat visible \u2014 freedom. RIGHT side: red-haired woman in doorway, blazing, green eyes furious \u2014 cage. Two fires. Two choices. Temperature contrast extreme \u2014 warm amber vs aggressive red-orange. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/kade-morrow.jpg",
+      "world/characters/senna-vale.jpg"
+    ],
+    "silence": 1.5
+  },
+  {
+    "name": "rei-steps-back",
+    "prompt": "Medium shot. Silver-haired woman stepping backward in storage room, arms crossing over her chest. Expression shutting down, going cold and neutral. Frost spreading subtly on her uniform shoulders. Composure returning. Retreat into herself. Dim storage room, cool blue lighting. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg",
+      "world/locations/storage-room.jpg"
+    ],
+    "silence": 2.0
+  },
+  {
+    "name": "rei-cheek-burning",
+    "prompt": "Close-up on cheek. Pale cheek still flushed where his hand was. Pink warmth that won't fade. The cold can't reach where he touched. Evidence. | anime manga, cel shading, clean linework, dramatic lighting, high contrast, MAPPA studio style",
+    "ref": [
+      "world/characters/rei-ashford.jpg"
+    ],
+    "silence": 2.0
+  }
+]

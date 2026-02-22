@@ -1,0 +1,22 @@
+{
+  "chapterNumber": 3,
+  "arcId": "1",
+  "status": "initialized",
+  "wordCount": 1704,
+  "steps": {
+    "concept": { "completed": true, "timestamp": "2026-02-20T00:00:00Z" },
+    "memory": { "completed": true, "timestamp": "2026-02-20T00:00:00Z" },
+    "route": { "completed": true, "timestamp": "2026-02-20T00:00:00Z" },
+    "compose": { "completed": true, "timestamp": "2026-02-20T00:00:00Z" },
+    "review": { "completed": true, "timestamp": "2026-02-20T00:00:00Z" },
+    "web": { "completed": true, "timestamp": "2026-02-20T00:00:00Z" },
+    "model": { "completed": true, "timestamp": "2026-02-20T00:00:00Z" },
+    "set": { "completed": true, "timestamp": "2026-02-20T00:00:00Z" },
+    "world": { "completed": true, "timestamp": "2026-02-20T00:00:00Z" },
+    "staging": { "completed": true, "timestamp": "2026-02-20T00:00:00Z" },
+    "pages": { "completed": true, "timestamp": "2026-02-20T00:00:00Z" },
+    "video": { "completed": true, "timestamp": "2026-02-20T00:00:00Z" },
+    "episode": { "completed": true, "timestamp": "2026-02-20T00:00:00Z" },
+    "complete": { "completed": false, "timestamp": null }
+  }
+}
