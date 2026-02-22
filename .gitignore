@@ -8,6 +8,9 @@ node_modules/
 .next/
 out/
 
+# Generated series content (synced from series/ by npm run sync)
+public/series/
+
 # Production
 build/
 

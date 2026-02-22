@@ -1,3 +1,3 @@
 // Shared constants for the application
 
-export const API_BASE = "/api/series";
+export const API_BASE = "/series";

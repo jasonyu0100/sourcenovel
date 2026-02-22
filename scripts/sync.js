@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 
 /**
- * Generate manifest.json and index.json for series content.
+ * Generate manifest.json and index.json for series content, then copy to public/.
  *
  * Usage: node scripts/sync.js [series-id]
  *
  * 1. Finds series in series/
  * 2. Generates manifest.json for each series from directory structure
  * 3. Generates index.json with all series metadata (reads from series.json per series)
+ * 4. Copies all series content to public/series/ for static serving
  *
- * Content is served via API route (/api/series/[...path]) from series/ folder.
+ * Content is served as static files from public/series/ to avoid serverless size limits.
  */
 
 const fs = require("fs");
@@ -17,6 +18,7 @@ const path = require("path");
 
 const ROOT = path.join(__dirname, "..");
 const SERIES_ROOT = path.join(ROOT, "series");
+const PUBLIC_SERIES = path.join(ROOT, "public", "series");
 
 // --- Helpers ---
 
@@ -221,11 +223,54 @@ function buildSeriesEntry(seriesId, title, genre, description) {
 }
 
 function generateIndexJson(seriesEntries) {
-  // Write to series/index.json (root level, served via /api/series/index.json)
+  // Write to series/index.json (root level)
   const indexPath = path.join(SERIES_ROOT, "index.json");
 
   // Always output as array for consistency
   fs.writeFileSync(indexPath, JSON.stringify(seriesEntries, null, 2) + "\n");
+}
+
+// --- Copy to Public ---
+
+function copyRecursive(src, dest) {
+  if (!fs.existsSync(src)) return;
+
+  const stat = fs.statSync(src);
+  if (stat.isDirectory()) {
+    fs.mkdirSync(dest, { recursive: true });
+    for (const file of fs.readdirSync(src)) {
+      copyRecursive(path.join(src, file), path.join(dest, file));
+    }
+  } else {
+    fs.copyFileSync(src, dest);
+  }
+}
+
+function syncToPublic(seriesIds) {
+  // Ensure public/series exists
+  fs.mkdirSync(PUBLIC_SERIES, { recursive: true });
+
+  // Copy each series folder
+  for (const seriesId of seriesIds) {
+    const srcDir = path.join(SERIES_ROOT, seriesId);
+    const destDir = path.join(PUBLIC_SERIES, seriesId);
+
+    // Remove existing destination to ensure clean sync
+    if (fs.existsSync(destDir)) {
+      fs.rmSync(destDir, { recursive: true });
+    }
+
+    copyRecursive(srcDir, destDir);
+    console.log(`  Copied to public/series/${seriesId}`);
+  }
+
+  // Copy index.json to public/series/
+  const srcIndex = path.join(SERIES_ROOT, "index.json");
+  const destIndex = path.join(PUBLIC_SERIES, "index.json");
+  if (fs.existsSync(srcIndex)) {
+    fs.copyFileSync(srcIndex, destIndex);
+    console.log(`  Copied index.json to public/series/`);
+  }
 }
 
 // --- Main ---
@@ -258,8 +303,12 @@ for (const seriesId of seriesIds) {
   console.log("");
 }
 
-// Generate index.json at series root (served via /api/series/index.json)
+// Generate index.json at series root
 generateIndexJson(seriesEntries);
 console.log(`Generated series/index.json with ${seriesEntries.length} series`);
+
+// Copy everything to public/series/ for static serving
+console.log(`\nSyncing to public/series/...`);
+syncToPublic(seriesIds);
 
 console.log("\nDone.");
