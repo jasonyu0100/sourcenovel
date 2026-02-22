@@ -1,0 +1,362 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground: #e2e8f0;
+  --background: #0a0a0f;
+  --muted: #64748b;
+  --accent: #a78bfa;
+  --accent-glow: rgba(167, 139, 250, 0.15);
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
+}
+
+/* Safe area support for iOS notch/home indicator */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Subtle background texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.08), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(167, 139, 250, 0.05), transparent);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Selection styling */
+::selection {
+  background: rgba(167, 139, 250, 0.3);
+  color: white;
+}
+
+/* Font classes for reader settings */
+.font-serif {
+  font-family: 'Lora', Georgia, 'Times New Roman', serif !important;
+}
+
+.font-sans {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+}
+
+.font-mono {
+  font-family: 'SF Mono', 'Fira Code', 'Monaco', monospace !important;
+}
+
+/* Prose styling for chapter content - theme aware */
+.prose-chapter {
+  @apply leading-relaxed;
+  color: inherit;
+}
+
+.prose-chapter p {
+  @apply mb-7 tracking-wide;
+  text-indent: 1.5em;
+}
+
+.prose-chapter p:first-of-type {
+  text-indent: 0;
+}
+
+.prose-chapter p:first-of-type::first-letter {
+  @apply text-5xl font-semibold float-left mr-3 mt-1;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.9;
+}
+
+.prose-chapter h1 {
+  font-family: 'Inter', system-ui, sans-serif;
+  @apply text-3xl font-bold mb-8 tracking-tight;
+  color: inherit;
+}
+
+.prose-chapter h2 {
+  font-family: 'Inter', system-ui, sans-serif;
+  @apply text-2xl font-semibold mt-16 mb-8 tracking-tight;
+  color: inherit;
+  opacity: 0.95;
+}
+
+.prose-chapter blockquote {
+  @apply border-l-2 pl-6 py-1 italic my-8;
+  border-color: currentColor;
+  text-indent: 0;
+  opacity: 0.7;
+}
+
+.prose-chapter blockquote p {
+  text-indent: 0;
+  @apply mb-0;
+}
+
+.prose-chapter blockquote p::first-letter {
+  @apply text-base font-normal float-none mr-0 mt-0;
+}
+
+.prose-chapter hr {
+  @apply my-16 border-0 h-px;
+  background: linear-gradient(to right, transparent, currentColor, transparent);
+  opacity: 0.15;
+}
+
+/* Theme-specific adjustments */
+.bg-stone-50 .prose-chapter {
+  @apply text-stone-800;
+}
+
+.bg-stone-50 .prose-chapter p:first-of-type::first-letter {
+  @apply text-stone-900;
+}
+
+.bg-amber-50 .prose-chapter {
+  @apply text-amber-900;
+}
+
+.bg-amber-50 .prose-chapter p:first-of-type::first-letter {
+  @apply text-amber-950;
+}
+
+/* Light/sepia scrollbar adjustments */
+.bg-stone-50::-webkit-scrollbar-thumb,
+.bg-amber-50::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.bg-stone-50::-webkit-scrollbar-thumb:hover,
+.bg-amber-50::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* Light/sepia selection */
+.bg-stone-50 ::selection {
+  background: rgba(124, 58, 237, 0.2);
+  color: inherit;
+}
+
+.bg-amber-50 ::selection {
+  background: rgba(180, 83, 9, 0.2);
+  color: inherit;
+}
+
+/* Prose styling for extras content (not novel prose) */
+.prose-extras {
+  font-family: 'Inter', system-ui, sans-serif;
+  @apply text-slate-300 leading-relaxed text-sm;
+}
+
+.prose-extras h1 {
+  @apply text-2xl font-bold text-slate-100 mb-6 tracking-tight;
+}
+
+.prose-extras h2 {
+  @apply text-xl font-semibold text-slate-200 mt-10 mb-4 tracking-tight;
+}
+
+.prose-extras h3 {
+  @apply text-lg font-medium text-slate-300 mt-6 mb-3;
+}
+
+.prose-extras p {
+  @apply mb-4 leading-relaxed;
+}
+
+.prose-extras ul {
+  @apply list-disc list-inside mb-4 space-y-1.5;
+}
+
+.prose-extras ol {
+  @apply list-decimal list-inside mb-4 space-y-1.5;
+}
+
+.prose-extras blockquote {
+  @apply border-l-2 border-violet-500/40 pl-4 italic text-slate-400 my-4;
+}
+
+.prose-extras code {
+  @apply bg-slate-800/80 px-1.5 py-0.5 rounded text-violet-300 text-xs;
+}
+
+.prose-extras pre {
+  @apply bg-slate-900/80 border border-slate-800 rounded-lg p-4 overflow-x-auto mb-4;
+}
+
+.prose-extras pre code {
+  @apply bg-transparent p-0 text-slate-300;
+}
+
+.prose-extras hr {
+  @apply my-8 border-slate-800;
+}
+
+.prose-extras strong {
+  @apply font-semibold text-slate-200;
+}
+
+/* Audio player styling */
+.audio-progress::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #a78bfa;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.audio-progress::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 16px rgba(167, 139, 250, 0.7);
+}
+
+.audio-progress::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #a78bfa;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
+}
+
+/* Smooth transitions */
+* {
+  transition-property: color, background-color, border-color, opacity, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Card hover effects */
+.card-hover {
+  @apply relative overflow-hidden;
+}
+
+.card-hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.08), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.card-hover:hover::before {
+  opacity: 1;
+}
+
+/* Glow effect for important elements */
+.glow-violet {
+  box-shadow: 0 0 20px rgba(167, 139, 250, 0.15);
+}
+
+.glow-violet-pulse {
+  animation: violet-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes violet-pulse {
+  0%, 100% { box-shadow: 0 0 15px rgba(167, 139, 250, 0.2), 0 0 30px rgba(167, 139, 250, 0.1); }
+  50% { box-shadow: 0 0 20px rgba(167, 139, 250, 0.4), 0 0 40px rgba(167, 139, 250, 0.2); }
+}
+
+/* Reading progress bar */
+.reading-progress {
+  background: linear-gradient(90deg, #a78bfa, #8b5cf6);
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Music playing pulse animation */
+@keyframes musicPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.9);
+  }
+}
+
+.animate-music-pulse {
+  animation: musicPulse 1.5s ease-in-out infinite;
+}
+
+/* Stagger children animation */
+.stagger-children > * {
+  opacity: 0;
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(7) { animation-delay: 0.35s; }
+.stagger-children > *:nth-child(8) { animation-delay: 0.4s; }
+.stagger-children > *:nth-child(9) { animation-delay: 0.45s; }
+.stagger-children > *:nth-child(10) { animation-delay: 0.5s; }
