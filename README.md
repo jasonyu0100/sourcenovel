@@ -30,9 +30,10 @@ The skills act as a structured creative process — each one prompts Claude with
 
 - [Node.js](https://nodejs.org/) 18+
 - [Claude Code](https://claude.com/claude-code) CLI installed
-- API keys for media generation (optional, for visual/audio features):
-  - [Replicate](https://replicate.com/) — image generation
-  - [ElevenLabs](https://elevenlabs.io/) — TTS and music generation
+- API keys:
+  - [Replicate](https://replicate.com/) — image generation (optional, for visual features)
+  - [ElevenLabs](https://elevenlabs.io/) — TTS and music generation (optional, for audio features)
+  - [OpenRouter](https://openrouter.ai/) — powers interactive episode AI on the frontend
 
 ### 1. Clone and install
 
@@ -55,9 +56,10 @@ Edit `.env` with your API tokens:
 ```
 REPLICATE_API_TOKEN=your_token_here
 ELEVEN_LABS_API_KEY=your_key_here
+OPENROUTER_API_KEY=your_key_here
 ```
 
-These are only needed for image, video, and music generation. The writing workflow works without them.
+Replicate and ElevenLabs are only needed for image, video, and music generation. OpenRouter is needed for interactive episode mode on the frontend. The writing workflow works without any of them.
 
 ### 3. Start your series
 

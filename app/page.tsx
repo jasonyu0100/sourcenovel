@@ -297,14 +297,18 @@ model → set → world → staging → pages → video → episode`}
               </div>
             </div>
 
-            <a
-              href="https://github.com/jasonyu0100/sourcenovel"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block mt-6 text-xs text-slate-600 hover:text-slate-400 transition-colors"
-            >
-              Full documentation on GitHub →
-            </a>
+            <div className="flex items-center gap-4 mt-6">
+              <a
+                href="https://github.com/jasonyu0100/sourcenovel"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-slate-600 hover:text-slate-400 transition-colors"
+              >
+                Full documentation on GitHub →
+              </a>
+              <span className="text-slate-800">·</span>
+              <span className="text-xs text-slate-600">MIT License</span>
+            </div>
           </section>
         </div>
       </main>
