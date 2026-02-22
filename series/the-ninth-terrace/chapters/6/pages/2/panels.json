@@ -1,0 +1,20 @@
+[
+  {
+    "name": "starfield-stabilizes",
+    "prompt": "Medium shot from behind. Young brunette woman seated against large viewport, her back to camera, head turned slightly. Through the viewport: stars stabilizing after FTL jump, distant convoy ships visible as points of light. Cool blue-white transport interior lighting. Her posture carries weight — somewhere behind her, someone is alone. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg", "world/locations/transport-viewport-convoy.jpg"],
+    "silence": 2.0
+  },
+  {
+    "name": "anchoring-gesture",
+    "prompt": "Extreme close-up on woman's hand pressed flat against viewport glass. Fingers spread wide, pressing firmly. Stars and convoy ships visible through the glass around her hand. The anchoring gesture — grounding herself in space. Cool blue light from behind the glass, warm skin tones. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": [],
+    "silence": 1.5
+  },
+  {
+    "name": "third-time",
+    "prompt": "Close-up, profile view. Young brunette woman in profile against viewport, eyes distant, not seeing the stars she's looking at. Hand still on glass at edge of frame. Expression raw, wounded but controlled. Cool blue light from viewport creating rim lighting on her profile. Dark interior behind her. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "silence": 2.0
+  }
+]

@@ -1,0 +1,21 @@
+[
+  {
+    "name": "no-answer",
+    "prompt": "Wide shot from room side. Dark-haired man (Idris) standing near table LEFT of frame, brunette woman (Sera) at window RIGHT, her back still to him. Three meters between them — neither moving to close the gap. Room around them — warm amber lighting, couch center, furniture, the domestic space. He doesn't answer. The silence is the space where a conversation should be. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/quarters-wide-couch.jpg"],
+    "silence": 3.0
+  },
+  {
+    "name": "another-convoy",
+    "prompt": "Through window view. Running lights tracing lines across the dark outside. Another convoy passing — military vessels in formation, destination visible in their direction. World keeps moving while they're frozen. City lights below, night sky, glass surface. Brunette woman's silhouette faint at edge of frame. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/locations/quarters-window.jpg"],
+    "silence": 2.0,
+    "sfx": [{"description": "distant rumble of convoy engines fading into the night", "duration": 2.0}]
+  },
+  {
+    "name": "anchoring-gesture",
+    "prompt": "Extreme close-up. Brunette woman's pale hand pressing flat against window glass. Fingers anchoring against the cold surface. The gesture she does before difficult moments — the cost of maintaining composure. City lights visible through glass around her fingers. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "silence": 2.5
+  }
+]

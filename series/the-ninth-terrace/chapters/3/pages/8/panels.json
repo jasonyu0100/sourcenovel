@@ -1,0 +1,33 @@
+[
+  {
+    "name": "sera-walks-to-window",
+    "prompt": "Medium shot from behind, tracking movement. Brunette woman walking toward window RIGHT of frame, her back to camera and to the dark-haired man behind her LEFT. Couch visible on LEFT of frame as she passes it. Window ahead showing city lights. Deliberate movement toward the world outside — and away from him. Warm amber room light around her. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg", "world/locations/quarters-window.jpg"],
+    "silence": 1.5
+  },
+  {
+    "name": "the-convoys",
+    "prompt": "Shot through window glass. Military convoys in tight formation outside, running lights blinking in the dark. City below, night sky above. World moving, choosing. The fracture made visible in the lights moving toward destinations. Faint reflection of brunette woman visible in glass. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/locations/quarters-window.jpg"],
+    "silence": 2.0,
+    "sfx": [{"description": "distant low rumble of military convoy engines passing outside", "duration": 2.0}]
+  },
+  {
+    "name": "idris-reaches-for-datapad",
+    "prompt": "Close-up on dark-skinned hand reaching for military datapad on table beside couch. The one with recall orders — ignored all night. Couch cushion visible LEFT, table surface, dark screen of datapad. Decision still unmade. Warm amber light from above. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg"],
+    "silence": 1.5
+  },
+  {
+    "name": "datapad-on-table",
+    "prompt": "Close-up on military datapad placed face down on table. Dark screen facing down — not opened, but no longer hidden. Like evidence. Like confession. Table surface, warm amber light from above. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/locations/quarters-wide-couch.jpg"],
+    "silence": 1.0
+  },
+  {
+    "name": "sera-sees",
+    "prompt": "Close-up on brunette woman's reflection in window glass. She stands at window RIGHT of frame, city lights visible through the glass. Her reflection shows she didn't turn — but she saw. Motionless, absorbing. Cool city light through glass, warm room light catching edge of reflection. Pale eyes watching his reflection move. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg", "world/locations/quarters-window.jpg"],
+    "silence": 2.0
+  }
+]

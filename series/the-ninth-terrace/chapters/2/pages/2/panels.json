@@ -1,0 +1,25 @@
+[
+  {
+    "name": "quarters-establishing",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, wide establishing shot of officers' quarters interior, a beautiful woman with brunette waves sitting at the desk reviewing tactical projections glowing pale blue, wearing elegant dark fitted attire, warm amber lighting softening dark modern furniture, two people's lives layered into a single space — handwritten annotations on the projections, a woman's jacket draped over a chair, stacked briefings on the bed, kitchen alcove with an electric kettle in background, wall-mounted screen showing debrief notes, weapon rack by the door, window showing futuristic city skyline at night with transit lines pulsing and the Senate dome lit in the distance, lived-in military apartment with personal touches, cozy intimate atmosphere",
+    "ref": ["world/characters/sera.jpg", "world/locations/shared-quarters.jpg"],
+    "silence": 2.5,
+    "sfx": [{"description": "soft indoor ambience with distant city hum and quiet electronics", "duration": 2.5}]
+  },
+  {
+    "name": "idris-pouring",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, medium shot of a handsome young man with dark unkempt hair moving through the room with casual ease, pouring amber liquid into two glasses, wearing a dark mandarin collar suit with rank insignia at his throat, his expression relaxed and focused, one hand on the bottle the other steadying a glass, warm amber lighting from above, background showing the tactical projections glowing on the wallscreen behind him, he moves through the space like he belongs there — comfortable, unhurried, attentive to details others miss, domestic elegance",
+    "ref": ["world/characters/idris.jpg", "world/locations/shared-quarters.jpg"]
+  },
+  {
+    "name": "sera-on-desk",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, medium shot of a beautiful woman with brunette waves settling onto the edge of a desk, one hand holding a datapad angled precisely for her grip, wearing elegant dark fitted attire, her posture professional but relaxed, the desk behind her has glowing tactical projections in pale blue, warm amber lighting from the side catching the curves of her face, her expression sharp and focused as she reviews the debrief notes, competent and commanding even in a domestic moment, warm intimate lighting",
+    "ref": ["world/characters/sera.jpg", "world/locations/shared-quarters.jpg"]
+  },
+  {
+    "name": "debrief-banter",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, medium two-shot from the side, she sits on the desk holding the datapad while he leans against the wall with glass in hand, they're facing each other with expressions of affectionate challenge — her eyebrow slightly raised in professional critique, his mouth curved in a knowing half-smile that deflects without conceding, warm amber lighting between them, their body language relaxed and comfortable, the easy dynamic of two people who've had this conversation a hundred times, professional banter that's also flirtation, intimate sparring",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/shared-quarters.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "Your cascade timing was off."}]
+  }
+]

@@ -1,0 +1,15 @@
+[
+  {
+    "name": "transport-contrail",
+    "prompt": "Wide shot. Window showing night sky. Single transport contrail visible, climbing through atmosphere. Distant lights. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/locations/quarters-window.jpg"],
+    "silence": 3.5,
+    "sfx": [{"description": "distant transport engine fading into silence, moving away", "duration": 3.0}]
+  },
+  {
+    "name": "finally-counting",
+    "prompt": "Close-up. Dark-haired man's face, eyes distant, finally counting. Heavy shadows around him, isolation visible. Cool blue light from window. Quiet devastation in stillness. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/idris.jpg"],
+    "silence": 4.0
+  }
+]

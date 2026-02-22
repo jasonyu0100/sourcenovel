@@ -1,0 +1,14 @@
+[
+  {
+    "name": "the-world-outside",
+    "prompt": "Wide shot through window. Futuristic city at night, military convoys still moving, broadcast towers still cycling. The fracture continuing without pause. The world doesn't stop. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/locations/quarters-window.jpg"],
+    "silence": 2.5
+  },
+  {
+    "name": "not-counting",
+    "prompt": "Close-up on dark-haired man, final image. Still, alone. Dark eyes distant. Cool blue light, heavy grief. | anime manga, cel shading, dramatic lighting, high detail",
+    "ref": ["world/characters/idris.jpg"],
+    "silence": 3.5
+  }
+]

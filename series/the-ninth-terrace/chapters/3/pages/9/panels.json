@@ -1,0 +1,15 @@
+[
+  {
+    "name": "room-unchanged-but-different",
+    "prompt": "Wide shot from corner of room. Officers quarters: his books on desk LEFT, her jacket on chair, couch center, window back wall RIGHT. Warm amber lighting. Same room as always — but different now. The domestic details that felt like home now feel like a lie. No figures in frame — just the space between their positions. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/locations/quarters-wide-couch.jpg"],
+    "silence": 2.5,
+    "sfx": [{"description": "low ambient hum of climate system, faint distant notification chime", "duration": 2.5}]
+  },
+  {
+    "name": "three-meters",
+    "prompt": "Wide shot from side of room. Dark-haired man (Idris) standing near table LEFT of frame, brunette woman (Sera) standing at window RIGHT of frame, her back to him. Significant empty space between them, standing far apart. Room around them: couch center, desk LEFT, warm amber lighting. The distance between them feels heavy and deliberate. Neither moving toward the other. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/quarters-wide-couch.jpg"],
+    "silence": 3.0
+  }
+]

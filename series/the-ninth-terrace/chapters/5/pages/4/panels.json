@@ -1,0 +1,21 @@
+[
+  {
+    "name": "corridor-walking",
+    "prompt": "Medium shot from behind. Brunette woman in elegant dark dress walking through angular military corridor. Running lights along floor, cool blue lighting. Measured pace, back straight. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/sera.jpg", "series/the-ninth-terrace/world/locations/corridor.jpg"],
+    "silence": 2.5
+  },
+  {
+    "name": "convoy-window",
+    "prompt": "Wide shot. Angular corridor interior, large window showing military transports moving in formation against night sky. Orange engine lights against dark. Cool corridor lighting. Distant silhouette of woman walking away. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/locations/corridor.jpg"],
+    "silence": 2.0,
+    "sfx": [{"description": "distant rumble of military convoy passing overhead", "duration": 2.5}]
+  },
+  {
+    "name": "anchoring-gesture",
+    "prompt": "Medium shot. Dark-haired woman in navy uniform leaning against corridor wall. Confident seductive pose, one hand on hip. Head tilted slightly, knowing expression. Cool blue corridor lighting casting dramatic shadows. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/valeria-caine.jpg", "world/locations/corridor.jpg"],
+    "silence": 2.5
+  }
+]

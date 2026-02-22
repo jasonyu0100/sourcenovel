@@ -1,0 +1,23 @@
+[
+  {
+    "name": "same-thing",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, ultrawide close-up portrait, beautiful young woman with rich brunette waves, her dark luminous eyes sharp and knowing but carrying a deep well of affection beneath the challenge, the faintest sad smile at the corner of her mouth — fond exasperation from someone who has had this argument before and knows she is right, mouth open speaking with quiet devastating confidence, warm golden light from the left catching her cheekbone and the curve of her jaw, cool starlight from the right creating the two kinds of light across her features, a few golden light motes drifting in the foreground, her flowing hair catching both warm and cool tones, shallow depth of field with warm golden bokeh filling the background, high detail on eyes and expression, cinematic portrait quality",
+    "ref": ["world/characters/sera.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "It's the same thing, and you know it."}],
+    "pause_after": 1.0
+  },
+  {
+    "name": "transport",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, ultrawide extreme wide shot of the cosmic void seen from the viewing terrace balustrade, a single small transport vessel with blinking running lights sliding across the middle distance — a tiny bright thing moving through an enormous emptiness, the carved golden stone balustrade visible as a dark silhouette along the bottom edge of the frame, two figures standing close together at the balustrade rendered as small dark silhouettes against the starfield, the luminara canopy glow visible as warm amber light at the far left edge, the vast starfield filling most of the frame with distant nebula colors of deep blue and purple, station-lights twinkling in the far distance, a moment of silence and scale that makes human concerns feel both insignificant and precious, Makoto Shinkai cosmic atmosphere",
+    "ref": ["world/locations/grand-promenade.jpg"],
+    "silence": 3.0,
+    "sfx": [{"description": "quiet cosmic void ambience with distant station hum and soft stellar wind", "duration": 3.0}]
+  },
+  {
+    "name": "come-here",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, ultrawide medium shot from a slight angle, beautiful young woman with brunette waves looking up at a young man with dark unkempt hair, her expression has shifted entirely — the sharp challenging edge is gone replaced by something soft and open and wanting, dark luminous eyes tender, mouth open speaking two quiet words, she is reaching one hand slightly toward him in a small beckoning gesture, he stands a step away looking at her with guarded intensity beginning to crack into vulnerability, the golden luminara avenue stretches behind them with warm amber light and drifting golden motes, the carved balustrade and starfield visible to one side, their dark clothing against the warm golden atmosphere, the tension between them resolving not into agreement but into something more honest than words, Makoto Shinkai atmospheric lighting with warm golden tones",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/grand-promenade.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "Come here."}],
+    "pause_after": 2.0
+  }
+]

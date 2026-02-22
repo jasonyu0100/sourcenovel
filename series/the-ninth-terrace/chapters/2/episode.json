@@ -1,0 +1,22 @@
+{
+  "chapterNum": 2,
+  "arcNum": 1,
+  "defaultCharacter": "Sera",
+  "startingLocation": "shared-quarters",
+  "characters": [
+    {
+      "name": "Idris",
+      "slug": "idris"
+    },
+    {
+      "name": "Sera",
+      "slug": "sera"
+    }
+  ],
+  "locations": [
+    {
+      "name": "Shared Quarters",
+      "slug": "shared-quarters"
+    }
+  ]
+}

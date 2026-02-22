@@ -1,0 +1,22 @@
+[
+  {
+    "name": "sera-rises",
+    "prompt": "Medium shot from side. Brunette woman rising from couch, standing up CENTER. Couch visible behind her legs, warm amber room around her. Strategic focus sharpening in her posture as she processes information. Dark-haired man visible seated on couch LEFT behind her in background. Warm amber overhead lighting. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg", "world/characters/idris.jpg", "world/locations/quarters-wide-couch.jpg"],
+    "silence": 1.0
+  },
+  {
+    "name": "seras-question",
+    "prompt": "Two-shot across doorway threshold. Brunette woman inside room LEFT of frame, facing right toward door. Auburn-haired woman in corridor RIGHT of frame, facing left into room. Door frame between them. Warm amber light on LEFT half, cool blue corridor light on RIGHT half — the divide visible in lighting. Interior room background left, corridor walls right. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg", "world/characters/maren-caul.jpg", "world/locations/quarters-door-interior.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "Which units have moved?"}],
+    "pause_after": 0.5
+  },
+  {
+    "name": "the-briefing",
+    "prompt": "Close-up on auburn-haired woman in corridor. Speaking rapidly, maintaining professional composure over visible fear. Cool blue corridor lighting behind her, warm room light from door creating split lighting on her face. Corridor wall visible over her shoulder. Each word carrying weight. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/maren-caul.jpg"],
+    "dialogue": [{"speaker": "Maren", "voice_id": "21m00Tcm4TlvDq8ikWAM", "text": "Third Fleet declared for the Ascendancy. Seventh is holding but fracturing. The Ascendancy is going by birth registry. Recalled. Not requested."}],
+    "pause_after": 1.0
+  }
+]

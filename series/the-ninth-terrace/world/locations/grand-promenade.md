@@ -1,0 +1,9 @@
+# Grand Promenade
+
+Where Idris and Sera walk in the present day, years after the Forgetting tore them apart. The outermost tier of the Ninth Terrace — sovereign ground, the only place representatives of both Thrones can meet without weapons drawn. This is where they've found each other again, walking a golden avenue suspended between the void and everything they left behind. The Terrace's time dilation means a week inside equals a day outside — the Promenade exists in stolen time, and so do they. The Senatorial Council has voted. Both Thrones are recalling Adepts. Envoys arrive tomorrow. Two priority dispatches sit unread while they walk here instead.
+
+The most beautiful avenue on the Ninth Terrace. A long golden curve along the outermost tier, lined with luminara trees — silver-white bark, translucent amber canopy that filters the artificial sky into warm honeyed light. Branches meet overhead forming cathedral arches. A low carved stone balustrade runs along the outer edge with the void and stars beyond. Golden stone paving, carved benches beneath the trees. Light-motes drift from the canopy like slow golden snow. Opens into viewing plazas — semicircles of golden stone suspended over the void with the Terrace's tiered architecture rising behind in illuminated layers. The kind of place designed at enormous expense to feel effortless.
+
+```
+manga anime style, magnificent golden avenue in space station, luminara trees with silver white bark and translucent amber leaf canopy, cathedral arch of branches overhead, warm golden honeyed light filtering through leaves, carved stone balustrade along edge, starfield and void beyond, golden stone paving, floating golden light motes, tiered sci-fi architecture in background, warm amber and gold tones, Makoto Shinkai atmospheric lighting with bokeh, detailed background art, cel shading, cinematic establishing shot
+```

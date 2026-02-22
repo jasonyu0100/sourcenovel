@@ -1,0 +1,30 @@
+[
+  {
+    "name": "reva-speaks",
+    "prompt": "Medium shot. Older woman with silver-streaked dark hair, Sovereignty uniform. Speaking with precision, no preamble. Expression controlled, testing. Cool blue-white light from above. Background abstract dark tones. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/reva-orin.jpg"],
+    "dialogue": [{"speaker": "Reva", "voice_id": "SaqYcK3ZpDKBAImA8AdW", "text": "The Sovereignty doesn't recruit by origin. It recruits by conviction."}],
+    "pause_after": 0.5
+  },
+  {
+    "name": "reva-continues",
+    "prompt": "Medium close-up. Older woman continuing to speak, eyes steady on her subject. Silver-streaked hair, sharp features, Commandant insignia visible. Expression measuring. Cool blue lighting from above. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/reva-orin.jpg"],
+    "dialogue": [{"speaker": "Reva", "voice_id": "SaqYcK3ZpDKBAImA8AdW", "text": "Everyone on this transport chose to forget — which means everyone has something they're leaving behind."}],
+    "pause_after": 0.8
+  },
+  {
+    "name": "the-blade",
+    "prompt": "Close-up, tight framing. Older woman's face, delivering the question. Eyes sharp, clinical precision. The question is a scalpel. Cool blue light from the left, shadows on right side of face. Background dark, vignette closing in — pressure visible. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/reva-orin.jpg"],
+    "dialogue": [{"speaker": "Reva", "voice_id": "SaqYcK3ZpDKBAImA8AdW", "text": "What did you leave behind?"}],
+    "pause_after": 1.5,
+    "sfx": [{"description": "heavy silence settling, emotional weight in the air", "duration": 1.5}]
+  },
+  {
+    "name": "the-wound",
+    "prompt": "Close-up on young brunette woman's face. The question landing — clean, surgical, testing the wound. Eyes widening slightly, composure cracking at the edges. Expression raw, caught off-guard. Cool blue light from viewport side, face partially in shadow. Heavy emotional weight visible. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "silence": 2.0
+  }
+]

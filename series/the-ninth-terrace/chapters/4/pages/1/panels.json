@@ -1,0 +1,21 @@
+[
+  {
+    "name": "establishing-tension",
+    "prompt": "Wide shot from corner. Officers quarters interior, warm amber lighting. Dark-haired man in dark suit standing near table LEFT of frame, facing right. Brunette woman in elegant dark attire standing near table RIGHT of frame, facing him. Military datapad face-down on table between them. Window back wall showing city lights. Both figures still, neither moving. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/quarters-wide-couch.jpg"],
+    "silence": 2.5
+  },
+  {
+    "name": "sera-breaks-it",
+    "prompt": "Medium shot from LEFT side. Brunette woman standing at table, looking down at datapad between them. Dark fitted attire with tech accents. Her expression controlled. Behind her: warm amber room, window visible. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg", "world/locations/quarters-wide-couch.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "You're not going to open it, are you."}],
+    "pause_after": 1.0
+  },
+  {
+    "name": "the-datapad",
+    "prompt": "Close-up on dark table surface. Military datapad lying face-down, untouched. Warm amber light from above. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": [],
+    "silence": 2.0
+  }
+]

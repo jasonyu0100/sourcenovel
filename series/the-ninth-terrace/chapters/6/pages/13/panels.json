@@ -1,0 +1,9 @@
+[
+  {
+    "name": "vantage-light",
+    "prompt": "Wide shot from behind. Young brunette woman seated at viewport, silhouetted against brilliant white-gold light flooding through glass. Vantage station emerging from FTL shadow — massive scale visible, construction frames reaching outward, thousands of ships in formation. The future filling the frame. Cool blue transport interior overwhelmed by warm golden station light. | anime manga, cel shading, clean linework, dramatic lighting, epic scale",
+    "ref": ["world/characters/sera.jpg", "world/locations/vantage-reveal.jpg"],
+    "silence": 3.5,
+    "sfx": [{"description": "warm light flooding in, distant station hum growing, hope and future arriving", "duration": 3.0}]
+  }
+]

@@ -1,0 +1,27 @@
+[
+  {
+    "name": "transport-interior",
+    "prompt": "Wide shot, camera from aisle. Military transport passenger bay interior. Rows of seats facing each other, sharp angular Sovereignty design. Large viewport along left wall showing stars and distant convoy. Cool blue-white overhead lighting. A few background figures in seats — officers in uniform, some in civilian dress. No ornamentation, just function. | anime manga, cel shading, clean linework, detailed background",
+    "ref": ["world/locations/transport-bay-wide.jpg"],
+    "silence": 1.5,
+    "sfx": [{"description": "quiet transport hum, air circulation system, distant engine drone", "duration": 2.0}]
+  },
+  {
+    "name": "passenger-detail",
+    "prompt": "Medium shot. Background passenger — woman in civilian dress, child's drawing visible tucked into jacket pocket, corner of crayon colors peeking out. The small costs of choosing made visible. Cool blue-white transport lighting. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": [],
+    "silence": 1.5
+  },
+  {
+    "name": "convoy-scale",
+    "prompt": "View through transport viewport. Dozens of military vessels in formation against star field — cruisers, carriers, support ships spreading across the void. Tactical display reflection faintly visible on glass. The scale of interstellar military movement. Two Thrones worth of people choosing. | anime manga, cel shading, detailed sci-fi illustration",
+    "ref": ["world/locations/transport-viewport-convoy.jpg"],
+    "silence": 2.0
+  },
+  {
+    "name": "sera-looking-out",
+    "prompt": "Medium shot. Young brunette woman seated against viewport LEFT of frame, looking out at convoy. Dark fitted attire with tech accents. Expression distant, processing scale — the intimacy of what she lost collapsed against the vastness she's joining. Cool blue-white light from above and from viewport beside her. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg", "world/locations/transport-bay-wide.jpg"],
+    "silence": 1.5
+  }
+]

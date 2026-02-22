@@ -1,0 +1,27 @@
+[
+  {
+    "name": "dock-arrival",
+    "prompt": "Wide shot. Military transport dock interior. Boarding ramps extending to spacecraft, checkpoint stations, overhead guidance lights. Orange engine glow against industrial grey. Brunette woman in dark dress entering from LEFT of frame. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/sera.jpg", "series/the-ninth-terrace/world/locations/transport-dock.jpg"],
+    "silence": 2.5,
+    "sfx": [{"description": "busy transport dock ambience, engines warming, distant announcements", "duration": 2.5}]
+  },
+  {
+    "name": "seeing-maren",
+    "prompt": "Medium shot. Woman with short dark hair in military field dress, pack over shoulder. Standing at boarding ramp. Expression of relief and grief combined. Industrial dock lighting. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/maren-caul.jpg", "series/the-ninth-terrace/world/locations/transport-dock.jpg"],
+    "silence": 1.5
+  },
+  {
+    "name": "eyes-meet",
+    "prompt": "Wide two-shot. Brunette woman LEFT of frame, woman with short hair RIGHT of frame at boarding ramp. Distance between them across the dock platform. Eyes meeting. Industrial overhead lighting. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/sera.jpg", "series/the-ninth-terrace/world/characters/maren-caul.jpg", "series/the-ninth-terrace/world/locations/transport-dock.jpg"],
+    "silence": 2.5
+  },
+  {
+    "name": "nothing-given",
+    "prompt": "Medium shot. Brunette woman, composed expression, revealing nothing. Brief nod only. Cool lighting, hard shadows. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/sera.jpg"],
+    "silence": 2.0
+  }
+]

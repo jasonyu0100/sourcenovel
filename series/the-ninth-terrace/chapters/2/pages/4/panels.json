@@ -1,0 +1,29 @@
+[
+  {
+    "name": "embrace",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, large dominant shot of an intimate embrace — handsome young man with dark unkempt hair has crossed the room to where a beautiful woman with brunette waves sits on the desk, his arm settled around her waist, his hand finding the curve of her hip, she leans into him with her shoulder against his chest and her head tipped back against his collarbone, her eyes half-closed in contentment, the datapad gone dark in her lap, both wearing dark elegant attire, warm amber lighting wrapping them in gold, two people who have learned each other completely — through repetition and attention and trust, domestic intimacy that feels like safety, warm and tender, Makoto Shinkai atmospheric lighting with soft bokeh",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/shared-quarters.jpg"],
+    "silence": 2.5
+  },
+  {
+    "name": "heartbeat",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, extreme close-up of her hand resting against his chest over his heart, his dark mandarin collar suit fabric visible, the suggestion of his heartbeat steady beneath her palm, warm amber lighting casting soft shadows across the fabric, intimate detail shot — the part of their relationship that doesn't fit into synergy reports, shallow depth of field, tender and present",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg"],
+    "silence": 2.0,
+    "sfx": [{"description": "soft heartbeat and quiet breathing in intimate space", "duration": 2.0}]
+  },
+  {
+    "name": "thinking-question",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, close-up of handsome young man with dark unkempt hair looking down with quiet attention, his dark eyes knowing and patient, his expression gentle but perceptive — he sees she's somewhere else, sharp features softened by amber lighting, the question in his eyes before he speaks it, tender observation",
+    "ref": ["world/characters/idris.jpg"],
+    "dialogue": [{"speaker": "Idris", "voice_id": "IKne3meq5aSn9XLyUdCD", "text": "You're thinking about something."}],
+    "pause_after": 1.0
+  },
+  {
+    "name": "choosing-silence",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, close-up of beautiful woman with brunette waves, her dark luminous eyes open but distant for a moment, thoughts visible in her expression — worry, calculation, the weight of what she won't name — then she blinks and it clears, her expression softening into deliberate peace, choosing not to acknowledge what's coming, letting the evening be what it is, warm amber lighting, melancholic beauty, the last warm moment before the world changes",
+    "ref": ["world/characters/sera.jpg", "world/locations/shared-quarters.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "No. Nothing important."}],
+    "pause_after": 2.5
+  }
+]

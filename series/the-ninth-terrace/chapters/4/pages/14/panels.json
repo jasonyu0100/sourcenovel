@@ -1,0 +1,27 @@
+[
+  {
+    "name": "walking-to-door",
+    "prompt": "Medium shot from behind. Brunette woman walking toward door, her back to camera. Dark-haired man visible in background LEFT, watching. The distance growing. Cool blue room. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg", "world/locations/quarters-cool.jpg"],
+    "silence": 2.0
+  },
+  {
+    "name": "the-door",
+    "prompt": "Medium shot on door. Dark metal surface, cool corridor light at edges. The door closing, quiet and final. No drama, just ending. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/locations/quarters-door-interior.jpg"],
+    "silence": 2.5,
+    "sfx": [{"description": "heavy metal door closing with solid thunk and latch click", "duration": 2.0}]
+  },
+  {
+    "name": "idris-alone",
+    "prompt": "Wide shot from door angle. Officers quarters interior, cool blue-white lighting. Dark-haired man standing alone CENTER-LEFT. Door closed behind camera. The room holding its breath. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/locations/quarters-cool.jpg"],
+    "silence": 2.5
+  },
+  {
+    "name": "standing-in-absence",
+    "prompt": "Medium shot. Dark-haired man standing where she left him. Isolated in frame, empty space around. Cool blue light. One fewer person in the room. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/locations/quarters-cool.jpg"],
+    "silence": 2.0
+  }
+]

@@ -1,0 +1,15 @@
+[
+  {
+    "name": "the-light-shift",
+    "prompt": "Wide shot from corner. Same room, but lighting shifted. Cool blue-white from screens dominant, amber warmth fading. Dark-haired man at table LEFT, brunette woman at window RIGHT. The atmosphere colder. Two figures in a room losing its warmth. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/quarters-cool.jpg"],
+    "silence": 2.5
+  },
+  {
+    "name": "her-quiet-response",
+    "prompt": "Close-up. Brunette woman's face in shifting light — cool blue from window, fading amber from room. Voice quiet. Eyes holding something back. The composure costing her. | anime manga, cel shading, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "Is that what you think I'm doing? Running?"}],
+    "pause_after": 1.0
+  }
+]

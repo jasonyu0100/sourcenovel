@@ -1,0 +1,26 @@
+[
+  {
+    "name": "window-seat",
+    "prompt": "Medium shot. Brunette woman in elegant dark dress sitting down at window seat. Transport interior, functional seating around her. Cool interior lighting, city glow through window. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/sera.jpg", "series/the-ninth-terrace/world/locations/transport-interior.jpg"],
+    "silence": 2.0
+  },
+  {
+    "name": "city-falling",
+    "prompt": "Wide shot through transport window. City lights falling away below, scattered like stars. Military convoys visible as moving lights. Night sky above. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/locations/transport-interior.jpg"],
+    "silence": 3.0
+  },
+  {
+    "name": "city-reflection",
+    "prompt": "Close-up. Brunette woman's face in profile. City lights reflected in window beside her. Composed expression, watching. Cool interior light, warm city glow on her skin. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/sera.jpg"],
+    "silence": 2.5
+  },
+  {
+    "name": "watching",
+    "prompt": "Close-up. Brunette woman's face, eyes forward, watching. Composed, not crying. Jaw set, eyes dry. Cool light, empty space around her. Isolation visible. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/sera.jpg"],
+    "silence": 3.0
+  }
+]

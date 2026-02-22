@@ -1,0 +1,28 @@
+[
+  {
+    "name": "idris-observes",
+    "prompt": "Medium close-up from RIGHT side. Dark-haired man in mandarin collar suit, sharp features. Watchful dark eyes, composure held. Behind him: warm amber room. Slight tension in jaw, cataloguing something unseen. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg"],
+    "silence": 1.5
+  },
+  {
+    "name": "his-deflection",
+    "prompt": "Medium shot. Dark-haired man standing near table, meeting her gaze. Shoulders set, controlled posture. Warm amber room behind him. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/locations/quarters-wide-couch.jpg"],
+    "dialogue": [{"speaker": "Idris", "voice_id": "IKne3meq5aSn9XLyUdCD", "text": "I know what it says. The words don't need reading."}],
+    "pause_after": 0.8
+  },
+  {
+    "name": "anchoring-gesture",
+    "prompt": "Extreme close-up on woman's elegant fingers pressed flat against dark table surface. The physical cost of not breaking. Warm amber light on skin. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": [],
+    "silence": 1.5
+  },
+  {
+    "name": "sera-challenges",
+    "prompt": "Medium shot from LEFT. Brunette woman at table, chin lifted slightly, eyes sharp. Controlled precision in her posture. Behind her: warm room, window glow. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "Then what are you waiting for? Permission? An exception?"}],
+    "pause_after": 0.5
+  }
+]

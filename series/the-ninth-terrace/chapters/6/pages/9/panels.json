@@ -1,0 +1,30 @@
+[
+  {
+    "name": "what-makes-it-war",
+    "prompt": "Close-up, tight framing. Older woman's face, eyes intense. Delivering the core truth. Sharp features, silver-streaked hair. Cool blue light from left side. Expression grave, meaningful. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/reva-orin.jpg"],
+    "dialogue": [{"speaker": "Reva", "voice_id": "SaqYcK3ZpDKBAImA8AdW", "text": "Also not wrong. That's what makes it war. That's what makes it matter."}],
+    "pause_after": 1.0
+  },
+  {
+    "name": "sera-pushes-back",
+    "prompt": "Medium shot. Young brunette woman leaning forward slightly, engaged now. Pushing back — needing to hear the counterargument. Dark fitted attire with tech accents. Cool blue-white transport lighting. Expression challenging, searching. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "What about weight? What about consequence? If nothing ends, does anything matter?"}],
+    "pause_after": 0.8
+  },
+  {
+    "name": "the-cage",
+    "prompt": "Close-up. Older woman responding with precision, eyes holding Sera's gaze. Sharp features, silver-streaked hair pulled back. Expression intense, teaching. Cool blue light creating dramatic shadows on face. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/reva-orin.jpg"],
+    "dialogue": [{"speaker": "Reva", "voice_id": "SaqYcK3ZpDKBAImA8AdW", "text": "Mortality wasn't meaning. Mortality was the cage. Every value humanity ever held was shaped by scarcity. By fear. By the knowledge of ending."}],
+    "pause_after": 1.0
+  },
+  {
+    "name": "the-freedom",
+    "prompt": "Medium shot. Older woman continuing, expression opening slightly. The argument completing itself. Sovereignty uniform, cool blue-white lighting. Hands visible, gesture of opening. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/reva-orin.jpg"],
+    "dialogue": [{"speaker": "Reva", "voice_id": "SaqYcK3ZpDKBAImA8AdW", "text": "Remove the cage and you discover what humans actually want when they're not terrified."}],
+    "pause_after": 1.2
+  }
+]

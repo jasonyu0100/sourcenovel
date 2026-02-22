@@ -1,0 +1,983 @@
+{
+  "generated": "2026-02-22T01:17:45.316Z",
+  "chapters": [
+    {
+      "number": 1,
+      "files": [
+        "concept.md",
+        "draft.md",
+        "memory.md",
+        "route.md",
+        "web.md"
+      ],
+      "media": [
+        "background-music.mp3",
+        "chapter-video-desktop.mp4",
+        "chapter-video-mobile.mp4",
+        "sfx-1.mp3",
+        "sfx-2.mp3",
+        "sfx-3.mp3",
+        "tts-1.mp3",
+        "tts-10.mp3",
+        "tts-11.mp3",
+        "tts-12.mp3",
+        "tts-13.mp3",
+        "tts-2.mp3",
+        "tts-3.mp3",
+        "tts-4.mp3",
+        "tts-5.mp3",
+        "tts-6.mp3",
+        "tts-7.mp3",
+        "tts-8.mp3",
+        "tts-9.mp3"
+      ],
+      "pages": [
+        {
+          "number": 1,
+          "files": [
+            "1-promenade.jpg",
+            "2-sera-council-text.jpg",
+            "2-sera-council.jpg",
+            "3-idris-knows-text.jpg",
+            "3-idris-knows.jpg",
+            "4-sera-cuts-text.jpg",
+            "4-sera-cuts.jpg"
+          ]
+        },
+        {
+          "number": 2,
+          "files": [
+            "1-viewing-terrace.jpg",
+            "2-recall-orders-text.jpg",
+            "2-recall-orders.jpg",
+            "3-unopened-text.jpg",
+            "3-unopened.jpg",
+            "4-neutrality-text.jpg",
+            "4-neutrality.jpg",
+            "5-sera-dismisses-text.jpg",
+            "5-sera-dismisses.jpg"
+          ]
+        },
+        {
+          "number": 3,
+          "files": [
+            "1-envoys-coming-text.jpg",
+            "1-envoys-coming.jpg",
+            "2-retired-shopkeeper-text.jpg",
+            "2-retired-shopkeeper.jpg",
+            "3-cant-hide-text.jpg",
+            "3-cant-hide.jpg",
+            "4-choosing-text.jpg",
+            "4-choosing.jpg"
+          ]
+        },
+        {
+          "number": 4,
+          "files": [
+            "1-same-thing-text.jpg",
+            "1-same-thing.jpg",
+            "2-transport.jpg",
+            "3-come-here-text.jpg",
+            "3-come-here.jpg"
+          ]
+        },
+        {
+          "number": 5,
+          "files": [
+            "1-collar.jpg",
+            "2-hand-chest.jpg",
+            "3-final-glow.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "files": [
+        "concept.md",
+        "draft.md",
+        "memory.md",
+        "review.md",
+        "route.md",
+        "web.md"
+      ],
+      "media": [
+        "background-music.mp3",
+        "chapter-video-desktop.mp4",
+        "chapter-video-mobile.mp4",
+        "sfx-1.mp3",
+        "sfx-2.mp3",
+        "sfx-3.mp3",
+        "tts-1.mp3",
+        "tts-2.mp3",
+        "tts-3.mp3",
+        "tts-4.mp3",
+        "tts-5.mp3",
+        "tts-6.mp3",
+        "tts-7.mp3",
+        "tts-8.mp3"
+      ],
+      "pages": [
+        {
+          "number": 1,
+          "files": [
+            "1-collar-adjustment.jpg",
+            "2-knuckle-kiss-text.jpg",
+            "2-knuckle-kiss.jpg",
+            "3-smiling-response-text.jpg",
+            "3-smiling-response.jpg"
+          ]
+        },
+        {
+          "number": 2,
+          "files": [
+            "1-quarters-establishing.jpg",
+            "2-idris-pouring.jpg",
+            "3-sera-on-desk.jpg",
+            "4-debrief-banter-text.jpg",
+            "4-debrief-banter.jpg"
+          ]
+        },
+        {
+          "number": 3,
+          "files": [
+            "1-cascade-response-text.jpg",
+            "1-cascade-response.jpg",
+            "2-torren-mention-text.jpg",
+            "2-torren-mention.jpg",
+            "3-dismissal-text.jpg",
+            "3-dismissal.jpg",
+            "4-capital-outside.jpg"
+          ]
+        },
+        {
+          "number": 4,
+          "files": [
+            "1-embrace.jpg",
+            "2-heartbeat.jpg",
+            "3-thinking-question-text.jpg",
+            "3-thinking-question.jpg",
+            "4-choosing-silence-text.jpg",
+            "4-choosing-silence.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "files": [
+        "concept.md",
+        "draft.md",
+        "memory.md",
+        "review.md",
+        "route.md",
+        "web.md"
+      ],
+      "media": [
+        "background-music.mp3",
+        "chapter-video-desktop.mp4",
+        "chapter-video-mobile.mp4",
+        "sfx-1.mp3",
+        "sfx-2.mp3",
+        "sfx-3.mp3",
+        "sfx-4.mp3",
+        "sfx-5.mp3",
+        "sfx-6.mp3",
+        "sfx-7.mp3",
+        "tts-1.mp3",
+        "tts-10.mp3",
+        "tts-11.mp3",
+        "tts-12.mp3",
+        "tts-2.mp3",
+        "tts-3.mp3",
+        "tts-4.mp3",
+        "tts-5.mp3",
+        "tts-6.mp3",
+        "tts-7.mp3",
+        "tts-8.mp3",
+        "tts-9.mp3"
+      ],
+      "pages": [
+        {
+          "number": 1,
+          "files": [
+            "1-sensing-the-approach.jpg",
+            "2-the-protected-evening.jpg",
+            "3-the-knock.jpg",
+            "4-idris-reads-her.jpg"
+          ]
+        },
+        {
+          "number": 2,
+          "files": [
+            "1-sera-stirs.jpg",
+            "2-opening-the-door.jpg",
+            "3-maren-in-the-doorway.jpg",
+            "4-the-wrong-things.jpg",
+            "5-the-news-text.jpg",
+            "5-the-news.jpg"
+          ]
+        },
+        {
+          "number": 3,
+          "files": [
+            "1-sera-rises.jpg",
+            "2-seras-question-text.jpg",
+            "2-seras-question.jpg",
+            "3-the-briefing-text.jpg",
+            "3-the-briefing.jpg"
+          ]
+        },
+        {
+          "number": 4,
+          "files": [
+            "1-sera-calculates.jpg",
+            "2-idris-is-not.jpg",
+            "3-torren-text.jpg",
+            "3-torren.jpg",
+            "4-the-flood-text.jpg",
+            "4-the-flood.jpg"
+          ]
+        },
+        {
+          "number": 5,
+          "files": [
+            "1-what-about-you-text.jpg",
+            "1-what-about-you.jpg",
+            "2-the-offer-text.jpg",
+            "2-the-offer.jpg",
+            "3-the-room-shrinks.jpg",
+            "4-the-hollow-answer-text.jpg",
+            "4-the-hollow-answer.jpg"
+          ]
+        },
+        {
+          "number": 6,
+          "files": [
+            "1-marens-disappointment.jpg",
+            "2-exchange-between-women.jpg",
+            "3-the-deadline-text.jpg",
+            "3-the-deadline.jpg"
+          ]
+        },
+        {
+          "number": 7,
+          "files": [
+            "1-marens-last-look.jpg",
+            "2-maren-leaves.jpg",
+            "3-the-door-closes.jpg",
+            "4-the-new-silence.jpg"
+          ]
+        },
+        {
+          "number": 8,
+          "files": [
+            "1-sera-walks-to-window.jpg",
+            "2-the-convoys.jpg",
+            "3-idris-reaches-for-datapad.jpg",
+            "4-datapad-on-table.jpg",
+            "5-sera-sees.jpg"
+          ]
+        },
+        {
+          "number": 9,
+          "files": [
+            "1-room-unchanged-but-different.jpg",
+            "2-three-meters.jpg"
+          ]
+        },
+        {
+          "number": 10,
+          "files": [
+            "1-sera-speaks-text.jpg",
+            "1-sera-speaks.jpg",
+            "2-us.jpg",
+            "3-his-answer-text.jpg",
+            "3-his-answer.jpg",
+            "4-do-you-text.jpg",
+            "4-do-you.jpg"
+          ]
+        },
+        {
+          "number": 11,
+          "files": [
+            "1-no-answer.jpg",
+            "2-another-convoy.jpg",
+            "3-anchoring-gesture.jpg"
+          ]
+        },
+        {
+          "number": 12,
+          "files": [
+            "1-he-wants-to-cross.jpg",
+            "2-the-final-image.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "files": [
+        "concept.md",
+        "draft.md",
+        "memory.md",
+        "review.md",
+        "route.md",
+        "web.md"
+      ],
+      "media": [
+        "background-music.mp3",
+        "chapter-video-desktop.mp4",
+        "chapter-video-mobile-1.5x.mp4",
+        "chapter-video-mobile.mp4",
+        "sfx-1.mp3",
+        "sfx-2.mp3",
+        "sfx-3.mp3",
+        "tts-1.mp3",
+        "tts-10.mp3",
+        "tts-11.mp3",
+        "tts-12.mp3",
+        "tts-13.mp3",
+        "tts-14.mp3",
+        "tts-15.mp3",
+        "tts-16.mp3",
+        "tts-17.mp3",
+        "tts-18.mp3",
+        "tts-19.mp3",
+        "tts-2.mp3",
+        "tts-20.mp3",
+        "tts-21.mp3",
+        "tts-22.mp3",
+        "tts-3.mp3",
+        "tts-4.mp3",
+        "tts-5.mp3",
+        "tts-6.mp3",
+        "tts-7.mp3",
+        "tts-8.mp3",
+        "tts-9.mp3"
+      ],
+      "pages": [
+        {
+          "number": 1,
+          "files": [
+            "1-establishing-tension.jpg",
+            "2-sera-breaks-it-text.jpg",
+            "2-sera-breaks-it.jpg",
+            "3-the-datapad.jpg"
+          ]
+        },
+        {
+          "number": 2,
+          "files": [
+            "1-idris-observes.jpg",
+            "2-his-deflection-text.jpg",
+            "2-his-deflection.jpg",
+            "3-anchoring-gesture.jpg",
+            "4-sera-challenges-text.jpg",
+            "4-sera-challenges.jpg"
+          ]
+        },
+        {
+          "number": 3,
+          "files": [
+            "1-he-starts-to-defend-text.jpg",
+            "1-he-starts-to-defend.jpg",
+            "2-dont-text.jpg",
+            "2-dont.jpg",
+            "3-she-dismantles-text.jpg",
+            "3-she-dismantles.jpg",
+            "4-two-shot-distance-text.jpg",
+            "4-two-shot-distance.jpg"
+          ]
+        },
+        {
+          "number": 4,
+          "files": [
+            "1-the-accusation-text.jpg",
+            "1-the-accusation.jpg",
+            "2-the-silence-lands.jpg",
+            "3-sera-moves-to-window.jpg"
+          ]
+        },
+        {
+          "number": 5,
+          "files": [
+            "1-the-city-below.jpg",
+            "2-sera-at-window-text.jpg",
+            "2-sera-at-window.jpg",
+            "3-she-turns-text.jpg",
+            "3-she-turns.jpg",
+            "4-wide-the-distance.jpg"
+          ]
+        },
+        {
+          "number": 6,
+          "files": [
+            "1-idris-counters-text.jpg",
+            "1-idris-counters.jpg",
+            "2-the-strike-text.jpg",
+            "2-the-strike.jpg",
+            "3-sera-goes-still.jpg"
+          ]
+        },
+        {
+          "number": 7,
+          "files": [
+            "1-the-light-shift.jpg",
+            "2-her-quiet-response-text.jpg",
+            "2-her-quiet-response.jpg"
+          ]
+        },
+        {
+          "number": 8,
+          "files": [
+            "1-idris-pushes-back-text.jpg",
+            "1-idris-pushes-back.jpg",
+            "2-his-assessment-text.jpg",
+            "2-his-assessment.jpg",
+            "3-sera-steps-toward-him.jpg",
+            "4-two-shot-closer-text.jpg",
+            "4-two-shot-closer.jpg"
+          ]
+        },
+        {
+          "number": 9,
+          "files": [
+            "1-control-slipping.jpg",
+            "2-come-with-me-text.jpg",
+            "2-come-with-me.jpg",
+            "3-his-response-text.jpg",
+            "3-his-response.jpg"
+          ]
+        },
+        {
+          "number": 10,
+          "files": [
+            "1-her-strike-text.jpg",
+            "1-her-strike.jpg"
+          ]
+        },
+        {
+          "number": 11,
+          "files": [
+            "1-the-words-land.jpg",
+            "2-his-return-text.jpg",
+            "2-his-return.jpg"
+          ]
+        },
+        {
+          "number": 12,
+          "files": [
+            "1-the-silence.jpg",
+            "2-wide-impasse.jpg",
+            "3-sera-explains-text.jpg",
+            "3-sera-explains.jpg",
+            "4-her-truth-text.jpg",
+            "4-her-truth.jpg"
+          ]
+        },
+        {
+          "number": 13,
+          "files": [
+            "1-his-silence.jpg",
+            "2-she-waits.jpg",
+            "3-she-turns.jpg"
+          ]
+        },
+        {
+          "number": 14,
+          "files": [
+            "1-walking-to-door.jpg",
+            "2-the-door.jpg",
+            "3-idris-alone.jpg",
+            "4-standing-in-absence.jpg"
+          ]
+        },
+        {
+          "number": 15,
+          "files": [
+            "1-the-books.jpg",
+            "2-the-jacket.jpg",
+            "3-the-datapad.jpg",
+            "4-wide-empty-room.jpg",
+            "5-except.jpg"
+          ]
+        },
+        {
+          "number": 16,
+          "files": [
+            "1-the-world-outside.jpg",
+            "2-not-counting.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "files": [
+        "concept.md",
+        "draft.md",
+        "memory.md",
+        "review.md",
+        "route.md",
+        "web.md"
+      ],
+      "media": [
+        "background-music.mp3",
+        "chapter-video-desktop.mp4",
+        "chapter-video-mobile-1.5x.mp4",
+        "chapter-video-mobile.mp4",
+        "sfx-1.mp3",
+        "sfx-10.mp3",
+        "sfx-2.mp3",
+        "sfx-3.mp3",
+        "sfx-4.mp3",
+        "sfx-5.mp3",
+        "sfx-6.mp3",
+        "sfx-7.mp3",
+        "sfx-8.mp3",
+        "sfx-9.mp3",
+        "tts-1.mp3",
+        "tts-10.mp3",
+        "tts-11.mp3",
+        "tts-12.mp3",
+        "tts-13.mp3",
+        "tts-14.mp3",
+        "tts-15.mp3",
+        "tts-16.mp3",
+        "tts-2.mp3",
+        "tts-3.mp3",
+        "tts-4.mp3",
+        "tts-5.mp3",
+        "tts-6.mp3",
+        "tts-7.mp3",
+        "tts-8.mp3",
+        "tts-9.mp3"
+      ],
+      "pages": [
+        {
+          "number": 1,
+          "files": [
+            "1-door-closing.jpg",
+            "2-alone-wide.jpg",
+            "3-jacket-detail.jpg",
+            "4-not-counting.jpg"
+          ]
+        },
+        {
+          "number": 2,
+          "files": [
+            "1-sensing.jpg",
+            "2-the-knock.jpg",
+            "3-door-opens.jpg",
+            "4-valeria-enters-text.jpg",
+            "4-valeria-enters.jpg"
+          ]
+        },
+        {
+          "number": 3,
+          "files": [
+            "1-his-response-text.jpg",
+            "1-his-response.jpg",
+            "2-she-surveys.jpg",
+            "3-official-business-text.jpg",
+            "3-official-business.jpg"
+          ]
+        },
+        {
+          "number": 4,
+          "files": [
+            "1-corridor-walking.jpg",
+            "2-convoy-window.jpg",
+            "3-anchoring-gesture.jpg"
+          ]
+        },
+        {
+          "number": 5,
+          "files": [
+            "1-closing-distance.jpg",
+            "2-mentioning-sera-text.jpg",
+            "2-mentioning-sera.jpg",
+            "3-his-challenge-text.jpg",
+            "3-his-challenge.jpg",
+            "4-her-truth-text.jpg",
+            "4-her-truth.jpg"
+          ]
+        },
+        {
+          "number": 6,
+          "files": [
+            "1-how-long-text.jpg",
+            "1-how-long.jpg",
+            "2-admission-text.jpg",
+            "2-admission.jpg",
+            "3-collar-reach.jpg"
+          ]
+        },
+        {
+          "number": 7,
+          "files": [
+            "1-fingers-on-collar.jpg",
+            "2-what-she-misses-text.jpg",
+            "2-what-she-misses.jpg",
+            "3-his-deflection-text.jpg",
+            "3-his-deflection.jpg",
+            "4-her-counter-text.jpg",
+            "4-her-counter.jpg"
+          ]
+        },
+        {
+          "number": 8,
+          "files": [
+            "1-dock-arrival.jpg",
+            "2-seeing-maren.jpg",
+            "3-eyes-meet.jpg",
+            "4-nothing-given.jpg"
+          ]
+        },
+        {
+          "number": 9,
+          "files": [
+            "1-the-warning-text.jpg",
+            "1-the-warning.jpg",
+            "2-his-defense-text.jpg",
+            "2-his-defense.jpg",
+            "3-the-pull.jpg"
+          ]
+        },
+        {
+          "number": 10,
+          "files": [
+            "1-the-offer-text.jpg",
+            "1-the-offer.jpg",
+            "2-almost-kiss.jpg"
+          ]
+        },
+        {
+          "number": 11,
+          "files": [
+            "1-catching-wrist.jpg",
+            "2-moving-away.jpg",
+            "3-the-truth-text.jpg",
+            "3-the-truth.jpg",
+            "4-valeria-cracks.jpg"
+          ]
+        },
+        {
+          "number": 12,
+          "files": [
+            "1-her-warning-text.jpg",
+            "1-her-warning.jpg",
+            "2-walking-to-door.jpg",
+            "3-second-door.jpg"
+          ]
+        },
+        {
+          "number": 13,
+          "files": [
+            "1-window-seat.jpg",
+            "2-city-falling.jpg",
+            "3-city-reflection.jpg",
+            "4-watching.jpg"
+          ]
+        },
+        {
+          "number": 14,
+          "files": [
+            "1-alone-again.jpg",
+            "2-picking-up-datapad.jpg",
+            "3-reading.jpg",
+            "4-setting-down.jpg"
+          ]
+        },
+        {
+          "number": 15,
+          "files": [
+            "1-transport-contrail.jpg",
+            "2-finally-counting.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "files": [
+        "concept.md",
+        "draft.md",
+        "memory.md",
+        "review.md",
+        "route.md",
+        "web.md"
+      ],
+      "media": [
+        "background-music.mp3",
+        "chapter-video-desktop.mp4",
+        "chapter-video-mobile-1.5x.mp4",
+        "chapter-video-mobile.mp4",
+        "sfx-1.mp3",
+        "sfx-2.mp3",
+        "sfx-3.mp3",
+        "sfx-4.mp3",
+        "sfx-5.mp3",
+        "sfx-6.mp3",
+        "tts-1.mp3",
+        "tts-10.mp3",
+        "tts-11.mp3",
+        "tts-12.mp3",
+        "tts-13.mp3",
+        "tts-14.mp3",
+        "tts-15.mp3",
+        "tts-16.mp3",
+        "tts-17.mp3",
+        "tts-18.mp3",
+        "tts-19.mp3",
+        "tts-2.mp3",
+        "tts-20.mp3",
+        "tts-21.mp3",
+        "tts-3.mp3",
+        "tts-4.mp3",
+        "tts-5.mp3",
+        "tts-6.mp3",
+        "tts-7.mp3",
+        "tts-8.mp3",
+        "tts-9.mp3"
+      ],
+      "pages": [
+        {
+          "number": 1,
+          "files": [
+            "1-ftl-transition.jpg"
+          ]
+        },
+        {
+          "number": 2,
+          "files": [
+            "1-starfield-stabilizes.jpg",
+            "2-anchoring-gesture.jpg",
+            "3-third-time.jpg"
+          ]
+        },
+        {
+          "number": 3,
+          "files": [
+            "1-transport-interior.jpg",
+            "2-passenger-detail.jpg",
+            "3-convoy-scale.jpg",
+            "4-sera-looking-out.jpg"
+          ]
+        },
+        {
+          "number": 4,
+          "files": [
+            "1-reva-settles.jpg",
+            "2-the-evaluation.jpg",
+            "3-reva-pov-scan.jpg",
+            "4-two-shot-axis.jpg"
+          ]
+        },
+        {
+          "number": 5,
+          "files": [
+            "1-reva-speaks-text.jpg",
+            "1-reva-speaks.jpg",
+            "2-reva-continues-text.jpg",
+            "2-reva-continues.jpg",
+            "3-the-blade-text.jpg",
+            "3-the-blade.jpg",
+            "4-the-wound.jpg"
+          ]
+        },
+        {
+          "number": 6,
+          "files": [
+            "1-considering-deflection.jpg",
+            "2-raw-answer-text.jpg",
+            "2-raw-answer.jpg",
+            "3-two-shot-aftermath.jpg"
+          ]
+        },
+        {
+          "number": 7,
+          "files": [
+            "1-reva-introduction-text.jpg",
+            "1-reva-introduction.jpg",
+            "2-reva-assessment-text.jpg",
+            "2-reva-assessment.jpg",
+            "3-conviction-or-tragedy-text.jpg",
+            "3-conviction-or-tragedy.jpg",
+            "4-probably-both-text.jpg",
+            "4-probably-both.jpg"
+          ]
+        },
+        {
+          "number": 8,
+          "files": [
+            "1-usually-is-text.jpg",
+            "1-usually-is.jpg",
+            "2-ascendancy-choice-text.jpg",
+            "2-ascendancy-choice.jpg",
+            "3-choosing-limitation-text.jpg",
+            "3-choosing-limitation.jpg",
+            "4-two-shot-viewport.jpg",
+            "5-sovereignty-choice-text.jpg",
+            "5-sovereignty-choice.jpg"
+          ]
+        },
+        {
+          "number": 9,
+          "files": [
+            "1-what-makes-it-war-text.jpg",
+            "1-what-makes-it-war.jpg",
+            "2-sera-pushes-back-text.jpg",
+            "2-sera-pushes-back.jpg",
+            "3-the-cage-text.jpg",
+            "3-the-cage.jpg",
+            "4-the-freedom-text.jpg",
+            "4-the-freedom.jpg"
+          ]
+        },
+        {
+          "number": 10,
+          "files": [
+            "1-two-shot-tension.jpg",
+            "2-some-people-text.jpg",
+            "2-some-people.jpg",
+            "3-landing.jpg"
+          ]
+        },
+        {
+          "number": 11,
+          "files": [
+            "1-founding-story-text.jpg",
+            "1-founding-story.jpg",
+            "2-permission-text.jpg",
+            "2-permission.jpg",
+            "3-absolution.jpg",
+            "4-armor-sliding.jpg"
+          ]
+        },
+        {
+          "number": 12,
+          "files": [
+            "1-the-declaration-text.jpg",
+            "1-the-declaration.jpg",
+            "2-acknowledgment-text.jpg",
+            "2-acknowledgment.jpg"
+          ]
+        },
+        {
+          "number": 13,
+          "files": [
+            "1-vantage-light.jpg"
+          ]
+        },
+        {
+          "number": 14,
+          "files": [
+            "1-vantage-full.jpg",
+            "2-sera-face-light.jpg",
+            "3-not-looking-back.jpg"
+          ]
+        },
+        {
+          "number": 15,
+          "files": [
+            "1-closing.jpg"
+          ]
+        }
+      ]
+    }
+  ],
+  "arcs": [
+    {
+      "number": 1,
+      "files": [
+        "arc.md",
+        "concept.md",
+        "formula.md"
+      ],
+      "sources": [
+        "characters.md",
+        "setting.md"
+      ]
+    }
+  ],
+  "sources": [
+    "disciplines.md",
+    "protagonist.md",
+    "world.md"
+  ],
+  "modules": [
+    "direction-module.md",
+    "interactive-module.md",
+    "writing-module.md"
+  ],
+  "meta": [
+    "series.md",
+    "style.md",
+    "voices.md"
+  ],
+  "world": {
+    "characters": [
+      {
+        "file": "idris.md",
+        "image": "idris.jpg"
+      },
+      {
+        "file": "maren-caul.md",
+        "image": "maren-caul.jpg"
+      },
+      {
+        "file": "reva-orin.md",
+        "image": "reva-orin.jpg"
+      },
+      {
+        "file": "sera.md",
+        "image": "sera.jpg"
+      },
+      {
+        "file": "valeria-caine.md",
+        "image": "valeria-caine.jpg"
+      }
+    ],
+    "locations": [
+      {
+        "file": "corridor.md",
+        "image": "corridor.jpg"
+      },
+      {
+        "file": "grand-promenade.md",
+        "image": "grand-promenade.jpg"
+      },
+      {
+        "file": "quarters-cool.md",
+        "image": "quarters-cool.jpg"
+      },
+      {
+        "file": "shared-quarters.md",
+        "image": "shared-quarters.jpg"
+      },
+      {
+        "file": "transport-bay-wide.md",
+        "image": "transport-bay-wide.jpg"
+      },
+      {
+        "file": "transport-dock.md",
+        "image": "transport-dock.jpg"
+      },
+      {
+        "file": "transport-interior.md",
+        "image": "transport-interior.jpg"
+      },
+      {
+        "file": "transport-viewport-convoy.md",
+        "image": "transport-viewport-convoy.jpg"
+      },
+      {
+        "file": "vantage-reveal.md",
+        "image": "vantage-reveal.jpg"
+      }
+    ],
+    "elements": []
+  }
+}

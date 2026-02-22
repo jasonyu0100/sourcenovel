@@ -1,0 +1,10 @@
+[
+  {
+    "name": "her-strike",
+    "prompt": "Close-up, dramatic composition. Brunette woman's face, aimed precision in her expression. Dark radiating lines behind — impact moment, the sharpest weapon deployed. Eyes locked on him, knowing exactly where the wound will open. | anime manga, cel shading, dramatic lighting, high detail",
+    "ref": ["world/characters/sera.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "If you loved me enough, you'd come with me."}],
+    "pause_after": 2.0,
+    "sfx": [{"description": "cinematic dramatic bass hit with reverb, emotional impact stinger", "duration": 2.0}]
+  }
+]

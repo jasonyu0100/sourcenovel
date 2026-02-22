@@ -1,0 +1,17 @@
+[
+  {
+    "name": "the-declaration",
+    "prompt": "Medium close-up. Young brunette woman, eyes now hard with conviction. Speaking a truth she's realizing was always true. Jaw set, composure complete. Cool blue light from viewport creating rim lighting. Background abstract — pressure lines releasing, dark vignette clearing. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "I wasn't going to be someone who waits to die."}],
+    "pause_after": 2.0,
+    "sfx": [{"description": "quiet resolve crystallizing, emotional release, inner strength emerging", "duration": 2.0}]
+  },
+  {
+    "name": "acknowledgment",
+    "prompt": "Close-up. Older woman nodding once — single acknowledgment. Expression of a teacher recognizing a correct answer. Sharp features, silver-streaked hair. Eyes approving. Cool blue light from above. The test is over. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/reva-orin.jpg"],
+    "dialogue": [{"speaker": "Reva", "voice_id": "SaqYcK3ZpDKBAImA8AdW", "text": "No. You weren't."}],
+    "pause_after": 1.5
+  }
+]

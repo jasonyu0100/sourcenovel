@@ -1,0 +1,29 @@
+[
+  {
+    "name": "cascade-response",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, medium close-up of handsome young man with dark unkempt hair leaning against the wall, glass in hand, his expression confident with a slight smirk, eyes warm despite the challenge in his words, wearing dark mandarin collar suit, warm amber lighting from the side, his posture relaxed — he knows he's right and doesn't need to prove it, deflecting her critique with charm rather than defense, affectionate arrogance",
+    "ref": ["world/characters/idris.jpg", "world/locations/shared-quarters.jpg"],
+    "dialogue": [{"speaker": "Idris", "voice_id": "IKne3meq5aSn9XLyUdCD", "text": "My cascade timing saved the operation."}]
+  },
+  {
+    "name": "torren-mention",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, medium shot of beautiful woman with brunette waves, her expression shifting from playful to something more careful, dark luminous eyes thoughtful as she turns the datapad in her hands, wearing elegant dark attire, warm amber lighting catching her face, the shift in mood subtle but present — moving from professional banter to something that matters, a careful testing of the waters, observant and strategic",
+    "ref": ["world/characters/sera.jpg", "world/locations/shared-quarters.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "Torren filed his transfer orders."}],
+    "pause_after": 1.0
+  },
+  {
+    "name": "dismissal",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, medium close-up of handsome young man with dark unkempt hair, his expression clean and unbothered as he takes a drink, dark eyes glancing up from the debrief notes with polite disinterest, wearing dark mandarin collar suit with rank insignia, warm amber lighting, his dismissal of the topic is smooth — not cold but complete, treating political fracture as weather he doesn't need to acknowledge, deliberately blind, the ease of someone who refuses to see what's coming",
+    "ref": ["world/characters/idris.jpg", "world/locations/shared-quarters.jpg"],
+    "dialogue": [{"speaker": "Idris", "voice_id": "IKne3meq5aSn9XLyUdCD", "text": "People make choices."}],
+    "pause_after": 1.2
+  },
+  {
+    "name": "capital-outside",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, wide shot through the window of the officers' quarters, showing the capital city at night — futuristic skyline with spires and transit lines pulsing, the Senate dome glowing in the distance, but in the foreground on the lower ring-road military convoys moving in quiet formation, more than usual, a broadcast tower on the eastern ridge cycling through frequencies with blinking lights, the city looks the same but isn't, ominous undertones beneath beautiful surface, cool blue exterior against warm amber interior reflection on the glass, the world changing outside while they remain inside",
+    "ref": ["world/locations/shared-quarters.jpg"],
+    "silence": 3.0,
+    "sfx": [{"description": "distant city ambience with muffled military convoy rumble and ominous low frequency drone", "duration": 3.0}]
+  }
+]

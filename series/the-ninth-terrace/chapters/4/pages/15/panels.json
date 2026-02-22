@@ -1,0 +1,32 @@
+[
+  {
+    "name": "the-books",
+    "prompt": "Close-up on dark desk surface. Stack of leather-bound books on the desk. Cool blue light from screens. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": [],
+    "silence": 1.5
+  },
+  {
+    "name": "the-jacket",
+    "prompt": "Close-up on chair back. Elegant dark jacket draped over the chair. Cool blue light. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": [],
+    "silence": 1.5
+  },
+  {
+    "name": "the-datapad",
+    "prompt": "Close-up on dark table. Military datapad face-down, untouched. Cool blue light. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": [],
+    "silence": 1.5
+  },
+  {
+    "name": "wide-empty-room",
+    "prompt": "Wide shot. Officers quarters interior, cool blue-white lighting. Couch, desk, window, door visible. Empty room. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/locations/quarters-cool.jpg"],
+    "silence": 2.0
+  },
+  {
+    "name": "except",
+    "prompt": "Medium shot. Dark-haired man alone in frame, empty space around him. Cool blue light, heavy shadows. | anime manga, cel shading, dramatic lighting",
+    "ref": ["world/characters/idris.jpg"],
+    "silence": 2.5
+  }
+]

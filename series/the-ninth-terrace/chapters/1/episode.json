@@ -1,0 +1,22 @@
+{
+  "chapterNum": 1,
+  "arcNum": 1,
+  "defaultCharacter": "Idris",
+  "startingLocation": "grand-promenade",
+  "characters": [
+    {
+      "name": "Idris",
+      "slug": "idris"
+    },
+    {
+      "name": "Sera",
+      "slug": "sera"
+    }
+  ],
+  "locations": [
+    {
+      "name": "Grand Promenade",
+      "slug": "grand-promenade"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+[
+  {
+    "name": "marens-last-look",
+    "prompt": "Wide shot from doorway looking into room — her point of view. Officers quarters interior: couch center, books stacked on desk left, jacket on chair right, window back wall with city lights. The life she's visited a hundred times. Warm amber lighting filling a space that's about to stop existing for her. No figures in frame — just the room. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/locations/quarters-wide-couch.jpg"],
+    "silence": 2.5
+  },
+  {
+    "name": "maren-leaves",
+    "prompt": "Medium shot in corridor. Auburn-haired woman walking away down corridor, her back to camera. Cool blue corridor lighting, functional walls and floor. Running lights along floor. She's gone — didn't ask again. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/maren-caul.jpg", "world/locations/corridor.jpg"],
+    "silence": 1.5
+  },
+  {
+    "name": "the-door-closes",
+    "prompt": "Close-up. Dark-haired man's hand still on door handle as door closes. Metal handle visible, the gesture of closing something. Warm amber room light from behind camera, cool corridor light disappearing as gap narrows. Processing visible in the stillness. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/locations/quarters-door-interior.jpg"],
+    "silence": 1.5,
+    "sfx": [{"description": "door sliding shut with soft metallic click of latch", "duration": 1.5}]
+  },
+  {
+    "name": "the-new-silence",
+    "prompt": "Wide shot from center of room. Officers quarters with door now closed on RIGHT. Couch center, window back wall, desk left. Dark-haired man (Idris) standing at closed door RIGHT side of frame, brunette woman (Sera) standing CENTER-LEFT by couch. Significant empty space between them, standing far apart. Warm amber lighting, but the silence has weight now. Tension in the distance between them. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/quarters-wide-couch.jpg"],
+    "silence": 2.5
+  }
+]

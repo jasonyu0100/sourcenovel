@@ -1,0 +1,36 @@
+[
+  {
+    "name": "usually-is",
+    "prompt": "Close-up. Older woman with slight acknowledgment in expression — the first hint of warmth, or at least recognition. Silver-streaked hair, sharp features. Cool blue lighting. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/reva-orin.jpg"],
+    "dialogue": [{"speaker": "Reva", "voice_id": "SaqYcK3ZpDKBAImA8AdW", "text": "Usually is."}],
+    "pause_after": 0.5
+  },
+  {
+    "name": "ascendancy-choice",
+    "prompt": "Medium shot. Older woman explaining with precision and clarity. Precise hand gesture visible. Sovereignty military uniform with Commandant insignia, cool blue-white transport lighting. Expression serious, authoritative, teaching. Silver-streaked dark hair, sharp features. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/reva-orin.jpg"],
+    "dialogue": [{"speaker": "Reva", "voice_id": "SaqYcK3ZpDKBAImA8AdW", "text": "The Ascendancy chose to remember death. To hold mortality as meaning. They believed finitude was what made choices matter."}],
+    "pause_after": 0.8
+  },
+  {
+    "name": "choosing-limitation",
+    "prompt": "Close-up. Older woman's face, fair assessment visible in expression. Not dismissing the opposition. Silver-streaked dark hair, sharp features. Cool blue light from left. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/reva-orin.jpg"],
+    "dialogue": [{"speaker": "Reva", "voice_id": "SaqYcK3ZpDKBAImA8AdW", "text": "They weren't wrong. They were choosing limitation the way someone chooses a discipline."}],
+    "pause_after": 0.5
+  },
+  {
+    "name": "two-shot-viewport",
+    "prompt": "Medium wide shot from end of row. Brunette woman (Sera) LEFT against viewport showing convoy, older silver-haired woman (Reva) RIGHT facing her. Both in profile. Convoy visible through glass behind Sera. Cool blue-white lighting throughout. The debate framed. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg", "world/characters/reva-orin.jpg", "world/locations/transport-viewport-convoy.jpg"],
+    "silence": 1.5
+  },
+  {
+    "name": "sovereignty-choice",
+    "prompt": "Medium shot. Older woman continuing to explain, gesturing slightly. Expression conveying weight of choice. Sovereignty uniform, Commandant insignia. Cool blue-white lighting from above. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/reva-orin.jpg"],
+    "dialogue": [{"speaker": "Reva", "voice_id": "SaqYcK3ZpDKBAImA8AdW", "text": "The Sovereignty chose differently. To forget. To build past the old limits, past the fear that had shaped every human value for a hundred thousand years."}],
+    "pause_after": 1.0
+  }
+]

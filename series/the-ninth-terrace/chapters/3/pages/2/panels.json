@@ -1,0 +1,34 @@
+[
+  {
+    "name": "sera-stirs",
+    "prompt": "Medium shot from LEFT side. Brunette woman sitting up on couch RIGHT, no longer leaning. Alert attention replacing relaxation. Couch visible beneath her, warm amber room behind. Her posture shifting from rest to awareness. Dark-haired man's position implied off-frame LEFT. Overhead amber lighting. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg", "world/locations/quarters-wide-couch.jpg"],
+    "silence": 1.0
+  },
+  {
+    "name": "opening-the-door",
+    "prompt": "Medium shot from behind, over dark-haired man's shoulder. His hand on door handle, opening it. His back and shoulder fill LEFT of frame. Through the widening gap: cool blue corridor light spilling in, contrasting with warm amber room. Threshold moment — two light sources meeting at the door. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/locations/quarters-door-interior.jpg"],
+    "silence": 1.0,
+    "sfx": [{"description": "door mechanism sliding open with soft hydraulic hiss", "duration": 1.0}]
+  },
+  {
+    "name": "maren-in-the-doorway",
+    "prompt": "Medium shot from inside room looking out. Auburn-haired woman (Maren) standing in corridor beyond doorway, positioned on threshold — not entering. Military field dress, no insignia visible on collar. Cool blue corridor lighting behind her, warm amber room light on her face from camera's side. Corridor walls and floor visible behind her. Terrified resolve in her posture, shoulders tense. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/maren-caul.jpg", "world/locations/corridor.jpg"],
+    "silence": 1.5
+  },
+  {
+    "name": "the-wrong-things",
+    "prompt": "Extreme close-up on military collar. Field dress fabric, conspicuously absent rank insignia — the first wrong thing. Cool blue corridor light on the fabric. Sharp focus on the empty space where insignia should be. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/maren-caul.jpg"],
+    "silence": 1.0
+  },
+  {
+    "name": "the-news",
+    "prompt": "Medium close-up, camera at her eye level in doorway. Auburn-haired woman delivering briefing, clipped professional efficiency masking fear underneath. Cool corridor lighting behind her creates rim light on hair. Warm room light on her face from camera position. Door frame visible at edges. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/maren-caul.jpg"],
+    "dialogue": [{"speaker": "Maren", "voice_id": "21m00Tcm4TlvDq8ikWAM", "text": "It's done. The Senate dissolved an hour ago. Both Thrones are recalling assets by origin."}],
+    "pause_after": 1.0
+  }
+]

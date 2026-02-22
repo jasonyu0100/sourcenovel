@@ -1,0 +1,29 @@
+[
+  {
+    "name": "idris-pushes-back",
+    "prompt": "Medium shot. Dark-haired man at table, speaking with careful precision. Cool blue light now mixing with amber. Behind him: room in transition, screens glowing. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/locations/quarters-cool.jpg"],
+    "dialogue": [{"speaker": "Idris", "voice_id": "IKne3meq5aSn9XLyUdCD", "text": "I think you're angry. I think the Ascendancy failed you in ways I can't fix."}],
+    "pause_after": 1.0
+  },
+  {
+    "name": "his-assessment",
+    "prompt": "Medium close-up. Dark-haired man, dark eyes steady. Delivering assessment without flinching. Split lighting — warm left, cool right. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg"],
+    "dialogue": [{"speaker": "Idris", "voice_id": "IKne3meq5aSn9XLyUdCD", "text": "The Sovereignty isn't salvation. It's just newer rot that hasn't had time to show."}],
+    "pause_after": 1.2
+  },
+  {
+    "name": "sera-steps-toward-him",
+    "prompt": "Medium shot. Brunette woman stepping away from window toward room center. Forward motion, closing distance. Cool window light behind her, warmer room ahead. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg", "world/locations/quarters-cool.jpg"],
+    "silence": 1.5
+  },
+  {
+    "name": "two-shot-closer",
+    "prompt": "Two-shot from side. Dark-haired man LEFT, brunette woman CENTER-RIGHT. Closer now — the distance between them halved. Cool blue-white room around them. Tension in the reduced space. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/quarters-cool.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "Staying inside a collapsing structure isn't loyalty, Idris. It's denial."}],
+    "pause_after": 1.2
+  }
+]

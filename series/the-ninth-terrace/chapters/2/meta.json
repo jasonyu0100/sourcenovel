@@ -1,0 +1,15 @@
+{
+  "chapterNumber": 2,
+  "arcId": "1",
+  "status": "complete",
+  "wordCount": 1082,
+  "steps": {
+    "concept": { "completed": true, "timestamp": "2026-02-14" },
+    "memory": { "completed": true, "timestamp": "2026-02-14" },
+    "route": { "completed": true, "timestamp": "2026-02-14" },
+    "compose": { "completed": true, "timestamp": "2026-02-14" },
+    "review": { "completed": true, "timestamp": "2026-02-14" },
+    "web": { "completed": true, "timestamp": "2026-02-14" },
+    "complete": { "completed": true, "timestamp": "2026-02-14" }
+  }
+}

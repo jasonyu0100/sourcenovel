@@ -1,0 +1,28 @@
+[
+  {
+    "name": "founding-story",
+    "prompt": "Medium shot. Older woman with silver-streaked hair, expression shifted to something like recognition. Not warm, but acknowledging. Sovereignty uniform, Commandant insignia. Cool blue-white transport lighting. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/reva-orin.jpg"],
+    "dialogue": [{"speaker": "Reva", "voice_id": "SaqYcK3ZpDKBAImA8AdW", "text": "You chose the future over someone who couldn't follow you there. That's the Sovereignty's founding story. That's the story of everyone on this transport."}],
+    "pause_after": 1.0
+  },
+  {
+    "name": "permission",
+    "prompt": "Medium shot. Older woman leaning back slightly in her seat, giving Sera space. Expression offering something — permission, absolution. Silver-streaked dark hair, sharp features softened slightly. Cool blue-white lighting from above. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/reva-orin.jpg"],
+    "dialogue": [{"speaker": "Reva", "voice_id": "SaqYcK3ZpDKBAImA8AdW", "text": "The grief doesn't go away. You just learn to use it as fuel for building something that outlasts it."}],
+    "pause_after": 1.5
+  },
+  {
+    "name": "absolution",
+    "prompt": "Close-up on young brunette woman's face. Receiving permission. Absolution for a choice she hadn't finished making. Eyes glistening slightly but not crying. Expression raw, open, accepting. Soft warm bokeh beginning to intrude on cool blue background — transformation starting. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "silence": 2.0
+  },
+  {
+    "name": "armor-sliding",
+    "prompt": "Medium shot. Young brunette woman seated against viewport, posture straightening. Something shifting — the first layer of armor sliding into place. Not numbness, not denial. A choice. Dark fitted attire with tech accents. Cool blue-white lighting, but her expression hardening with purpose. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "silence": 1.5
+  }
+]

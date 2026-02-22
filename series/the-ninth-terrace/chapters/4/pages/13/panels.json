@@ -1,0 +1,20 @@
+[
+  {
+    "name": "his-silence",
+    "prompt": "Close-up on dark-haired man. Speechless. Eyes holding back, jaw tight. Heavy shadows, grief visible in expression. | anime manga, cel shading, dramatic lighting",
+    "ref": ["world/characters/idris.jpg"],
+    "silence": 2.5
+  },
+  {
+    "name": "she-waits",
+    "prompt": "Two-shot from side. Brunette woman RIGHT, waiting. Dark-haired man LEFT, silent. Both figures still. Cool blue room. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/quarters-cool.jpg"],
+    "silence": 2.0
+  },
+  {
+    "name": "she-turns",
+    "prompt": "Medium shot. Brunette woman turning away from him. Her profile as she begins to move toward door. Cool blue light. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg", "world/locations/quarters-cool.jpg"],
+    "silence": 1.5
+  }
+]

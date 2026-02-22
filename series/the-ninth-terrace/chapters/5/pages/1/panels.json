@@ -1,0 +1,27 @@
+[
+  {
+    "name": "door-closing",
+    "prompt": "Close-up on door handle releasing. Metal door surface, cool corridor light at edges. The moment of closure. Cool blue-white lighting from room behind camera. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/locations/quarters-door-interior.jpg"],
+    "silence": 2.5,
+    "sfx": [{"description": "door latch clicking closed, quiet and final", "duration": 1.5}]
+  },
+  {
+    "name": "alone-wide",
+    "prompt": "Wide shot from doorway. Dark-haired man in dark suit standing alone center of room. Couch center, table with face-down datapad in front. Window back wall showing city lights. Cool blue-white lighting, warmth absent. Empty room, still atmosphere. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/idris.jpg", "series/the-ninth-terrace/world/locations/quarters-cool.jpg"],
+    "silence": 3.0
+  },
+  {
+    "name": "jacket-detail",
+    "prompt": "Medium close-up on elegant dark jacket draped over chair. Feminine cut, abandoned. Cool blue lighting. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/locations/quarters-cool.jpg"],
+    "silence": 2.0
+  },
+  {
+    "name": "not-counting",
+    "prompt": "Medium close-up. Dark-haired man's face, eyes distant, unfocused. Dark suit with bare collar. Composure held through stillness. Cool blue-white light from left. Heavy shadows, muted tones behind. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/idris.jpg"],
+    "silence": 2.5
+  }
+]

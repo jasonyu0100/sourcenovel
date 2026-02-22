@@ -1,0 +1,28 @@
+[
+  {
+    "name": "sensing-the-approach",
+    "prompt": "Medium shot, camera 2 meters from couch. Dark-haired man (Idris) seated on LEFT side of couch, going still. Behind him: warm amber room, bookshelf on far left wall, window visible over his right shoulder showing distant city lights. Couch cushions around him, table beside with dark datapad. Alert tension in shoulders, eyes shifting focus to something unseen. Warm amber lighting from overhead. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/locations/quarters-wide-couch.jpg"],
+    "silence": 1.5
+  },
+  {
+    "name": "the-protected-evening",
+    "prompt": "Wide shot from right side, camera showing couch in profile. Dark-haired man seated LEFT side of couch, brunette woman leaning against his right shoulder RIGHT, her eyes closed. Dark datapad on table beside them. Behind them: warm amber room interior, window on back wall showing city lights. Books stacked on desk visible left of frame. Intimate domestic scene, last moment of peace. Warm amber lighting fills the space. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/quarters-wide-couch.jpg"],
+    "silence": 2.5,
+    "sfx": [{"description": "soft warm ambient room hum with distant city sounds through glass", "duration": 2.5}]
+  },
+  {
+    "name": "the-knock",
+    "prompt": "Close-up on door from inside room. Metal door surface, weapon rack visible on wall beside it. Cool blue corridor light seeping through door edges. Sharp visual tension — the moment before intrusion. Warm amber room light from behind camera creates contrast at door edge. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/locations/quarters-door-interior.jpg"],
+    "silence": 1.5,
+    "sfx": [{"description": "sharp metallic door knock, two firm deliberate raps", "duration": 1.5}]
+  },
+  {
+    "name": "idris-reads-her",
+    "prompt": "Close-up, tight framing on face. Dark-haired man processing information through closed door — reading someone's presence before seeing them. Sharp dark eyes cataloguing, composed surface over heightened awareness. Warm amber light from the LEFT casting soft shadows on right side of face. Background: soft radiating focus lines converging behind him — heightened awareness moment. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg"],
+    "silence": 1.5
+  }
+]

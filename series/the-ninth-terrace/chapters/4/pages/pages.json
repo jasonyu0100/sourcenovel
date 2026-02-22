@@ -1,0 +1,18 @@
+[
+  {"page": 1, "layout": "cinematic3"},
+  {"page": 2, "layout": "story4"},
+  {"page": 3, "layout": "focus4"},
+  {"page": 4, "layout": "cinematic3"},
+  {"page": 5, "layout": "story4"},
+  {"page": 6, "layout": "hero"},
+  {"page": 7, "layout": "impact2"},
+  {"page": 8, "layout": "story4"},
+  {"page": 9, "layout": "cinematic3"},
+  {"page": 10, "layout": "splash"},
+  {"page": 11, "layout": "impact2"},
+  {"page": 12, "layout": "story4"},
+  {"page": 13, "layout": "cinematic3"},
+  {"page": 14, "layout": "focus4"},
+  {"page": 15, "layout": "story5"},
+  {"page": 16, "layout": "impact2"}
+]

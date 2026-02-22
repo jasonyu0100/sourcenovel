@@ -1,0 +1,26 @@
+[
+  {
+    "name": "reva-settles",
+    "prompt": "Medium shot from seated position looking across aisle. Older woman with sharp features settling into seat across from camera. Silver-streaked dark hair pulled back. Sovereignty military dress uniform, charcoal with blue-silver accents. Commandant insignia at collar. Flat evaluating gaze, not introducing herself. Cool blue-white transport lighting from above. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/reva-orin.jpg", "world/locations/transport-bay-wide.jpg"],
+    "silence": 1.5
+  },
+  {
+    "name": "the-evaluation",
+    "prompt": "Close-up on older woman's eyes. Sharp, evaluating, cataloguing. Silver streaks visible in hair at temples. The gaze of someone who reads synergy reports for a living. Cool blue light from above casting slight shadows under brows. Expression flat, precise, measuring. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/reva-orin.jpg"],
+    "silence": 1.5
+  },
+  {
+    "name": "reva-pov-scan",
+    "prompt": "POV shot looking at young brunette woman seated against viewport. Her commission seal visible, posture noted, hands pressed against glass. Cool blue-white transport interior. The subject being catalogued. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "silence": 1.0
+  },
+  {
+    "name": "two-shot-axis",
+    "prompt": "Wide two-shot from side of aisle. Brunette woman (Sera) seated LEFT against viewport, older silver-haired woman (Reva) seated RIGHT across from her. Aisle between them. Both in profile, facing each other. Transport interior visible, cool blue-white lighting. The axis established. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg", "world/characters/reva-orin.jpg", "world/locations/transport-bay-wide.jpg"],
+    "silence": 1.5
+  }
+]

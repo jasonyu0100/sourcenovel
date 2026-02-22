@@ -1,0 +1,29 @@
+[
+  {
+    "name": "fingers-on-collar",
+    "prompt": "Extreme close-up. Woman's fingers touching dark fabric of mandarin collar. Bare collar, no insignia. Fingers delicate against the fold. Soft warm light. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": [],
+    "silence": 2.0
+  },
+  {
+    "name": "what-she-misses",
+    "prompt": "Close-up. Woman's face very close, dark hair swept back. Voice dropping, eyes warm. Seductive expression. Soft bokeh behind, dreamy blur. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/valeria-caine.jpg"],
+    "dialogue": [{"speaker": "Valeria", "voice_id": "pFZP5JQG7iQjIQuC4Bku", "text": "I miss who you were."}],
+    "pause_after": 1.2
+  },
+  {
+    "name": "his-deflection",
+    "prompt": "Medium shot. Dark-haired man, guarded expression, pulling back slightly. Dark eyes hard, jaw tight. Cool blue light from left, shadows on right. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/idris.jpg"],
+    "dialogue": [{"speaker": "Idris", "voice_id": "IKne3meq5aSn9XLyUdCD", "text": "That's not why I'm here."}],
+    "pause_after": 0.8
+  },
+  {
+    "name": "her-counter",
+    "prompt": "Close-up. Woman's face, hand still visible at edge touching his collar. Knowing expression, pressing the point. Cool light, pressure visible in composition. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/valeria-caine.jpg"],
+    "dialogue": [{"speaker": "Valeria", "voice_id": "pFZP5JQG7iQjIQuC4Bku", "text": "You don't have to stand alone in an empty room."}],
+    "pause_after": 1.5
+  }
+]

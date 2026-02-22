@@ -1,0 +1,21 @@
+[
+  {
+    "name": "the-accusation",
+    "prompt": "Medium close-up. Brunette woman's face, flat clarity in expression. Eyes steady. Warm amber light on her face. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "It's about hiding. You sound like someone hiding, Idris. Not someone choosing."}],
+    "pause_after": 1.2
+  },
+  {
+    "name": "the-silence-lands",
+    "prompt": "Close-up on dark-haired man. Speechless. Eyes still, composure cracking slightly at edges. Heavy shadows on one side of face. Dark vignette closing in. | anime manga, cel shading, dramatic lighting",
+    "ref": ["world/characters/idris.jpg"],
+    "silence": 2.5
+  },
+  {
+    "name": "sera-moves-to-window",
+    "prompt": "Medium shot from behind. Brunette woman walking away from table toward window back wall. Her back to camera, elegant silhouette. Dark-haired man visible at table LEFT background, watching her go. Room around them. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg", "world/characters/idris.jpg", "world/locations/quarters-wide-couch.jpg"],
+    "silence": 2.0
+  }
+]

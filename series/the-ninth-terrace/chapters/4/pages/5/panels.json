@@ -1,0 +1,28 @@
+[
+  {
+    "name": "the-city-below",
+    "prompt": "Wide shot through window glass. Futuristic city at night far below, military convoys on streets, broadcast towers with glowing frequencies. Urban lights, sense of crisis. The fracture visible from above. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/locations/quarters-window.jpg"],
+    "silence": 2.0
+  },
+  {
+    "name": "sera-at-window",
+    "prompt": "Medium shot from behind-right. Brunette woman standing at window, profile visible against glass. City lights reflected in window. Her back partially to room. Silhouette against cool light. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg", "world/locations/quarters-window.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "The Ascendancy is recalling by birth registry. Not request. Demand."}],
+    "pause_after": 0.8
+  },
+  {
+    "name": "she-turns",
+    "prompt": "Medium shot. Brunette woman at window turning to face room. City lights behind her, cool blue backlight. Her expression grave. Room visible behind camera. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "They want what we produce together. I'm in those files too."}],
+    "pause_after": 1.0
+  },
+  {
+    "name": "wide-the-distance",
+    "prompt": "Wide shot from side. Officers quarters interior. Dark-haired man at table LEFT, brunette woman at window RIGHT. Large visible distance between them. Warm amber room, cool window glow. Neither moving toward the other. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/quarters-wide-couch.jpg"],
+    "silence": 2.0
+  }
+]

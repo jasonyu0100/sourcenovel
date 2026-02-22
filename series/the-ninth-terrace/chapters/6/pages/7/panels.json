@@ -1,0 +1,30 @@
+[
+  {
+    "name": "reva-introduction",
+    "prompt": "Medium shot. Older woman with silver-streaked hair, expression shifted from evaluation to recognition. Introducing herself now — the dynamic changed. Sovereignty uniform crisp, Commandant insignia visible. Cool blue-white lighting from above. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/reva-orin.jpg"],
+    "dialogue": [{"speaker": "Reva", "voice_id": "SaqYcK3ZpDKBAImA8AdW", "text": "Reva Orin. Strategic Command. Your file was flagged before you boarded."}],
+    "pause_after": 0.5
+  },
+  {
+    "name": "reva-assessment",
+    "prompt": "Close-up. Older woman's face, tilting head slightly. Sharp features, evaluating but with new respect. Silver streaks in dark hair. Expression precise, calculating value. Cool blue light from above. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/reva-orin.jpg"],
+    "dialogue": [{"speaker": "Reva", "voice_id": "SaqYcK3ZpDKBAImA8AdW", "text": "Not for the synergy — for leaving it. You walked away from Paragon-tier output because he wouldn't cross over."}],
+    "pause_after": 0.8
+  },
+  {
+    "name": "conviction-or-tragedy",
+    "prompt": "Close-up, tight framing. Older woman delivering assessment. Eyes steady, direct. Silver-streaked dark hair framing sharp features. Expression knowing. Cool blue light casting dramatic shadows. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/reva-orin.jpg"],
+    "dialogue": [{"speaker": "Reva", "voice_id": "SaqYcK3ZpDKBAImA8AdW", "text": "That's either conviction or tragedy."}],
+    "pause_after": 1.0
+  },
+  {
+    "name": "probably-both",
+    "prompt": "Medium shot. Young brunette woman, meeting Reva's eyes now. Expression guarded but honest. A flicker of dark humor. Cool blue-white transport lighting from above and viewport beside her. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "Probably both."}],
+    "pause_after": 0.8
+  }
+]

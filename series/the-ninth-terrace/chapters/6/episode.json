@@ -1,0 +1,30 @@
+{
+  "chapterNum": 6,
+  "arcNum": 1,
+  "defaultCharacter": "Sera",
+  "startingLocation": "transport-bay-wide",
+  "characters": [
+    {
+      "name": "Sera",
+      "slug": "sera"
+    },
+    {
+      "name": "Reva Orin",
+      "slug": "reva-orin"
+    }
+  ],
+  "locations": [
+    {
+      "name": "Transport Bay \u2014 Wide Interior",
+      "slug": "transport-bay-wide"
+    },
+    {
+      "name": "Transport Viewport \u2014 Convoy View",
+      "slug": "transport-viewport-convoy"
+    },
+    {
+      "name": "Vantage Station \u2014 Reveal",
+      "slug": "vantage-reveal"
+    }
+  ]
+}

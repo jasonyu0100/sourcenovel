@@ -1,0 +1,22 @@
+[
+  {
+    "name": "her-warning",
+    "prompt": "Medium shot. Woman in navy uniform straightening posture, smoothing fabric. Regaining composure. Expression hardening. Cool room lighting. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/valeria-caine.jpg"],
+    "dialogue": [{"speaker": "Valeria", "voice_id": "pFZP5JQG7iQjIQuC4Bku", "text": "You'll regret this when she forgets you."}],
+    "pause_after": 1.5
+  },
+  {
+    "name": "walking-to-door",
+    "prompt": "Medium shot from behind. Woman in navy uniform walking toward door RIGHT of frame. Dark-haired man visible standing LEFT in background. Distance between them growing. Cool room lighting. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/valeria-caine.jpg", "series/the-ninth-terrace/world/characters/idris.jpg", "series/the-ninth-terrace/world/locations/quarters-cool.jpg"],
+    "silence": 2.0
+  },
+  {
+    "name": "second-door",
+    "prompt": "Close-up on door closing. Metal surface, handle settling. Cool corridor light at edges disappearing. The same quiet closure. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/locations/quarters-door-interior.jpg"],
+    "silence": 2.5,
+    "sfx": [{"description": "door latch clicking closed, quiet and final, echoing the opening", "duration": 1.5}]
+  }
+]

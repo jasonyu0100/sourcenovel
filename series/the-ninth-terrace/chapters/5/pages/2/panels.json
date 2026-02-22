@@ -1,0 +1,28 @@
+[
+  {
+    "name": "sensing",
+    "prompt": "Close-up on dark-haired man's face in profile, looking toward door. Alert stillness, jaw tight. Cool blue light from window behind him illuminating edge of face. Dark room around him. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/idris.jpg"],
+    "silence": 2.0
+  },
+  {
+    "name": "the-knock",
+    "prompt": "Medium shot on door from interior. Metal surface, cool corridor light visible through gap at bottom. The stillness before it opens. Room interior visible in foreground edges. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/locations/quarters-door-interior.jpg"],
+    "silence": 1.5,
+    "sfx": [{"description": "three confident knocks on metal door", "duration": 2.0}]
+  },
+  {
+    "name": "door-opens",
+    "prompt": "Wide shot from room interior. Door opening RIGHT of frame, dark-haired woman in navy military uniform stepping through. Dark-haired man standing center-left, facing door. Cool blue-white room lighting. Distance between them. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/idris.jpg", "series/the-ninth-terrace/world/characters/valeria-caine.jpg", "series/the-ninth-terrace/world/locations/quarters-cool.jpg"],
+    "silence": 2.0
+  },
+  {
+    "name": "valeria-enters",
+    "prompt": "Medium shot. Woman with dark hair swept back, navy military dress uniform with gold accents. Standing in doorway, confident posture, knowing smile. Cool corridor light behind her, room light in front. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/valeria-caine.jpg"],
+    "dialogue": [{"speaker": "Valeria", "voice_id": "pFZP5JQG7iQjIQuC4Bku", "text": "Idris. You look terrible."}],
+    "pause_after": 1.0
+  }
+]

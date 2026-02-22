@@ -1,0 +1,22 @@
+[
+  {
+    "name": "two-shot-tension",
+    "prompt": "Two-shot from low angle between seats. Brunette woman (Sera) LEFT, silver-haired woman (Reva) RIGHT. Both looking at each other, the conversation reaching its point. Cool blue-white transport lighting from above creating dramatic shadows. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg", "world/characters/reva-orin.jpg"],
+    "silence": 1.5
+  },
+  {
+    "name": "some-people",
+    "prompt": "Close-up. Older woman's face, eyes directly at camera/Sera. Delivering truth without judgment. Sharp features, silver-streaked hair. Expression knowing, almost gentle. Cool blue light from above. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/reva-orin.jpg"],
+    "dialogue": [{"speaker": "Reva", "voice_id": "SaqYcK3ZpDKBAImA8AdW", "text": "Some people can't handle that freedom. Some people need the frame. Some people choose the weight because existence without it feels like falling."}],
+    "pause_after": 1.5,
+    "sfx": [{"description": "soft atmospheric pulse, words resonating, emotional truth settling", "duration": 1.5}]
+  },
+  {
+    "name": "landing",
+    "prompt": "Close-up on young brunette woman's face. Words landing somewhere unexpected. Not recruitment, not evaluation — something closer to recognition. Eyes soft with realization, composure intact but something shifting underneath. Cool blue light from viewport side. Light burst beginning behind — halftone fade, revelation dawning. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "silence": 2.0
+  }
+]

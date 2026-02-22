@@ -1,0 +1,9 @@
+[
+  {
+    "name": "ftl-transition",
+    "prompt": "Close-up, tight framing. Young woman with flowing brunette hair, eyes closed, feeling something pass through her. Face caught in a moment of wrongness — space folding around her, the universe briefly incorrect. Cool blue-white light from the left side illuminating her features. Expression of concentration mixed with loss. Dark background with subtle warped light streaks suggesting FTL transit. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "silence": 3.0,
+    "sfx": [{"description": "deep warping hum, space folding, reality bending then snapping into place", "duration": 2.5}]
+  }
+]

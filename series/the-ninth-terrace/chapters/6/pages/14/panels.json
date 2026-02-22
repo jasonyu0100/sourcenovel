@@ -1,0 +1,20 @@
+[
+  {
+    "name": "vantage-full",
+    "prompt": "Extreme wide shot through viewport. Vantage station in full — massive orbital city-station, construction frames extending into void, shipyards and research domes gleaming, thousands of ships in formation around it. Still being built, still becoming. Bright lights against the void. The future rendered in metal and light. | anime manga, cel shading, detailed sci-fi illustration, epic scale",
+    "ref": ["world/locations/vantage-reveal.jpg"],
+    "silence": 2.5
+  },
+  {
+    "name": "sera-face-light",
+    "prompt": "Close-up on young brunette woman's face, illuminated by brilliant light from viewport. Eyes reflecting the station's glow. Expression transformed — resolved, armored, hard with conviction. The woman who laughed, who reached, who straightened his collar — she made a choice. This woman will live with it. Warm golden light from the right, face in profile. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "silence": 2.0
+  },
+  {
+    "name": "not-looking-back",
+    "prompt": "Medium shot, profile view. Young brunette woman facing forward, profile sharp against brilliant viewport light. She doesn't look back toward where she came from. Dark fitted attire silhouetted. Warm golden light flooding from right, cool blue interior behind camera. Done looking back. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "silence": 2.5
+  }
+]

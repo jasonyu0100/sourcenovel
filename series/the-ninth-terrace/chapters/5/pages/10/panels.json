@@ -1,0 +1,16 @@
+[
+  {
+    "name": "the-offer",
+    "prompt": "Close-up. Woman's face, dark hair swept back. Warmth in expression, offering comfort. Eyes soft, lips parted slightly. Soft warm bokeh behind, intimate lighting. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/valeria-caine.jpg"],
+    "dialogue": [{"speaker": "Valeria", "voice_id": "pFZP5JQG7iQjIQuC4Bku", "text": "Come back with me. Come home."}],
+    "pause_after": 1.5
+  },
+  {
+    "name": "almost-kiss",
+    "prompt": "Extreme close-up. Two faces inches apart. Dark-haired woman leaning in from RIGHT, dark-haired man from LEFT. Her eyes closed, his eyes open. The moment suspended. Soft warm light, shallow depth. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["series/the-ninth-terrace/world/characters/valeria-caine.jpg", "series/the-ninth-terrace/world/characters/idris.jpg"],
+    "silence": 3.5,
+    "sfx": [{"description": "breath held, tension suspended in silence", "duration": 3.0}]
+  }
+]

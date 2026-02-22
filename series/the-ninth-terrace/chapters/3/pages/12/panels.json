@@ -1,0 +1,14 @@
+[
+  {
+    "name": "he-wants-to-cross",
+    "prompt": "Medium shot from behind dark-haired man, over his shoulder LEFT of frame. Brunette woman at window ahead RIGHT, her back to him, three meters away. He can see her silhouette against city lights — dark hair, straight posture, hand on glass. Room visible around them. He wants to cross — wants to stand behind her, put his hand over hers. Three meters feels like a boundary. Warm amber room light on him, cool window light on her. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/quarters-wide-couch.jpg"],
+    "silence": 3.0
+  },
+  {
+    "name": "the-final-image",
+    "prompt": "Wide shot from corner of room. Full officers quarters visible: datapad face-down on table center, dark-haired man (Idris) standing near table LEFT side of frame, brunette woman (Sera) standing at window RIGHT side of frame, her back to him. Three meters between them, neither moving toward the other. Warm amber lighting filling a room that was theirs. The silence, the distance, the datapad they both know the contents of. Final image — two people waiting. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/quarters-wide-couch.jpg"],
+    "silence": 3.5
+  }
+]

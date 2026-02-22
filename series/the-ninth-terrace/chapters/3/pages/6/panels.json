@@ -1,0 +1,21 @@
+[
+  {
+    "name": "marens-disappointment",
+    "prompt": "Close-up. Auburn-haired woman in corridor receiving the non-answer. Disappointment settling over understanding — she'd hoped, she'd known better. Cool corridor light behind her, resignation in her eyes. Background: soft fade to dark, hope dimming. The light going out. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/maren-caul.jpg"],
+    "silence": 2.5
+  },
+  {
+    "name": "exchange-between-women",
+    "prompt": "Two-shot, the two women. Auburn-haired woman in corridor LEFT of frame looking at brunette woman in room RIGHT of frame. Silent understanding passing between them — a question about him, an answer about time. Cool corridor light on LEFT half, warm amber light on RIGHT half. Something communicated that he can see but not interpret. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/maren-caul.jpg", "world/characters/sera.jpg"],
+    "silence": 2.0
+  },
+  {
+    "name": "the-deadline",
+    "prompt": "Medium shot. Auburn-haired woman in corridor, final posture — accepting his non-answer. Resolve visible in her stance. Corridor walls behind her, cool blue lighting. Door frame at edge of shot RIGHT. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/maren-caul.jpg"],
+    "dialogue": [{"speaker": "Maren", "voice_id": "21m00Tcm4TlvDq8ikWAM", "text": "Transport leaves at 0400. After that, the window closes."}],
+    "pause_after": 1.2
+  }
+]

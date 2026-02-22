@@ -1,0 +1,50 @@
+{
+  "chapterNum": 5,
+  "arcNum": 1,
+  "defaultCharacter": "Idris",
+  "startingLocation": "quarters-cool",
+  "characters": [
+    {
+      "name": "Idris",
+      "slug": "idris"
+    },
+    {
+      "name": "Valeria",
+      "slug": "valeria-caine"
+    },
+    {
+      "name": "Sera",
+      "slug": "sera"
+    },
+    {
+      "name": "Maren",
+      "slug": "maren-caul"
+    }
+  ],
+  "locations": [
+    {
+      "name": "Quarters \u2014 Cool Lighting",
+      "slug": "quarters-cool"
+    },
+    {
+      "name": "Quarters Door Interior",
+      "slug": "quarters-door-interior"
+    },
+    {
+      "name": "Quarters Window",
+      "slug": "quarters-window"
+    },
+    {
+      "name": "Corridor",
+      "slug": "corridor"
+    },
+    {
+      "name": "Transport Dock",
+      "slug": "transport-dock"
+    },
+    {
+      "name": "Transport Interior",
+      "slug": "transport-interior"
+    }
+  ]
+}

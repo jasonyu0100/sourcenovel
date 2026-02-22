@@ -1,0 +1,28 @@
+[
+  {
+    "name": "the-silence",
+    "prompt": "Two-shot, close framing. Dark-haired man LEFT, brunette woman RIGHT. Close enough to touch, neither reaching. The space between their hands visible. Silence worse than argument. Cool blue room around them. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/quarters-cool.jpg"],
+    "silence": 3.0
+  },
+  {
+    "name": "wide-impasse",
+    "prompt": "Wide shot from behind Idris. Man LEFT foreground, woman CENTER. Door visible RIGHT of frame, large and important. Cool blue-white room. The exit waiting. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/locations/quarters-cool.jpg", "world/locations/quarters-door-interior.jpg"],
+    "silence": 2.0
+  },
+  {
+    "name": "sera-explains",
+    "prompt": "Medium close-up. Brunette woman, voice gentle now. Eyes soft, composure giving way to something sadder. The fight leaving her face. Cool light on her features. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "I can't stay. Not because I don't love you."}],
+    "pause_after": 1.2
+  },
+  {
+    "name": "her-truth",
+    "prompt": "Close-up. Brunette woman speaking her truth. Eyes holding his. Warm soft bokeh behind — intimacy in the devastation. | anime manga, cel shading, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "I was never going to be that person. I thought you knew that."}],
+    "pause_after": 1.5
+  }
+]

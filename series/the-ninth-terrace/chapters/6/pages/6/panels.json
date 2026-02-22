@@ -1,0 +1,21 @@
+[
+  {
+    "name": "considering-deflection",
+    "prompt": "Medium shot. Young brunette woman seated against viewport, looking down and to the side. Considering deflection — the careful nothing she'd give anyone else. Transport interior visible behind her, cool blue-white lighting. Guarded posture, arms slightly crossed. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg", "world/locations/transport-bay-wide.jpg"],
+    "silence": 1.5
+  },
+  {
+    "name": "raw-answer",
+    "prompt": "Close-up. Young brunette woman, eyes not meeting the other's gaze, looking to the side. Speaking flat, clinical — like reading someone else's file. Expression controlled but raw underneath. Cool blue light from left, face partially shadowed. Background abstract cool tones. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "The other half of the highest bilateral synergy ever recorded. A man who chose to remember."}],
+    "pause_after": 1.2
+  },
+  {
+    "name": "two-shot-aftermath",
+    "prompt": "Two-shot from side of aisle. Brunette woman (Sera) LEFT, still not meeting eyes, having just spoken. Older silver-haired woman (Reva) RIGHT, posture shifting — recognition, calculation, both. Space between them charged. Cool blue-white transport lighting. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg", "world/characters/reva-orin.jpg"],
+    "silence": 1.5
+  }
+]

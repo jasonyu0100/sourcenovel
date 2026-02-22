@@ -1,0 +1,28 @@
+[
+  {
+    "name": "sera-calculates",
+    "prompt": "Close-up, tight on face. Brunette woman processing implications — she's Sovereignty-born, calculating what this means. Strategic mind visible in her pale eyes. Warm amber light from the LEFT side, soft shadows on right. Background: subtle geometric pattern — analytical mind at work, calculating paths. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "silence": 2.0
+  },
+  {
+    "name": "idris-is-not",
+    "prompt": "Close-up, tight framing. Dark-haired man standing apart at door, closed off expression. He's Ascendancy-born — the crack forms. Cool blue corridor light mixing with warm amber from behind him, split lighting on his face. Dark eyes guarded. Background: vertical divide — half warm amber, half cool blue. The fracture visualized. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg"],
+    "silence": 2.0
+  },
+  {
+    "name": "torren",
+    "prompt": "Close-up. Dark-haired man asking about someone specific — the name matters. Controlled expression but the weight visible in dark eyes. Warm amber light from LEFT, shadows on right. Background: heavy crosshatching, dark pressure. The cost of asking. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg"],
+    "dialogue": [{"speaker": "Idris", "voice_id": "IKne3meq5aSn9XLyUdCD", "text": "Torren?"}],
+    "pause_after": 1.0
+  },
+  {
+    "name": "the-flood",
+    "prompt": "Close-up. Auburn-haired woman delivering the list of names — each one costs her. Heartbreak visible beneath professional composure. Cool corridor light behind, warm room light on face. Background: downward flowing lines — names falling like weight. The flood of losses. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/maren-caul.jpg"],
+    "dialogue": [{"speaker": "Maren", "voice_id": "21m00Tcm4TlvDq8ikWAM", "text": "Already on a transport. Vasquez and Chen went with him. Orin-Daal was detained."}],
+    "pause_after": 0.8
+  }
+]

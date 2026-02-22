@@ -1,0 +1,29 @@
+[
+  {
+    "name": "he-starts-to-defend",
+    "prompt": "Medium shot. Dark-haired man opening his mouth to speak, hand raised slightly. Defensive posture beginning. Warm amber room behind. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg"],
+    "dialogue": [{"speaker": "Idris", "voice_id": "IKne3meq5aSn9XLyUdCD", "text": "The Terrace—"}]
+  },
+  {
+    "name": "dont",
+    "prompt": "Close-up, tight framing. Brunette woman cutting him off mid-word. Eyes sharp, jaw set. Dark radiating lines behind her. | anime manga, cel shading, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "Don't."}],
+    "pause_after": 1.0
+  },
+  {
+    "name": "she-dismantles",
+    "prompt": "Medium shot. Brunette woman at table, light catching her dark eyes. Eyes hard, jaw set. Warm amber from room, cool hint from window. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/sera.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "Do you actually believe a line on a treaty will protect you when both sides decide it won't?"}],
+    "pause_after": 0.8
+  },
+  {
+    "name": "two-shot-distance",
+    "prompt": "Two-shot from side angle. Dark-haired man LEFT of frame, brunette woman RIGHT. Table between them, visible space. Warm amber room. Neither moving closer. | anime manga, cel shading, clean linework, dramatic lighting",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/quarters-wide-couch.jpg"],
+    "dialogue": [{"speaker": "Idris", "voice_id": "IKne3meq5aSn9XLyUdCD", "text": "It's not about protection. It's about choosing where to stand."}],
+    "pause_after": 0.8
+  }
+]

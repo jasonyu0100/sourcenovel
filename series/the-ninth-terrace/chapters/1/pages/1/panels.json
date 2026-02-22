@@ -1,0 +1,29 @@
+[
+  {
+    "name": "promenade",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, extreme wide establishing shot, bird's eye angle tilted slightly forward, magnificent golden tree-lined avenue stretching into the distance in a long curve, luminara trees with silver-white bark and translucent amber leaf canopy forming cathedral arches overhead, warm golden honeyed light filtering through leaves, golden light motes drifting like slow snow, carved stone balustrade along the left edge with starfield and cosmic void beyond, golden stone paving, tiered futuristic architecture rising in illuminated layers in the far background, two small figures walking together along the avenue — a woman in dark fitted dress half a step ahead and a man in dark mandarin collar suit behind her, their silhouettes framed by the golden canopy tunnel, Makoto Shinkai atmospheric lighting with visible light shafts and bokeh, warm amber and gold color palette, cinematic depth of field with foreground leaves slightly out of focus",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/grand-promenade.jpg"],
+    "silence": 2.5,
+    "sfx": [{"description": "gentle ambient space station hum with soft wind through luminara leaves and distant birdsong", "duration": 2.5}]
+  },
+  {
+    "name": "sera-council",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, medium shot from slightly behind and to the right, beautiful young woman with flowing brunette waves walking along a golden avenue, she is speaking while looking straight ahead not turning back, mouth slightly open mid-sentence, her expression grave and measured as she delivers serious political news, high cheekbones catching warm golden light from above, dark luminous eyes carrying the weight of what she is saying, wearing elegant dark fitted dress with subtle tech-line accents at collar and cuffs, silver-white tree trunks and amber canopy visible in background, golden light motes floating around her, warm amber tones, shallow depth of field with bokeh on background architecture",
+    "ref": ["world/characters/sera.jpg", "world/locations/grand-promenade.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "The Senatorial Council voted. Formal dissolution — two Thrones by end of the standard week."}]
+  },
+  {
+    "name": "idris-knows",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, close-up portrait, handsome young man with dark slightly unkempt hair, sharp angular features and strong jawline, dark watchful eyes with a guarded distant expression as if he already knew and has been carrying the weight in silence, jaw set, mouth barely open, wearing dark mandarin collar suit with clean lines, warm golden ambient light from the luminara canopy catching the left side of his face, dark shadows on the right, shallow depth of field with golden bokeh circles in background, composed and still while the world glows around him, cinematic portrait framing with negative space on the right",
+    "ref": ["world/characters/idris.jpg"],
+    "dialogue": [{"speaker": "Idris", "voice_id": "IKne3meq5aSn9XLyUdCD", "text": "I know."}],
+    "pause_after": 1.2
+  },
+  {
+    "name": "sera-cuts",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, medium wide two-shot from eye level, beautiful young woman with brunette waves glancing back over her right shoulder toward the camera with a sharp knowing expression, dark luminous eyes carrying an edge of frustration and affection, one eyebrow slightly raised, mouth open speaking with quiet challenge, golden light catching her hair, young man with dark unkempt hair visible a step behind her in the midground his expression closed off and avoidant, the golden avenue stretches ahead of them with luminara trees forming cathedral arches, amber leaves and golden light motes floating between them, carved stone balustrade and starfield visible at the left edge, warm amber and gold tones throughout, cinematic depth of field",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/grand-promenade.jpg"],
+    "dialogue": [{"speaker": "Sera", "voice_id": "XB0fDUnXU5powFXDhCwa", "text": "You always know. You just never do anything about it."}],
+    "pause_after": 1.0
+  }
+]

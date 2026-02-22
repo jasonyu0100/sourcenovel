@@ -1,0 +1,34 @@
+{
+  "chapterNum": 4,
+  "arcNum": 1,
+  "defaultCharacter": "Idris",
+  "startingLocation": "quarters-wide-couch",
+  "characters": [
+    {
+      "name": "Idris",
+      "slug": "idris"
+    },
+    {
+      "name": "Sera",
+      "slug": "sera"
+    }
+  ],
+  "locations": [
+    {
+      "name": "Shared Quarters",
+      "slug": "quarters-wide-couch"
+    },
+    {
+      "name": "Quarters Window",
+      "slug": "quarters-window"
+    },
+    {
+      "name": "Quarters Cool",
+      "slug": "quarters-cool"
+    },
+    {
+      "name": "Quarters Door",
+      "slug": "quarters-door-interior"
+    }
+  ]
+}

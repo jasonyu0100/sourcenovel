@@ -1,0 +1,21 @@
+[
+  {
+    "name": "collar",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, ultrawide intimate medium close-up shot composed with open space in the upper left quarter showing the luminara canopy and golden bokeh, the two figures positioned in the right two-thirds of the frame, a beautiful young woman with brunette waves reaching up to straighten a young man's dark mandarin collar with her slender fingers, her expression soft and absent with gentle focus as if performing an automatic caring gesture she does without thinking, lips parted speaking softly, the man's face partially visible in the right edge of the frame looking down at her with quiet intensity and tenderness in his dark eyes, warm golden ambient light from luminara canopy above filling the open upper left area, the carved stone balustrade and starfield visible as a blurred background, her dark dress and his dark suit contrasting against the warm golden atmosphere, shallow depth of field with golden bokeh, intimate and tender",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/grand-promenade.jpg"],
+    "silence": 2.0
+  },
+  {
+    "name": "hand-chest",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, ultrawide extreme close-up detail shot centered on a woman's hand held flat against a man's chest over his heart, his larger hand covering hers gently, dark mandarin collar suit fabric visible with clean lines, both faces partially visible at the edges of the frame — her dark luminous eyes open and vulnerable on the left without any performance or composure, his sharp features softened with raw tenderness on the right with eyes looking down at her, warm golden light from above casting soft shadows through their interlinked fingers, golden light motes floating around them, shallow depth of field, warm gold tones, melancholic tenderness, the most intimate moment two guarded people allow themselves",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg"],
+    "silence": 2.5
+  },
+  {
+    "name": "final-glow",
+    "prompt": "anime manga style, cel shading, clean linework, dramatic lighting, high detail manga illustration, vibrant colors, studio quality anime key visual, ultrawide cinematic pullback shot, a man pressing his lips gently to a woman's forehead while she has her eyes peacefully closed with a serene trusting expression and her fingers curled softly against his dark mandarin collar shirt, they stand together at the golden stone balustrade of the viewing terrace, the magnificent luminara avenue stretching behind them with silver-white tree trunks and amber canopy glowing, golden light motes drifting around them like slow snow, the carved balustrade and infinite starfield visible to the side, a faint blue holographic notification glowing from a public broadcast column in the midground ignored, the Ninth Terrace's tiered golden architecture rising in the far background, Makoto Shinkai atmospheric lighting with warm gold and cool starlight, the last moment of peace before the world changes, bittersweet beauty",
+    "ref": ["world/characters/idris.jpg", "world/characters/sera.jpg", "world/locations/grand-promenade.jpg"],
+    "silence": 3.5,
+    "sfx": [{"description": "warm ambient luminara leaves rustling with distant golden chimes and soft heartbeat", "duration": 3.5}]
+  }
+]
