@@ -99,15 +99,18 @@ export default function HomePage() {
       {/* Header */}
       <header className="relative z-10 px-6 py-6">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold text-white">SourceNovel</h1>
-            <p className="text-xs text-slate-500">Generative Fiction</p>
+          <div className="flex items-center gap-3">
+            <img src="/source-novel-icon.png" alt="SourceNovel" className="w-8 h-8 rounded-lg" />
+            <div>
+              <h1 className="text-xl font-bold text-white">SourceNovel</h1>
+              <p className="text-xs text-slate-500">Generative Fiction</p>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="relative z-10 flex-1 flex flex-col justify-center py-8">
+      <main className="relative z-10 flex-1 flex flex-col py-8">
         {/* Series Carousel */}
         <div className="relative">
           {/* Navigation Arrows */}
@@ -153,10 +156,10 @@ export default function HomePage() {
                     scrollToIndex(index);
                   }
                 }}
-                className={`group relative flex-shrink-0 w-[360px] sm:w-[440px] aspect-[3/4] rounded-2xl overflow-hidden snap-center transition-all duration-500 ${
+                className={`group relative flex-shrink-0 w-[360px] sm:w-[440px] aspect-[3/4] rounded-2xl overflow-hidden snap-start transition-all duration-500 ${
                   index === activeIndex
                     ? "scale-100 opacity-100 shadow-2xl shadow-violet-500/20"
-                    : "scale-90 opacity-50 cursor-pointer"
+                    : "scale-95 opacity-50 cursor-pointer"
                 }`}
               >
                 {/* Card Background */}
@@ -230,15 +233,85 @@ export default function HomePage() {
             {activeIndex + 1} of {seriesList.length} stories
           </p>
         </div>
+
+        {/* Below Carousel Content */}
+        <div className="w-full max-w-2xl self-center px-4 mt-16 mb-8 space-y-12">
+          {/* Getting Started */}
+          <section>
+            <h2 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-4">Create Your Own</h2>
+            <p className="text-xs text-slate-500 leading-relaxed mb-5">
+              Generative Fiction — stories co-created by humans and AI. Clone the repo, add your API keys, and use Claude Code skills to write, illustrate, and publish your own visual novel.
+            </p>
+
+            {/* Setup */}
+            <div className="space-y-4">
+              <div>
+                <p className="text-xs font-medium text-slate-300 mb-2">1. Clone and install</p>
+                <pre className="text-[11px] text-slate-400 bg-white/[0.03] border border-slate-800/50 rounded-lg px-3 py-2 overflow-x-auto">
+{`git clone https://github.com/jasonyu0100/sourcenovel.git
+cd sourcenovel && npm install`}
+                </pre>
+              </div>
+
+              <div>
+                <p className="text-xs font-medium text-slate-300 mb-2">2. API keys</p>
+                <pre className="text-[11px] text-slate-400 bg-white/[0.03] border border-slate-800/50 rounded-lg px-3 py-2 overflow-x-auto">
+{`cp .env.example .env`}
+                </pre>
+                <div className="mt-2 space-y-1">
+                  <p className="text-[11px] text-slate-500">
+                    <a href="https://replicate.com/account/api-tokens" target="_blank" rel="noopener noreferrer" className="text-violet-400/70 hover:text-violet-400">Replicate</a> — image generation (Seedream)
+                  </p>
+                  <p className="text-[11px] text-slate-500">
+                    <a href="https://elevenlabs.io/app/settings/api-keys" target="_blank" rel="noopener noreferrer" className="text-violet-400/70 hover:text-violet-400">ElevenLabs</a> — TTS narration and music
+                  </p>
+                  <p className="text-[11px] text-slate-500">
+                    <a href="https://openrouter.ai/settings/keys" target="_blank" rel="noopener noreferrer" className="text-violet-400/70 hover:text-violet-400">OpenRouter</a> — interactive episode AI
+                  </p>
+                  <p className="text-[11px] text-slate-500">
+                    <a href="https://claude.com/claude-code" target="_blank" rel="noopener noreferrer" className="text-violet-400/70 hover:text-violet-400">Claude Code</a> — runs the authoring workflow
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <p className="text-xs font-medium text-slate-300 mb-2">3. Start writing</p>
+                <pre className="text-[11px] text-slate-400 bg-white/[0.03] border border-slate-800/50 rounded-lg px-3 py-2 overflow-x-auto">
+{`claude                    # open Claude Code
+/workflow-new-series      # create your series
+/workflow-new-arc         # define your first arc
+/workflow-new-chapter     # start writing`}
+                </pre>
+              </div>
+
+              <div>
+                <p className="text-xs font-medium text-slate-300 mb-2">4. Pipeline</p>
+                <pre className="text-[11px] text-slate-500 bg-white/[0.03] border border-slate-800/50 rounded-lg px-3 py-2 overflow-x-auto whitespace-pre">
+{`memory → route → compose → review → web
+                                      ↓
+model → set → world → staging → pages → video → episode`}
+                </pre>
+                <p className="text-[11px] text-slate-500 mt-2">
+                  Each step is a <code className="text-violet-400/60 bg-violet-500/5 px-1 rounded">/workflow-*</code> command. Run <code className="text-violet-400/60 bg-violet-500/5 px-1 rounded">/workflow-status</code> to see where you are.
+                </p>
+              </div>
+            </div>
+
+            <a
+              href="https://github.com/jasonyu0100/sourcenovel"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mt-6 text-xs text-slate-600 hover:text-slate-400 transition-colors"
+            >
+              Full documentation on GitHub →
+            </a>
+          </section>
+        </div>
       </main>
 
       {/* Footer */}
       <footer className="relative z-10 border-t border-slate-800/30">
-        <div className="max-w-6xl mx-auto px-6 py-6 text-center">
-          <p className="text-slate-600 text-xs">
-            AI-generated visual stories with interactive narratives
-          </p>
-        </div>
+        <div className="max-w-6xl mx-auto px-6 py-6" />
       </footer>
     </div>
   );

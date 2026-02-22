@@ -1,13 +1,27 @@
-# Web Novel Template
+# SourceNovel
 
-An AI-powered authoring platform that turns your story ideas into illustrated, interactive web novels. Built with [Claude Code](https://claude.com/claude-code) and Next.js.
+An AI-powered authoring platform that turns your story ideas into illustrated, interactive web novels with manga-style visuals. Built with [Claude Code](https://claude.com/claude-code) and Next.js.
+
+## How It Works
+
+SourceNovel is driven by **18 Claude Code skills** — specialized prompt workflows that guide Claude through every stage of novel production. Each skill encapsulates a distinct creative task, from narrative planning to visual design to video assembly. You invoke them as slash commands (`/workflow-*`) and Claude handles the rest.
+
+The skills are organized into four phases:
+
+- **Setup (3 skills)** — Series creation, arc definition, and chapter initialization. Interactive conversations where you and Claude establish story direction together.
+- **Text (5 skills)** — The writing pipeline. Claude builds context from your sources, plans beats, drafts prose in your style, self-reviews against the outline, and generates an explorable web tree.
+- **Visual (6 skills)** — Manga production. Claude extracts a spatial model from your prose, designs sets and costumes, builds a world reference library with generated images, composes panel prompts, renders pages, and assembles narrated video.
+- **Integration (2 skills)** — Finalization. Generates interactive episode data and checks arc progress.
+- **Utility (2 skills)** — Status checks and step resets.
+
+The skills act as a structured creative process — each one prompts Claude with the right context, constraints, and output format so the result is consistent and builds on previous steps. You stay in control of direction; the skills handle execution.
 
 ## What You Get
 
-- **AI-assisted writing** — Claude helps you write chapters step by step: outline, draft, review
-- **Generated illustrations** — Images created from your visual style guide
-- **Ambient music** — Background tracks composed for each chapter
-- **Interactive web reader** — Explorable chapter views, reading progress, theme customization
+- **Skill-driven authoring** — 18 purpose-built workflows guide Claude through writing, illustration, and production
+- **Manga-style illustrations** — Panel images generated from spatial models and visual direction
+- **Chapter videos** — Narrated video with TTS dialogue and background music
+- **Interactive web reader** — Explorable chapter views with episode mode, reading progress, theme customization
 - **EPUB export** — Download your story as an ebook
 
 ## Quick Start
@@ -16,15 +30,15 @@ An AI-powered authoring platform that turns your story ideas into illustrated, i
 
 - [Node.js](https://nodejs.org/) 18+
 - [Claude Code](https://claude.com/claude-code) CLI installed
-- API keys for image/music generation (optional, for media features):
+- API keys for media generation (optional, for visual/audio features):
   - [Replicate](https://replicate.com/) — image generation
-  - [ElevenLabs](https://elevenlabs.io/) — music generation
+  - [ElevenLabs](https://elevenlabs.io/) — TTS and music generation
 
 ### 1. Clone and install
 
 ```bash
-git clone https://github.com/jasonyu0100/web-novel-template.git
-cd web-novel-template
+git clone https://github.com/jasonyu0100/sourcenovel.git
+cd sourcenovel
 npm install
 ```
 
@@ -43,7 +57,7 @@ REPLICATE_API_TOKEN=your_token_here
 ELEVEN_LABS_API_KEY=your_key_here
 ```
 
-These are only needed for image and music generation. The writing workflow works without them.
+These are only needed for image, video, and music generation. The writing workflow works without them.
 
 ### 3. Start your series
 
@@ -59,9 +73,7 @@ Then run:
 /workflow-new-series
 ```
 
-Claude will have a conversation with you about your story — genre, protagonist, setting, tone. By the end, you'll have a complete series foundation: a series bible, visual style guide, writing module, and generated cover art.
-
-This also replaces the example "Intro to Forge" series with your own.
+Claude will have a conversation with you about your story — genre, protagonist, setting, tone. By the end, you'll have a complete series foundation: a series bible, visual style guide, writing module, direction module, and generated cover art.
 
 ### 4. Define your first arc
 
@@ -77,45 +89,56 @@ An arc is a group of chapters with a shared narrative thread. You'll define the 
 /workflow-new-chapter
 ```
 
-This kicks off the chapter pipeline. Claude will guide you through each step automatically:
+This kicks off the chapter pipeline. Claude will guide you through each step automatically.
 
-| Step | What happens |
-|------|-------------|
-| **Concept** | Set the chapter's objective and direction |
-| **Memory** | Claude gathers context from your sources and previous chapters |
-| **Route** | Plan the chapter beat by beat (you can adjust before writing) |
-| **Compose** | Claude writes the full draft following your outline and style |
-| **Review** | Quality check against the outline — pass or targeted revision |
-| **Web** | Generate an interactive explorable view |
-| **Complete** | Finalize and check arc progress |
+## Pipeline
 
-### 6. Add media (optional)
+The workflow has three phases:
 
 ```
-/workflow-media
+concept → memory → route → compose → review → web
+                                ↑         |
+                                └─rewrite─┘
+                                          ↓
+model → set → world → staging → pages → video → episode → complete
 ```
 
-Generates illustrations, background music, and visual story highlights. Requires Replicate and ElevenLabs API keys.
+### Text Phase — Writing
 
-### 7. Publish and preview
+| Step | Command | What happens |
+|------|---------|-------------|
+| 1 | `/workflow-new-chapter` | Set the chapter's objective and direction |
+| 2 | `/workflow-memory` | Gather context from sources and previous chapters |
+| 3 | `/workflow-route` | Plan the chapter beat by beat (8-15 nodes) |
+| 4 | `/workflow-compose` | Write the full draft following your outline and style |
+| 5 | `/workflow-review` | Quality check — pass or targeted revision |
+| 6 | `/workflow-web` | Generate interactive explorable tree view |
 
-```
-/workflow-sync
-```
+After web: proceed to `/workflow-model` for visual production, or skip to `/workflow-episode` for text-only output.
 
-Syncs your work to the web reader. Then:
+### Visual Phase — Manga Production (optional)
 
-```bash
-npm run dev
-```
+| Step | Command | What happens |
+|------|---------|-------------|
+| 7 | `/workflow-model` | Extract spatial model — scenes, beats, positions, dialogue |
+| 8 | `/workflow-set` | Design the production set — locations, costumes, props |
+| 9 | `/workflow-world` | Create world entries and generate reference images |
+| 10 | `/workflow-staging` | Transform beats into manga panel prompts |
+| 11 | `/workflow-pages` | Generate panel images from staging prompts |
+| 12 | `/workflow-video` | Generate narrated chapter video with TTS and BGM |
 
-Open [http://localhost:3000](http://localhost:3000) to see your story live.
+### Integration Phase — Finalization
 
-## Workflow Commands
+| Step | Command | What happens |
+|------|---------|-------------|
+| 13 | `/workflow-episode` | Generate episode.json for interactive chapter mode |
+| 14 | `/workflow-complete` | Finalize chapter, check arc progress, plan next steps |
+
+## All Commands
 
 | Command | Description |
 |---------|-------------|
-| `/workflow-new-series` | Create a new series (replaces intro-to-forge) |
+| `/workflow-new-series` | Create a new series with full foundation |
 | `/workflow-new-arc` | Define a new story arc |
 | `/workflow-new-chapter` | Start a new chapter |
 | `/workflow-memory` | Build chapter context |
@@ -123,13 +146,16 @@ Open [http://localhost:3000](http://localhost:3000) to see your story live.
 | `/workflow-compose` | Write the chapter |
 | `/workflow-review` | Review and revise |
 | `/workflow-web` | Generate interactive web view |
+| `/workflow-model` | Extract spatial model from prose |
+| `/workflow-set` | Design production set |
+| `/workflow-world` | Create world references and images |
+| `/workflow-staging` | Generate manga panel prompts |
+| `/workflow-pages` | Generate panel images |
+| `/workflow-video` | Generate narrated chapter video |
+| `/workflow-episode` | Generate interactive episode data |
 | `/workflow-complete` | Finalize chapter |
-| `/workflow-media` | Generate images, music, highlights |
-| `/workflow-sync` | Publish to web reader |
 | `/workflow-status` | Check current progress |
 | `/workflow-reset` | Redo a workflow step |
-| `/workflow-video` | Generate narrated chapter video |
-| `/workflow-arc-video` | Combine chapter videos into arc video |
 
 ## Project Structure
 
@@ -138,15 +164,28 @@ series/                  # Your authoring workspace
   {your-series}/
     series.md            # Series identity
     style.md             # Visual/audio style guide
-    modules/             # Writing module (voice, POV, style)
-    sources/             # Character sheets, world-building
-    arcs/                # Arc definitions
-    chapters/            # Chapter files and media
-    world/               # Visual references
+    modules/
+      writing-module.md  # Prose style guide (voice, POV, style)
+      direction-module.md # Visual storytelling guide
+    sources/             # *.md (general) + {arc-num}/*.md (arc-specific)
+    arcs/{arc-num}/      # concept.md, arc.md, formula.md
+    chapters/{chapter-num}/
+      concept.md         # Chapter direction
+      memory.md, route.md, draft.md, review.md, web.md
+      meta.json
+      media/             # background-music.mp3, chapter-video-*.mp4
+      pages/
+        model.md         # Spatial model (positions + beats)
+        set.md           # Set design (locations, costumes, props)
+        staging.md       # Full panel prompts
+        {P}/             # page.jpg + individual panel images
+    world/               # index.md + characters/, locations/, elements/
+                         # Each entry: {slug}.md + {slug}.jpg (reference)
 
-public/                  # Published content (synced from series/)
+public/                  # Published content
 app/                     # Next.js web reader
 components/              # React UI components
+scripts/                 # Build and sync utilities
 ```
 
 ## Deploying
