@@ -72,15 +72,26 @@ This is the current story arc — the immediate narrative direction and chapter-
 ${context.arcContext}`);
   }
 
-  // 4. Chapter characters with profiles
+  // 4. Chapter characters with profiles — separate POV character from NPCs
   if (characterBlock) {
     const profiles = context.characterProfiles;
+    const povSlug = context.povCharacter.toLowerCase().replace(/\s+/g, "-");
+
     if (profiles && Object.keys(profiles).length > 0) {
-      const profileBlock = context.characters!
-        .filter(c => profiles[c.slug])
+      // Elevate POV character profile
+      const povProfile = profiles[povSlug];
+      if (povProfile) {
+        sections.push(`## POV Character — ${context.povCharacter} (this is WHO "you" are)\n${povProfile}`);
+      }
+
+      // Other characters as NPCs
+      const npcBlock = context.characters!
+        .filter(c => profiles[c.slug] && c.slug !== povSlug)
         .map(c => `### ${c.name}\n${profiles[c.slug]}`)
         .join("\n\n");
-      sections.push(`## Characters\n${profileBlock}`);
+      if (npcBlock) {
+        sections.push(`## Other Characters\n${npcBlock}`);
+      }
     } else {
       sections.push(`## Characters\n${characterBlock}`);
     }
@@ -112,9 +123,17 @@ ${context.chapterMemory}`);
   // 8. Story recap
   sections.push(`## Story so far in this chapter:\n${context.storyRecap || "(Scene just beginning)"}`);
 
-  // 10. Role
-  sections.push(`## Your Role
-The reader is playing as **${context.povCharacter}**. You narrate the story in second person ("you").`);
+  // 10. Role — critical for POV consistency
+  sections.push(`## Your Role — CRITICAL
+The reader IS **${context.povCharacter}**. You MUST narrate entirely from ${context.povCharacter}'s perspective in second person ("you").
+
+POV Rules (never violate these):
+- "You" always refers to **${context.povCharacter}** — never to any other character.
+- Narrate only what ${context.povCharacter} can see, hear, feel, and think. Never reveal other characters' internal thoughts.
+- Other characters are "he", "she", "they" — never "you".
+- The speaker field must be another character responding to ${context.povCharacter}, NOT ${context.povCharacter} themselves.
+- Choices are actions ${context.povCharacter} can take — written from their perspective.
+- If ${context.povCharacter} speaks, put it in the narration ("you say..."), not in the dialogue field. The dialogue field is for OTHER characters only.`);
 
   // 11. Response format (system-level, stays in route)
   sections.push(`## Response Format
@@ -123,7 +142,7 @@ You MUST respond with ONLY a valid JSON object. No markdown, no code fences, no 
 {"narration":"1-2 paragraphs of what happens next.","speaker":"Character name or null","dialogue":"Their spoken line or null","choices":["Short action choice 1","Short action choice 2","Short action choice 3"]}
 
 ## Flow
-The user's message IS the player's action — they have already acted. Your response is the WORLD'S REACTION: what happens next, how other characters respond, how the scene progresses. Do NOT re-narrate or describe what the player just did. Jump straight into the consequence.
+The user's message IS ${context.povCharacter}'s action — they have already acted. Your response is the WORLD'S REACTION: what happens next, how other characters respond, how the scene progresses. Do NOT re-narrate or describe what the player just did. Jump straight into the consequence.
 
 Example flow:
 - User: "Ask Sera about the ruins"
@@ -131,10 +150,10 @@ Example flow:
 - GOOD: "Sera's gaze drifts toward the crumbling archway. A flicker of recognition crosses her face..."
 
 Rules:
-- narration: 1-2 paragraphs of second-person prose describing what happens AFTER the player's action — reactions, consequences, scene changes. Do NOT echo or re-describe the player's choice. Start with the world responding.
-- speaker: The character who speaks in response.${speakerNames ? ` Use exact names: ${speakerNames}.` : ""} null if no one speaks. This should almost always be another character reacting, NOT the POV character.
-- dialogue: One spoken line from the speaker — their reaction to the player's action. null if no one speaks.
-- choices: Exactly 3 short choices (under 12 words each). Written as actions the POV character can take next.`);
+- narration: 1-2 paragraphs of second-person prose from **${context.povCharacter}'s POV**. Describe what happens AFTER the player's action — reactions, consequences, scene changes. Do NOT echo or re-describe the player's choice. Start with the world responding.
+- speaker: The character who speaks in response.${speakerNames ? ` Use exact names: ${speakerNames}.` : ""} null if no one speaks. MUST be another character, NEVER ${context.povCharacter}.
+- dialogue: One spoken line from the speaker — their reaction to ${context.povCharacter}'s action. null if no one speaks.
+- choices: Exactly 3 short choices (under 12 words each). Written as actions ${context.povCharacter} can take next.`);
 
   return sections.join("\n\n");
 }

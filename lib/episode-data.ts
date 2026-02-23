@@ -265,3 +265,35 @@ export async function loadCharacterProfiles(
   );
   return Object.fromEntries(entries.filter((e): e is [string, string] => e !== null));
 }
+
+export async function loadLocationProfiles(
+  seriesId: string,
+  slugs: string[]
+): Promise<Record<string, string>> {
+  const entries = await Promise.all(
+    slugs.map(async (slug) => {
+      try {
+        const res = await fetch(`${API_BASE}/${seriesId}/world/locations/${slug}.md`);
+        if (!res.ok) return null;
+        const text = await res.text();
+        return [slug, text] as [string, string];
+      } catch {
+        return null;
+      }
+    })
+  );
+  return Object.fromEntries(entries.filter((e): e is [string, string] => e !== null));
+}
+
+export async function loadStyleGuide(
+  seriesId: string
+): Promise<string | null> {
+  try {
+    const res = await fetch(`${API_BASE}/${seriesId}/style.md`);
+    if (!res.ok) return null;
+    return await res.text();
+  } catch {
+    return null;
+  }
+}
+

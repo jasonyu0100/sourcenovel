@@ -289,6 +289,7 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, interactiveM
             chapterMemory: storyContext.chapterMemory,
             seriesContext: storyContext.seriesContext,
             arcContext: storyContext.arcContext,
+            characterProfiles: storyContext.characterProfiles,
           },
         }),
       });
