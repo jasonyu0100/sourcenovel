@@ -573,7 +573,7 @@ function CharacterPickerOption({ name, imageSrc, isDefault, onSelect }: {
       }`}
     >
       {/* Portrait */}
-      <div className="relative w-full aspect-[3/4] overflow-hidden">
+      <div className="relative w-full aspect-[2/3] overflow-hidden">
         <img
           src={imageSrc}
           alt={name}

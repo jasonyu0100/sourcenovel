@@ -335,7 +335,7 @@ export default function SourcesPage() {
                     }`}
                   >
                     {file.image && seriesId ? (
-                      <div className="aspect-[3/4] bg-slate-800 relative">
+                      <div className="aspect-[2/3] bg-slate-800 relative">
                         <Image
                           src={`${API_BASE}/${seriesId}/${file.image}`}
                           alt={file.label}
@@ -349,7 +349,7 @@ export default function SourcesPage() {
                         </span>
                       </div>
                     ) : (
-                      <div className="aspect-[3/4] bg-slate-800/60 flex flex-col items-center justify-center gap-1 p-2 relative">
+                      <div className="aspect-[2/3] bg-slate-800/60 flex flex-col items-center justify-center gap-1 p-2 relative">
                         <DocumentTextIcon className="w-5 h-5 text-slate-600" />
                         <span className="text-[11px] font-medium text-slate-400 text-center leading-tight">
                           {file.label}
@@ -634,7 +634,7 @@ export default function SourcesPage() {
                                               setContent("");
                                               setSidebarOpen(false);
                                             }}
-                                            className={`relative aspect-[3/4] rounded overflow-hidden border transition-all ${
+                                            className={`relative aspect-[2/3] rounded overflow-hidden border transition-all ${
                                               isActive
                                                 ? "border-violet-500 ring-1 ring-violet-500/50"
                                                 : "border-slate-700/50 hover:border-slate-500"

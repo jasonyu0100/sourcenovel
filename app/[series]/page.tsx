@@ -21,8 +21,6 @@ interface ChapterMedia {
   pageCount: number;
 }
 
-const introDismissedFor: Record<string, boolean> = {};
-
 export default function SeriesPage() {
   return (
     <Suspense>
@@ -37,7 +35,7 @@ function SeriesPageContent() {
 
   const [entry, setEntry] = useState<SeriesEntry | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showIntro, setShowIntro] = useState(!introDismissedFor[seriesId]);
+  const [showIntro, setShowIntro] = useState(true);
   const [introReady, setIntroReady] = useState(false);
   const [chapterMedia, setChapterMedia] = useState<Record<number, ChapterMedia>>({});
   const [chapterInfo, setChapterInfo] = useState<ChapterInfo[]>([]);
@@ -60,12 +58,10 @@ function SeriesPageContent() {
     const view = searchParams.get("view");
     if (view && ["gallery", "chapters", "videos", "episodes", "related"].includes(view)) {
       setActiveTab(view as TabType);
-      introDismissedFor[seriesId] = true;
       setShowIntro(false);
     }
     // Handle openReader query param
     if (searchParams.get("openReader") === "true") {
-      introDismissedFor[seriesId] = true;
       setShowIntro(false);
       setOpenPagesOnLoad(true);
     }
@@ -167,7 +163,6 @@ function SeriesPageContent() {
   };
 
   const dismissIntro = () => {
-    introDismissedFor[seriesId] = true;
     setShowIntro(false);
   };
 
@@ -214,7 +209,7 @@ function SeriesPageContent() {
               <img
                 src={`${API_BASE}/${seriesId}/${entry.cover}`}
                 alt={entry.title}
-                className="w-36 h-48 mx-auto rounded-xl object-cover shadow-2xl border border-white/10"
+                className="w-36 aspect-[2/3] mx-auto rounded-xl object-cover shadow-2xl border border-white/10"
               />
             </div>
           )}
@@ -257,7 +252,7 @@ function SeriesPageContent() {
                       setOpenPagesOnLoad(true);
                     }
                   }}
-                  className="inline-flex items-center justify-center gap-2 w-full max-w-xs px-8 py-3 rounded-full bg-cyan-600/30 hover:bg-cyan-600/40 border border-cyan-500/50 text-cyan-300 hover:text-white text-sm font-medium shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] transition-all duration-300"
+                  className="inline-flex items-center justify-center gap-2 w-full max-w-xs px-8 py-3 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-sm font-medium shadow-lg shadow-blue-600/25 hover:shadow-blue-500/40 transition-all duration-300"
                 >
                   <BookOpenIcon className="w-5 h-5" />
                   Read Pages
@@ -331,7 +326,7 @@ function SeriesPageContent() {
               hasEpisodes ? (
                 <Link
                   href={`/${seriesId}/episode/1`}
-                  className="hidden sm:block w-48 h-64 rounded-xl overflow-hidden shadow-2xl flex-shrink-0 border border-violet-400/30 glow-violet-pulse hover:scale-[1.03] transition-transform duration-300"
+                  className="hidden sm:block w-48 aspect-[2/3] rounded-xl overflow-hidden shadow-2xl flex-shrink-0 border border-violet-400/30 glow-violet-pulse hover:scale-[1.03] transition-transform duration-300"
                 >
                   <img
                     src={`${API_BASE}/${seriesId}/${entry.cover}`}
@@ -340,7 +335,7 @@ function SeriesPageContent() {
                   />
                 </Link>
               ) : (
-                <div className="hidden sm:block w-48 h-64 rounded-xl overflow-hidden shadow-2xl flex-shrink-0 border border-white/10 glow-violet">
+                <div className="hidden sm:block w-48 aspect-[2/3] rounded-xl overflow-hidden shadow-2xl flex-shrink-0 border border-white/10 glow-violet">
                   <img
                     src={`${API_BASE}/${seriesId}/${entry.cover}`}
                     alt={entry.title}
