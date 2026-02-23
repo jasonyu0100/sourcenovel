@@ -196,7 +196,7 @@ export default function HomePage() {
                       onClick={(e) => e.stopPropagation()}
                     >
                       <PlayIcon className="w-4 h-4" />
-                      Start Reading
+                      Enter World
                     </Link>
                   </div>
                 </div>
@@ -232,84 +232,6 @@ export default function HomePage() {
           <p className="text-slate-500 text-sm">
             {activeIndex + 1} of {seriesList.length} stories
           </p>
-        </div>
-
-        {/* Below Carousel Content */}
-        <div className="w-full max-w-2xl self-center px-4 mt-16 mb-8 space-y-12">
-          {/* Getting Started */}
-          <section>
-            <h2 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-4">Create Your Own</h2>
-            <p className="text-xs text-slate-500 leading-relaxed mb-5">
-              Generative Fiction — stories co-created by humans and AI. Clone the repo, add your API keys, and use Claude Code skills to write, illustrate, and publish your own visual novel.
-            </p>
-
-            {/* Setup */}
-            <div className="space-y-4">
-              <div>
-                <p className="text-xs font-medium text-slate-300 mb-2">1. Clone and install</p>
-                <pre className="text-[11px] text-slate-400 bg-white/[0.03] border border-slate-800/50 rounded-lg px-3 py-2 overflow-x-auto">
-{`git clone https://github.com/jasonyu0100/sourcenovel.git
-cd sourcenovel && npm install`}
-                </pre>
-              </div>
-
-              <div>
-                <p className="text-xs font-medium text-slate-300 mb-2">2. API keys</p>
-                <pre className="text-[11px] text-slate-400 bg-white/[0.03] border border-slate-800/50 rounded-lg px-3 py-2 overflow-x-auto">
-{`cp .env.example .env`}
-                </pre>
-                <div className="mt-2 space-y-1">
-                  <p className="text-[11px] text-slate-500">
-                    <a href="https://replicate.com/account/api-tokens" target="_blank" rel="noopener noreferrer" className="text-violet-400/70 hover:text-violet-400">Replicate</a> — image generation (Seedream)
-                  </p>
-                  <p className="text-[11px] text-slate-500">
-                    <a href="https://elevenlabs.io/app/settings/api-keys" target="_blank" rel="noopener noreferrer" className="text-violet-400/70 hover:text-violet-400">ElevenLabs</a> — TTS narration and music
-                  </p>
-                  <p className="text-[11px] text-slate-500">
-                    <a href="https://openrouter.ai/settings/keys" target="_blank" rel="noopener noreferrer" className="text-violet-400/70 hover:text-violet-400">OpenRouter</a> — interactive episode AI
-                  </p>
-                  <p className="text-[11px] text-slate-500">
-                    <a href="https://claude.com/claude-code" target="_blank" rel="noopener noreferrer" className="text-violet-400/70 hover:text-violet-400">Claude Code</a> — runs the authoring workflow
-                  </p>
-                </div>
-              </div>
-
-              <div>
-                <p className="text-xs font-medium text-slate-300 mb-2">3. Start writing</p>
-                <pre className="text-[11px] text-slate-400 bg-white/[0.03] border border-slate-800/50 rounded-lg px-3 py-2 overflow-x-auto">
-{`claude                    # open Claude Code
-/workflow-new-series      # create your series
-/workflow-new-arc         # define your first arc
-/workflow-new-chapter     # start writing`}
-                </pre>
-              </div>
-
-              <div>
-                <p className="text-xs font-medium text-slate-300 mb-2">4. Pipeline</p>
-                <pre className="text-[11px] text-slate-500 bg-white/[0.03] border border-slate-800/50 rounded-lg px-3 py-2 overflow-x-auto whitespace-pre">
-{`memory → route → compose → review → web
-                                      ↓
-model → set → world → staging → pages → video → episode`}
-                </pre>
-                <p className="text-[11px] text-slate-500 mt-2">
-                  Each step is a <code className="text-violet-400/60 bg-violet-500/5 px-1 rounded">/workflow-*</code> command. Run <code className="text-violet-400/60 bg-violet-500/5 px-1 rounded">/workflow-status</code> to see where you are.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4 mt-6">
-              <a
-                href="https://github.com/jasonyu0100/sourcenovel"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-slate-600 hover:text-slate-400 transition-colors"
-              >
-                Full documentation on GitHub →
-              </a>
-              <span className="text-slate-800">·</span>
-              <span className="text-xs text-slate-600">MIT License</span>
-            </div>
-          </section>
         </div>
       </main>
 
