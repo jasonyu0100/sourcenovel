@@ -3,9 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
+import { SignedIn } from "@clerk/nextjs";
 import {
   HomeIcon,
   SparklesIcon,
@@ -13,8 +11,8 @@ import {
   QuestionMarkCircleIcon,
   Bars3Icon,
   XMarkIcon,
-  BoltIcon,
 } from "@heroicons/react/24/outline";
+import { SidebarUser } from "./sidebar-user";
 
 const NAV_ITEMS = [
   { label: "Home", href: "/", icon: HomeIcon },
@@ -22,105 +20,64 @@ const NAV_ITEMS = [
   { label: "Help & FAQ", href: "/help", icon: QuestionMarkCircleIcon },
 ];
 
-const AUTHED_NAV_ITEMS = [
-  { label: "Home", href: "/", icon: HomeIcon },
-  { label: "Account", href: "/account", icon: UserCircleIcon },
-  { label: "Plans", href: "/plans", icon: SparklesIcon },
-  { label: "Help & FAQ", href: "/help", icon: QuestionMarkCircleIcon },
-];
-
-function NavLinks({
-  items,
-  isActive,
-  onNavigate,
+function NavLink({
+  href,
+  label,
+  icon: Icon,
+  active,
+  onClick,
 }: {
-  items: typeof NAV_ITEMS;
-  isActive: (href: string) => boolean;
-  onNavigate: () => void;
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  active: boolean;
+  onClick?: () => void;
 }) {
   return (
-    <nav className="flex flex-col gap-1 px-3">
-      {items.map((item) => {
-        const active = isActive(item.href);
-        const Icon = item.icon;
-        return (
-          <Link
-            key={item.href}
-            href={item.href}
-            onClick={onNavigate}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-              active
-                ? "bg-violet-500/15 text-violet-300 border border-violet-500/20"
-                : "text-slate-400 hover:text-white hover:bg-white/5 border border-transparent"
-            }`}
-          >
-            <Icon className="w-5 h-5 flex-shrink-0" />
-            {item.label}
-          </Link>
-        );
-      })}
-    </nav>
+    <Link
+      href={href}
+      onClick={onClick}
+      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+        active
+          ? "bg-violet-500/15 text-violet-300 border border-violet-500/20"
+          : "text-slate-400 hover:text-white hover:bg-white/5 border border-transparent"
+      }`}
+    >
+      <Icon className="w-5 h-5 flex-shrink-0" />
+      {label}
+    </Link>
   );
 }
 
-function TokenBadge() {
-  const tokens = useQuery(api.users.getTokenBalance);
-  return (
-    <div className="flex items-center gap-1.5">
-      <BoltIcon className="w-3.5 h-3.5 text-violet-400" />
-      <span className="text-xs text-slate-400">
-        <span className="text-white font-semibold">{tokens ?? "—"}</span> tokens
-      </span>
-    </div>
-  );
-}
+function SidebarContent({ onNavigate }: { onNavigate: () => void }) {
+  const pathname = usePathname();
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
 
-function SidebarContent({
-  isActive,
-  onNavigate,
-}: {
-  isActive: (href: string) => boolean;
-  onNavigate: () => void;
-}) {
   return (
     <>
-      {/* User profile area */}
-      <SignedIn>
-        <div className="px-5 pb-3 pt-1">
-          <div className="flex items-center gap-3">
-            <UserButton
-              appearance={{
-                elements: { avatarBox: "w-9 h-9" },
-              }}
-            />
-            <TokenBadge />
-          </div>
-        </div>
-        <div className="mx-4 mb-3 h-px bg-slate-800/60" />
-      </SignedIn>
+      <SidebarUser onNavigate={onNavigate} />
 
-      <SignedOut>
-        <div className="px-4 pb-3 pt-1">
-          <Link
-            href="/sign-in"
+      <nav className="flex flex-col gap-1 px-3">
+        {NAV_ITEMS.map((item) => (
+          <NavLink
+            key={item.href}
+            {...item}
+            active={isActive(item.href)}
             onClick={onNavigate}
-            className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl text-sm font-medium bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white transition-all"
-          >
-            Sign In
-          </Link>
-        </div>
-        <div className="mx-4 mb-3 h-px bg-slate-800/60" />
-      </SignedOut>
+          />
+        ))}
+        <SignedIn>
+          <NavLink
+            href="/account"
+            label="Account"
+            icon={UserCircleIcon}
+            active={isActive("/account")}
+            onClick={onNavigate}
+          />
+        </SignedIn>
+      </nav>
 
-      {/* Navigation */}
-      <SignedIn>
-        <NavLinks items={AUTHED_NAV_ITEMS} isActive={isActive} onNavigate={onNavigate} />
-      </SignedIn>
-      <SignedOut>
-        <NavLinks items={NAV_ITEMS} isActive={isActive} onNavigate={onNavigate} />
-      </SignedOut>
-
-      {/* Premium banner */}
       <div className="mt-auto px-3 pb-5">
         <Link
           href="/plans"
@@ -137,21 +94,13 @@ function SidebarContent({
 }
 
 export function Sidebar() {
-  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  const isActive = (href: string) => {
-    if (href === "/") return pathname === "/";
-    return pathname.startsWith(href);
-  };
-
   const closeMobile = () => setMobileOpen(false);
 
   return (
     <>
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex flex-col w-60 flex-shrink-0 border-r border-slate-800/50 bg-[#0a0a0f] h-screen sticky top-0 z-30">
-        {/* Logo */}
         <div className="flex items-center gap-3 px-6 py-6">
           <img src="/source-novel-icon.png" alt="SourceNovel" className="w-8 h-8 rounded-lg" />
           <div>
@@ -160,7 +109,7 @@ export function Sidebar() {
           </div>
         </div>
 
-        <SidebarContent isActive={isActive} onNavigate={closeMobile} />
+        <SidebarContent onNavigate={closeMobile} />
       </aside>
 
       {/* Mobile top bar */}
@@ -196,7 +145,7 @@ export function Sidebar() {
               </button>
             </div>
 
-            <SidebarContent isActive={isActive} onNavigate={closeMobile} />
+            <SidebarContent onNavigate={closeMobile} />
           </aside>
         </div>
       )}
