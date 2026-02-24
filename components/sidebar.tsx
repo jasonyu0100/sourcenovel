@@ -3,11 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SignedIn } from "@clerk/nextjs";
 import {
   HomeIcon,
   SparklesIcon,
-  UserCircleIcon,
   QuestionMarkCircleIcon,
   Bars3Icon,
   XMarkIcon,
@@ -67,15 +65,6 @@ function SidebarContent({ onNavigate }: { onNavigate: () => void }) {
             onClick={onNavigate}
           />
         ))}
-        <SignedIn>
-          <NavLink
-            href="/account"
-            label="Account"
-            icon={UserCircleIcon}
-            active={isActive("/account")}
-            onClick={onNavigate}
-          />
-        </SignedIn>
       </nav>
 
       <div className="mt-auto px-3 pb-5">

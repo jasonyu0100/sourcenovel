@@ -1,8 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
-import { SignedIn, SignedOut, UserButton, useAuth } from "@clerk/nextjs";
-import { useQuery } from "convex/react";
+import { SignedIn, SignedOut, UserButton, useAuth, useUser } from "@clerk/nextjs";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { BoltIcon } from "@heroicons/react/24/outline";
 
@@ -16,6 +17,23 @@ function TokenBadge() {
       </span>
     </div>
   );
+}
+
+function SyncUser() {
+  const { user } = useUser();
+  const createOrGetUser = useMutation(api.users.createOrGetUser);
+
+  useEffect(() => {
+    if (!user) return;
+    createOrGetUser({
+      clerkId: user.id,
+      email: user.primaryEmailAddress?.emailAddress ?? "",
+      name: user.fullName ?? user.firstName ?? "User",
+      imageUrl: user.imageUrl,
+    });
+  }, [user, createOrGetUser]);
+
+  return null;
 }
 
 function UserSkeleton() {
@@ -47,6 +65,7 @@ export function SidebarUser({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <>
       <SignedIn>
+        <SyncUser />
         <div className="px-5 pb-3 pt-1">
           <div className="flex items-center gap-3">
             <UserButton
