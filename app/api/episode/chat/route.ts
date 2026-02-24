@@ -1,6 +1,11 @@
 import { NextRequest } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import { ConvexHttpClient } from "convex/browser";
+import { api } from "@/convex/_generated/api";
 
 export const runtime = "edge";
+
+const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -189,6 +194,29 @@ function extractJSON(text: string): Record<string, unknown> | null {
 
 export async function POST(request: NextRequest) {
   try {
+    // Token gating: require auth and deduct a token
+    const { getToken } = await auth();
+    const token = await getToken({ template: "convex" });
+
+    if (!token) {
+      return Response.json(
+        { error: "Sign in to use interactive episodes" },
+        { status: 401 }
+      );
+    }
+
+    convex.setAuth(token);
+    const result = await convex.mutation(api.users.deductToken, {});
+
+    if (!result.success) {
+      return Response.json(
+        { error: result.error === "No tokens remaining"
+            ? "No tokens remaining. Upgrade your plan for more."
+            : result.error },
+        { status: 403 }
+      );
+    }
+
     const body: ChatRequest = await request.json();
     const { messages, context } = body;
 

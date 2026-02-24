@@ -2,7 +2,10 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { ArrowLeftIcon, XMarkIcon, MapPinIcon, MusicalNoteIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, XMarkIcon, MapPinIcon, MusicalNoteIcon, BoltIcon } from "@heroicons/react/24/outline";
+import { SignedIn } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import type { StoryContext } from "@/lib/episode-context";
 import { locationToImageSrc, characterToImageSrc } from "@/lib/episode-context";
 import { useWorldMarkdown } from "@/lib/use-world-description";
@@ -105,6 +108,19 @@ function getSpeakerStyle(name: string) {
     speakerColorMap.set(name, SPEAKER_PALETTE[speakerColorMap.size % SPEAKER_PALETTE.length]);
   }
   return speakerColorMap.get(name)!;
+}
+
+function TokenBadge() {
+  const tokens = useQuery(api.users.getTokenBalance);
+  if (tokens === null || tokens === undefined) return null;
+  return (
+    <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-black/30 backdrop-blur-sm">
+      <BoltIcon className="w-3.5 h-3.5 text-violet-400" />
+      <span className="text-xs text-white/70">
+        <span className="font-semibold text-white">{tokens}</span>
+      </span>
+    </div>
+  );
 }
 
 export function EpisodeInteractive({ storyContext, playAsCharacter, interactiveModule, bgmPlaying, onToggleBgm, onClose, onBackToEpisodes }: EpisodeInteractiveProps) {
@@ -475,6 +491,9 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, interactiveM
           </button>
 
           <div className="flex items-center gap-2">
+            <SignedIn>
+              <TokenBadge />
+            </SignedIn>
             {onToggleBgm && (
               <button
                 onClick={(e) => { e.stopPropagation(); onToggleBgm(); }}

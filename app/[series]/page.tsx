@@ -235,7 +235,6 @@ function SeriesPageContent() {
               {hasEpisodes && (
                 <Link
                   href={`/${seriesId}/episode/1`}
-                  onClick={dismissIntro}
                   className="inline-flex items-center justify-center gap-2 w-full max-w-xs px-8 py-3 rounded-full bg-emerald-600/30 hover:bg-emerald-600/40 border border-emerald-500/50 text-emerald-300 hover:text-white text-sm font-medium shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] transition-all duration-300"
                 >
                   <PlayIcon className="w-5 h-5" />
