@@ -5,7 +5,9 @@ import { api } from "@/convex/_generated/api";
 
 export const runtime = "edge";
 
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+function getConvexClient() {
+  return new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+}
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -205,6 +207,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const convex = getConvexClient();
     convex.setAuth(token);
     const result = await convex.mutation(api.users.deductToken, {});
 
