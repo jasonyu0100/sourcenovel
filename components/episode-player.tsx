@@ -39,6 +39,19 @@ interface EpisodePlayerProps {
   initialBeatIndex?: number;
 }
 
+function timeAgo(ts: number): string {
+  const seconds = Math.floor((Date.now() - ts) / 1000);
+  if (seconds < 60) return "just now";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}d ago`;
+  const months = Math.floor(days / 30);
+  return `${months}mo ago`;
+}
+
 export function EpisodePlayer({ chapterData, seriesId, onClose, replaySessionId, initialBeatIndex }: EpisodePlayerProps) {
   const { isSignedIn } = useAuth();
   const [currentIndex, setCurrentIndex] = useState(initialBeatIndex && initialBeatIndex > 0 ? initialBeatIndex : 0);
@@ -503,7 +516,7 @@ export function EpisodePlayer({ chapterData, seriesId, onClose, replaySessionId,
         });
 
         return (
-          <div className="absolute right-3 z-[25] pointer-events-none flex flex-col items-center gap-4" style={{ top: "50%", transform: "translateY(-50%)" }}>
+          <div className="absolute right-3 z-[25] pointer-events-none flex flex-col items-end gap-4" style={{ top: "50%", transform: "translateY(-50%)" }}>
             {sorted.slice(0, 5).map((session) => {
               const isExpanded = expandedBubble === session._id;
               const isIllustrated = session.mode === "illustrated";
@@ -511,8 +524,8 @@ export function EpisodePlayer({ chapterData, seriesId, onClose, replaySessionId,
               const charImg = `${API_BASE}/${seriesId}/world/characters/${charSlug}.jpg`;
 
               return (
-                <div key={session._id} className="relative flex items-center pointer-events-auto">
-                  {/* Popover — anchored left of bubble */}
+                <div key={session._id} className="pointer-events-auto relative">
+                  {/* Popover — floating left, vertically centered on bubble */}
                   {isExpanded && (
                     <button
                       onClick={(e) => {
@@ -522,20 +535,26 @@ export function EpisodePlayer({ chapterData, seriesId, onClose, replaySessionId,
                         setInteractiveMode(true);
                         setExpandedBubble(null);
                       }}
-                      className="absolute right-full mr-2 flex items-center gap-2.5 px-3 py-2 rounded-xl bg-black/80 backdrop-blur-md whitespace-nowrap hover:bg-black/90 transition-all"
+                      className="absolute right-full mr-2 top-1/2 -translate-y-1/2 flex items-center gap-2.5 px-3 py-2 rounded-xl bg-black/80 backdrop-blur-md whitespace-nowrap hover:bg-black/90 transition-all"
                       style={{ animation: "fadeIn 0.15s ease-out" }}
                     >
-                      <img src={charImg} alt={session.characterName} className="w-8 h-8 rounded-full object-cover object-top shrink-0" />
+                      {session.userImage ? (
+                        <img src={session.userImage} alt={session.userName} className="w-7 h-7 rounded-full object-cover shrink-0" />
+                      ) : (
+                        <div className="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center shrink-0">
+                          <span className="text-[10px] text-white font-semibold">{session.userName[0]}</span>
+                        </div>
+                      )}
                       <div className="min-w-0 text-left">
                         <p className="text-white text-[11px] font-medium leading-tight">{session.userName}</p>
                         <p className="text-white/40 text-[10px] leading-tight">
-                          as {session.characterName} · {session.beatCount} {session.beatCount === 1 ? "beat" : "beats"} · {isIllustrated ? "Illustrated" : "Dialogue"}
+                          {session.beatCount} {session.beatCount === 1 ? "beat" : "beats"} · {isIllustrated ? "Illustrated" : "Dialogue"} · {timeAgo(session.startedAt)}
                         </p>
                       </div>
                       <span className="text-white/50 text-[10px] ml-1">Watch</span>
                     </button>
                   )}
-                  {/* Avatar bubble — user photo, character badge below */}
+                  {/* Avatar bubble — character photo */}
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -548,25 +567,19 @@ export function EpisodePlayer({ chapterData, seriesId, onClose, replaySessionId,
                         ? "ring-2 ring-white scale-110"
                         : "ring-1 ring-white/20 opacity-70 group-hover:opacity-100 group-hover:ring-white/40"
                     }`}>
-                      {session.userImage ? (
-                        <img src={session.userImage} alt={session.userName} className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full bg-white/15 flex items-center justify-center">
-                          <span className="text-sm text-white font-semibold">{session.userName[0]}</span>
-                        </div>
-                      )}
+                      <img src={charImg} alt={session.characterName} className="w-full h-full object-cover object-top" />
                     </div>
                     <span className={`text-[10px] leading-none ${
                       isExpanded ? "text-white font-medium" : "text-white/40"
                     }`}>
-                      {session.userName.split(" ")[0]}
+                      {session.characterName.split(" ")[0]}
                     </span>
                   </button>
                 </div>
               );
             })}
             {sorted.length > 5 && (
-              <span className="text-white/30 text-[10px] font-medium pointer-events-none">+{sorted.length - 5}</span>
+              <span className="text-white/30 text-[10px] font-medium">+{sorted.length - 5}</span>
             )}
           </div>
         );

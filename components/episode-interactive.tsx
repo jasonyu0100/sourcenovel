@@ -253,9 +253,17 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, sessionMode 
   const dialogueChars = Math.max(0, revealedChars - narration.length);
   const allTextRevealed = !currentBeat || (!streaming && revealedChars >= totalLength);
 
-  // Single typewriter effect — aware of streaming buffer growth
+  // Single typewriter effect — aware of streaming buffer growth (skip in replay)
   useEffect(() => {
     if (!currentBeat) return;
+
+    // In replay mode, instantly reveal all text — no typewriter
+    if (isReplay) {
+      const currentTotal = narration.length + dialogue.length;
+      progressRef.current = currentTotal;
+      setRevealedChars(currentTotal);
+      return;
+    }
 
     // Reset for new beat
     if (storyBeats.length !== beatCountRef.current) {
@@ -305,7 +313,7 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, sessionMode 
 
     setTimeout(tick, 20);
     return () => { cancelled = true; };
-  }, [storyBeats.length, totalLength, streaming]);
+  }, [storyBeats.length, totalLength, streaming, isReplay]);
 
   // Panel generation timer
   useEffect(() => {
@@ -841,7 +849,7 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, sessionMode 
               const userChoice = userChoiceIndex > 0 ? messages[userChoiceIndex]?.content : null;
 
               return (
-                <div key={bi} className="space-y-3 opacity-60">
+                <div key={bi} className="space-y-3">
                   {/* Player action */}
                   {userChoice && (
                     <div className="flex gap-3 justify-end">
