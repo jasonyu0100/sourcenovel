@@ -4,8 +4,9 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { ArrowLeftIcon, XMarkIcon, MapPinIcon, MusicalNoteIcon, BoltIcon } from "@heroicons/react/24/outline";
 import { SignedIn } from "@clerk/nextjs";
-import { useQuery } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import type { Id } from "@/convex/_generated/dataModel";
 import type { StoryContext } from "@/lib/episode-context";
 import { locationToImageSrc, characterToImageSrc } from "@/lib/episode-context";
 import { useWorldMarkdown } from "@/lib/use-world-description";
@@ -28,11 +29,13 @@ interface StoryBeat {
 interface EpisodeInteractiveProps {
   storyContext: StoryContext;
   playAsCharacter?: string | null;
+  sessionMode?: "illustrated" | "dialogue";
   interactiveModule?: string | null;
   bgmPlaying?: boolean;
   onToggleBgm?: () => void;
   onClose: () => void;
   onBackToEpisodes?: () => void;
+  replaySessionId?: string | null;
 }
 
 /** Extract a string field value from partial/streaming JSON. Handles escape sequences. */
@@ -123,7 +126,7 @@ function TokenBadge() {
   );
 }
 
-export function EpisodeInteractive({ storyContext, playAsCharacter, interactiveModule, bgmPlaying, onToggleBgm, onClose, onBackToEpisodes }: EpisodeInteractiveProps) {
+export function EpisodeInteractive({ storyContext, playAsCharacter, sessionMode = "illustrated", interactiveModule, bgmPlaying, onToggleBgm, onClose, onBackToEpisodes, replaySessionId }: EpisodeInteractiveProps) {
   const [mounted, setMounted] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [storyBeats, setStoryBeats] = useState<StoryBeat[]>([]);
@@ -144,20 +147,83 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, interactiveM
   const rawBufferRef = useRef("");
   const abortControllerRef = useRef<AbortController | null>(null);
 
+  // Panel generation state
+  const [panelUrls, setPanelUrls] = useState<(string | null)[]>([]);
+  const [panelRefs, setPanelRefs] = useState<{ label: string; url: string }[][]>([]);
+  const [panelLoading, setPanelLoading] = useState(false);
+  const [panelElapsed, setPanelElapsed] = useState(0);
+  const previousPanelUrlRef = useRef<string | null>(null);
+
+  // Session persistence state
+  const sessionIdRef = useRef<Id<"sessions"> | null>(null);
+  const sessionReadyRef = useRef<Promise<Id<"sessions"> | null>>(Promise.resolve(null));
+  const sessionCreatedRef = useRef(false);
+  const createSession = useMutation(api.sessions.createSession);
+  const addBeatMutation = useMutation(api.sessions.addBeat);
+  const storePanelImage = useMutation(api.sessions.storePanelImage);
+  const generateUploadUrl = useMutation(api.sessions.generateUploadUrl);
+  const lastUserChoiceRef = useRef<string>("Begin the scene");
+
+  // Replay mode
+  const isReplay = !!replaySessionId;
+  const replayBeats = useQuery(
+    api.sessions.getSessionBeats,
+    replaySessionId ? { sessionId: replaySessionId as Id<"sessions"> } : "skip"
+  );
+  const [replayIndex, setReplayIndex] = useState(0);
+
   // Scroll ref for text panel
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setMounted(true);
     document.body.style.overflow = "hidden";
+
+    // Create session on mount (not in replay mode)
+    // Guard against React StrictMode double-mount
+    if (!isReplay && !sessionCreatedRef.current) {
+      sessionCreatedRef.current = true;
+      const sessionPromise = createSession({
+        seriesId: storyContext.seriesId,
+        chapterNum: storyContext.chapterNum,
+        characterName: playAsCharacter || storyContext.povCharacter,
+        mode: sessionMode,
+        startBeatIndex: storyContext.beatIndex,
+      }).then(id => {
+        sessionIdRef.current = id;
+        return id;
+      }).catch(() => null);
+      sessionReadyRef.current = sessionPromise;
+    }
+
     return () => {
       document.body.style.overflow = "";
       if (abortControllerRef.current) abortControllerRef.current.abort();
     };
   }, []);
 
-  // Start the story on mount
+
+  // Replay mode: load beats from Convex into storyBeats
   useEffect(() => {
+    if (!isReplay || !replayBeats || replayBeats.length === 0) return;
+    const beats: StoryBeat[] = replayBeats.map(b => ({
+      narration: b.narration,
+      speaker: b.speaker ?? null,
+      dialogue: b.dialogue ?? null,
+      location: b.location ?? null,
+      choices: b.choices,
+    }));
+    setStoryBeats(beats);
+    // Load panel URLs from stored beats
+    const urls = replayBeats.map(b => b.panelUrl ?? null);
+    setPanelUrls(urls);
+    // Show all beats up to replayIndex
+    setReplayIndex(beats.length);
+  }, [isReplay, replayBeats]);
+
+  // Start the story on mount (skip in replay mode)
+  useEffect(() => {
+    if (isReplay) return;
     if (mounted && storyBeats.length === 0 && !loading) {
       const { beatIndex, recentBeatNames, lastDialogue } = storyContext;
 
@@ -241,12 +307,25 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, interactiveM
     return () => { cancelled = true; };
   }, [storyBeats.length, totalLength, streaming]);
 
-  // Auto-scroll when content changes
+  // Panel generation timer
   useEffect(() => {
-    if (scrollRef.current) {
+    if (!panelLoading) {
+      setPanelElapsed(0);
+      return;
+    }
+    setPanelElapsed(0);
+    const interval = setInterval(() => {
+      setPanelElapsed(prev => prev + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [panelLoading]);
+
+  // Auto-scroll when content changes (disabled in replay to let user scroll freely)
+  useEffect(() => {
+    if (!isReplay && scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [revealedChars, storyBeats.length, loading]);
+  }, [revealedChars, storyBeats.length, loading, isReplay]);
 
   const skip = useCallback(() => {
     if (streaming) {
@@ -262,6 +341,9 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, interactiveM
   }, [currentBeat, allTextRevealed, totalLength, streaming, narration.length, dialogue.length]);
 
   const sendMessage = async (userMessage: string) => {
+    // Track choice for session persistence
+    lastUserChoiceRef.current = userMessage;
+
     // Abort any in-flight stream
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -291,6 +373,7 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, interactiveM
         signal: abortController.signal,
         body: JSON.stringify({
           messages: newMessages,
+          mode: sessionMode,
           context: {
             chapterNum: storyContext.chapterNum,
             chapterTitle: storyContext.chapterTitle,
@@ -344,15 +427,16 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, interactiveM
 
       // Stream complete — parse the full response
       const parsed = extractJSON(rawBufferRef.current);
+      const fallbackChoices = ["Step closer", "Confront them", "Leave the room"];
       const finalBeat: StoryBeat = parsed && parsed.narration
         ? {
             narration: String(parsed.narration),
             speaker: parsed.speaker ? String(parsed.speaker) : null,
             dialogue: parsed.dialogue ? String(parsed.dialogue) : null,
-            location: null,
+            location: parsed.location ? String(parsed.location) : null,
             choices: Array.isArray(parsed.choices) && parsed.choices.length > 0
               ? parsed.choices.map(String).slice(0, 3)
-              : ["Continue", "Look around", "Stay silent"],
+              : fallbackChoices,
           }
         : {
             narration: extractPartialField(rawBufferRef.current, "narration")
@@ -360,8 +444,8 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, interactiveM
               || "The story continues...",
             speaker: extractNullableField(rawBufferRef.current, "speaker"),
             dialogue: extractNullableField(rawBufferRef.current, "dialogue"),
-            location: null,
-            choices: ["Continue", "Look around", "Stay silent"],
+            location: extractNullableField(rawBufferRef.current, "location"),
+            choices: fallbackChoices,
           };
 
       // Finalize: update beat, message history, location/character tracking
@@ -380,6 +464,29 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, interactiveM
           return prev;
         });
       }
+
+      // Track location changes from LLM response
+      if (finalBeat.location) {
+        setCurrentLocation(finalBeat.location);
+      }
+
+      // Persist beat to Convex — await session creation if still in flight
+      const sid = sessionIdRef.current ?? await sessionReadyRef.current;
+      const panelBeatIndex = sid ? (await addBeatMutation({
+        sessionId: sid,
+        userChoice: lastUserChoiceRef.current,
+        narration: finalBeat.narration,
+        speaker: finalBeat.speaker ?? undefined,
+        dialogue: finalBeat.dialogue ?? undefined,
+        location: finalBeat.location ?? undefined,
+        choices: finalBeat.choices,
+      }).catch((e: unknown) => { console.error("Failed to save beat:", e); return null; }))?.index ?? (storyBeats.length - 1) : (storyBeats.length - 1);
+
+      // Fire panel generation async (non-blocking) — only in illustrated mode
+      if (sessionMode === "illustrated") {
+        const locationChanged = finalBeat.location !== null && finalBeat.location !== currentLocation;
+        generatePanel(finalBeat, panelBeatIndex, locationChanged, sid);
+      }
     } catch (err) {
       if ((err as Error).name === "AbortError") return; // intentional abort
       console.error("Failed to generate story:", err);
@@ -389,7 +496,7 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, interactiveM
       const errorBeat: StoryBeat = {
         narration: partialNarration || "The story wavers for a moment, like a signal losing coherence...",
         speaker: null, dialogue: null, location: null,
-        choices: ["Try again", "Look around", "Stay still"],
+        choices: ["Try again", "Push forward", "Change course"],
       };
       setStoryBeats(prev => {
         const updated = [...prev];
@@ -400,6 +507,134 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, interactiveM
       setStreaming(false);
       setLoading(false);
       abortControllerRef.current = null;
+    }
+  };
+
+  // Generate a manga panel for a beat
+  const generatePanel = async (beat: StoryBeat, beatIndex: number, locationChanged = false, sid?: Id<"sessions"> | null) => {
+    const episodeData = storyContext.episodeData;
+    if (!beat.narration) return;
+
+    setPanelLoading(true);
+
+    // Resolve character slugs for ref images — POV character always first
+    const characterSlugs: string[] = [];
+    const povName = playAsCharacter || storyContext.povCharacter;
+    const allNames = [povName, ...currentCharacters.filter(n => n.toLowerCase() !== povName.toLowerCase())];
+    if (beat.speaker && !allNames.some(n => n.toLowerCase() === beat.speaker!.toLowerCase())) {
+      allNames.splice(1, 0, beat.speaker);
+    }
+    for (const name of allNames) {
+      const char = episodeData?.characters.find(c =>
+        c.name.toLowerCase() === name.toLowerCase() ||
+        c.name.toLowerCase().split(" ")[0] === name.toLowerCase()
+      );
+      if (char) characterSlugs.push(char.slug);
+    }
+
+    // Build reference image list for display
+    const refs: { label: string; url: string }[] = [];
+    for (const slug of characterSlugs) {
+      const char = episodeData?.characters.find(c => c.slug === slug);
+      refs.push({
+        label: char?.name || slug,
+        url: `/series/${storyContext.seriesId}/world/characters/${slug}.jpg`,
+      });
+    }
+    const beatLocation = beat.location || currentLocation;
+    if (beatLocation) {
+      const loc = episodeData?.locations?.find(l => l.slug === beatLocation);
+      refs.push({
+        label: loc?.name || beatLocation.replace(/-/g, " "),
+        url: `/series/${storyContext.seriesId}/world/locations/${beatLocation}.jpg`,
+      });
+    }
+
+    // Only pass previous panel when scene is visually continuous:
+    // - Same location (no scene change)
+    // - Not the first beat (no previous panel exists)
+    const usePreviousPanel = !locationChanged && previousPanelUrlRef.current !== null;
+    if (usePreviousPanel && previousPanelUrlRef.current) {
+      refs.push({ label: "Previous panel", url: previousPanelUrlRef.current });
+    }
+
+    // Store refs for this beat
+    setPanelRefs(prev => {
+      const updated = [...prev];
+      while (updated.length <= beatIndex) updated.push([]);
+      updated[beatIndex] = refs;
+      return updated;
+    });
+
+    try {
+      // Submit prediction
+      const submitRes = await fetch("/api/episode/panel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          seriesId: storyContext.seriesId,
+          narration: beat.narration,
+          speaker: beat.speaker,
+          dialogue: beat.dialogue,
+          location: beat.location || currentLocation,
+          povCharacter: playAsCharacter || storyContext.povCharacter,
+          characterSlugs,
+          previousPanelUrl: usePreviousPanel ? previousPanelUrlRef.current : null,
+        }),
+      });
+
+      if (!submitRes.ok) throw new Error("Submit failed");
+      const { predictionId } = await submitRes.json();
+
+      // Poll until complete
+      let panelUrl: string | null = null;
+      for (let attempt = 0; attempt < 30; attempt++) {
+        await new Promise(r => setTimeout(r, 2000));
+        const pollRes = await fetch(`/api/episode/panel?id=${predictionId}`);
+        const data = await pollRes.json();
+        if (data.status === "succeeded" && data.panelUrl) {
+          panelUrl = data.panelUrl;
+          break;
+        }
+        if (data.status === "failed") break;
+      }
+
+      if (panelUrl) {
+        // Upload to Convex file storage for permanent persistence
+        let storedUrl = panelUrl;
+        const activeSessionId = sid ?? sessionIdRef.current;
+        if (activeSessionId) {
+          try {
+            const blob = await fetch(panelUrl).then(r => r.blob());
+            const uploadUrl = await generateUploadUrl();
+            const uploadRes = await fetch(uploadUrl, {
+              method: "POST",
+              headers: { "Content-Type": blob.type },
+              body: blob,
+            });
+            const { storageId } = await uploadRes.json();
+            storedUrl = await storePanelImage({
+              sessionId: activeSessionId,
+              index: beatIndex,
+              storageId,
+            });
+          } catch (e) {
+            console.error("Failed to upload panel to Convex:", e);
+          }
+        }
+
+        setPanelUrls(prev => {
+          const updated = [...prev];
+          while (updated.length <= beatIndex) updated.push(null);
+          updated[beatIndex] = storedUrl;
+          return updated;
+        });
+        previousPanelUrlRef.current = storedUrl;
+      }
+    } catch (err) {
+      console.error("Panel generation failed:", err);
+    } finally {
+      setPanelLoading(false);
     }
   };
 
@@ -453,7 +688,7 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, interactiveM
       || currentLocation.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase()))
     : null;
 
-  const hasChoices = allTextRevealed && !loading && currentBeat?.choices && currentBeat.choices.length > 0;
+  const hasChoices = !isReplay && allTextRevealed && !loading && currentBeat?.choices && currentBeat.choices.length > 0;
 
   // Characters for the hero section
   const characters = episodeData?.characters || [];
@@ -491,6 +726,11 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, interactiveM
           </button>
 
           <div className="flex items-center gap-2">
+            {isReplay && (
+              <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 backdrop-blur-sm">
+                <span className="text-[10px] text-amber-300/80 font-medium uppercase tracking-wider">Replay</span>
+              </div>
+            )}
             <SignedIn>
               <TokenBadge />
             </SignedIn>
@@ -624,6 +864,31 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, interactiveM
                       </CharacterPreviewTooltip>
                     </div>
                   )}
+                  {/* Panel for historical beat — above text */}
+                  {panelUrls[bi] && (
+                    <div className="mx-1 rounded-xl overflow-hidden">
+                      <img
+                        src={panelUrls[bi]!}
+                        alt="Manga panel"
+                        className="w-full rounded-xl border border-white/[0.06]"
+                      />
+                      {panelRefs[bi]?.length > 0 && (
+                        <div className="flex items-center gap-2 px-2 py-2 overflow-x-auto">
+                          <span className="text-white/20 text-[10px] uppercase tracking-wider font-medium shrink-0">Refs</span>
+                          {panelRefs[bi].map((ref, ri) => (
+                            <div key={ri} className="flex items-center gap-1.5 shrink-0">
+                              <img
+                                src={ref.url}
+                                alt={ref.label}
+                                className="w-8 h-8 rounded-md object-cover border border-white/10"
+                              />
+                              <span className="text-white/30 text-[10px]">{ref.label}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                   {/* Narration */}
                   <div className="px-1">
                     <p className="text-white/50 text-sm leading-relaxed">{beat.narration}</p>
@@ -634,7 +899,6 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, interactiveM
                       <CharacterPreviewTooltip
                         character={episodeData?.characters.find(c => c.name === pastSpeaker) || null}
                         imageSrc={pastImage}
-  
                         position="top"
                       >
                         {pastImage ? (
@@ -684,7 +948,68 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, interactiveM
               })()
             )}
 
-            {/* Current beat: with typewriter */}
+            {/* Current beat: panel above text */}
+            {/* Panel — generated manga panel for current beat (illustrated mode only) */}
+            {sessionMode === "illustrated" && panelLoading && !panelUrls[storyBeats.length - 1] && (
+              <div className="mx-1 my-3 rounded-xl overflow-hidden">
+                <div className="aspect-[3/4] bg-white/[0.03] border border-white/[0.06] rounded-xl">
+                  <div className="w-full h-full flex items-center justify-center">
+                    <div className="flex flex-col items-center gap-3">
+                      {/* Spinning circle */}
+                      <div className="w-10 h-10 rounded-full border-2 border-violet-500/20 border-t-violet-400 animate-spin" />
+                      <span className="text-white/30 text-xs font-medium">Generating panel...</span>
+                      {/* Timer */}
+                      <span className="text-white/15 text-[11px] font-mono tabular-nums">{panelElapsed}s</span>
+                      {/* Disclaimer */}
+                      <span className="text-white/10 text-[10px] text-center max-w-[200px] leading-relaxed">
+                        Panels typically take 15–30s to generate
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                {panelRefs[storyBeats.length - 1]?.length > 0 && (
+                  <div className="flex items-center gap-2 px-2 py-2 overflow-x-auto">
+                    <span className="text-white/20 text-[10px] uppercase tracking-wider font-medium shrink-0">Refs</span>
+                    {panelRefs[storyBeats.length - 1].map((ref, ri) => (
+                      <div key={ri} className="flex items-center gap-1.5 shrink-0">
+                        <img
+                          src={ref.url}
+                          alt={ref.label}
+                          className="w-8 h-8 rounded-md object-cover border border-white/10"
+                        />
+                        <span className="text-white/30 text-[10px]">{ref.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+            {panelUrls[storyBeats.length - 1] && (
+              <div className="mx-1 my-3 rounded-xl overflow-hidden" style={{ animation: "fadeIn 0.5s ease-out" }}>
+                <img
+                  src={panelUrls[storyBeats.length - 1]!}
+                  alt="Manga panel"
+                  className="w-full rounded-xl border border-white/[0.06]"
+                />
+                {panelRefs[storyBeats.length - 1]?.length > 0 && (
+                  <div className="flex items-center gap-2 px-2 py-2 overflow-x-auto">
+                    <span className="text-white/20 text-[10px] uppercase tracking-wider font-medium shrink-0">Refs</span>
+                    {panelRefs[storyBeats.length - 1].map((ref, ri) => (
+                      <div key={ri} className="flex items-center gap-1.5 shrink-0">
+                        <img
+                          src={ref.url}
+                          alt={ref.label}
+                          className="w-8 h-8 rounded-md object-cover border border-white/10"
+                        />
+                        <span className="text-white/30 text-[10px]">{ref.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Narration + dialogue with typewriter */}
             {currentBeat && currentBeat.narration && (
               <>
                 {/* Narration */}
@@ -763,8 +1088,8 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, interactiveM
               </div>
             )}
 
-            {/* Custom input — always available when text is revealed */}
-            {allTextRevealed && !loading && (
+            {/* Custom input — always available when text is revealed (not in replay) */}
+            {!isReplay && allTextRevealed && !loading && (
               <div className={hasChoices ? "" : "pt-2 animate-fade-in"}>
                 {!hasChoices && (
                   <p className="text-white/25 text-[11px] uppercase tracking-wider font-medium mb-2.5 px-1">What do you do?</p>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { loadEpisodeChapterData } from "@/lib/episode-data";
 import type { EpisodeChapterData } from "@/lib/episode-types";
@@ -9,8 +9,10 @@ import { EpisodePlayer } from "@/components/episode-player";
 export default function EpisodeChapterPage() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const seriesId = params.series as string;
   const chapterNum = parseInt(params.chapter as string, 10);
+  const replaySessionId = searchParams.get("session");
 
   const [chapterData, setChapterData] = useState<EpisodeChapterData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -67,6 +69,7 @@ export default function EpisodeChapterPage() {
       chapterData={chapterData}
       seriesId={seriesId}
       onClose={() => router.push(`/${seriesId}`)}
+      replaySessionId={replaySessionId}
     />
   );
 }

@@ -26,6 +26,7 @@ interface EpisodeLocation {
 
 interface ChatRequest {
   messages: ChatMessage[];
+  mode?: "illustrated" | "dialogue";
   context: {
     chapterNum: number;
     chapterTitle: string;
@@ -146,7 +147,7 @@ POV Rules (never violate these):
   sections.push(`## Response Format
 You MUST respond with ONLY a valid JSON object. No markdown, no code fences, no explanation. Just the JSON:
 
-{"narration":"1-2 paragraphs of what happens next.","speaker":"Character name or null","dialogue":"Their spoken line or null","choices":["Short action choice 1","Short action choice 2","Short action choice 3"]}
+{"narration":"3-4 paragraphs of vivid, action-dense prose.","speaker":"Character name or null","dialogue":"Their spoken line or null","location":"current-location-slug","choices":["Bold action choice 1","Bold action choice 2","Bold action choice 3"]}
 
 ## Flow
 The user's message IS ${context.povCharacter}'s action — they have already acted. Your response is the WORLD'S REACTION: what happens next, how other characters respond, how the scene progresses. Do NOT re-narrate or describe what the player just did. Jump straight into the consequence.
@@ -157,10 +158,20 @@ Example flow:
 - GOOD: "Sera's gaze drifts toward the crumbling archway. A flicker of recognition crosses her face..."
 
 Rules:
-- narration: 1-2 paragraphs of second-person prose from **${context.povCharacter}'s POV**. Describe what happens AFTER the player's action — reactions, consequences, scene changes. Do NOT echo or re-describe the player's choice. Start with the world responding.
+- narration: 2-3 paragraphs of vivid second-person prose from **${context.povCharacter}'s POV**. This narration will be turned into a manga page with 2-3 expressive panels. Describe physical actions, environmental details, character expressions, and body language. Include at least one moment of escalation or dramatic shift. Paint the scene with bold visual moments — a key establishing shot, then an intense character moment or dramatic reveal.
 - speaker: The character who speaks in response.${speakerNames ? ` Use exact names: ${speakerNames}.` : ""} null if no one speaks. MUST be another character, NEVER ${context.povCharacter}.
 - dialogue: One spoken line from the speaker — their reaction to ${context.povCharacter}'s action. null if no one speaks.
-- choices: Exactly 3 short choices (under 12 words each). Written as actions ${context.povCharacter} can take next.`);
+- location: The slug of the current location where this beat takes place.${context.locations?.length ? ` Known locations: ${context.locations.map(l => `"${l.slug}"`).join(", ")}.` : ""} Use the same slug if location hasn't changed. Use a new slug if the scene moves.
+- choices: Exactly 3 short choices (under 12 words each). Written as actions ${context.povCharacter} can take next.
+
+## Beat Density — CRITICAL
+Each beat becomes a manga page with 2-3 expressive panels. Your narration must contain forward-driving action with a clear visual arc: something must HAPPEN and ESCALATE. Include character reactions, environmental details, and a dramatic moment. Do NOT write static contemplation — write ACTION that a camera can capture.
+
+## Choice Design — CRITICAL
+Choices MUST drive the story forward. Every choice should escalate tension, trigger a confrontation, reveal information, or move the scene. NEVER offer passive, stalling choices like "Look around", "Stay silent", "Wait", or "Continue". Each choice should feel like it has real consequences.
+
+Good choices: "Grab her wrist before she leaves", "Tell him the truth about last night", "Follow the sound into the corridor"
+Bad choices: "Look around", "Stay silent", "Wait and see", "Continue", "Think about it"`);
 
   return sections.join("\n\n");
 }
@@ -209,7 +220,13 @@ export async function POST(request: NextRequest) {
 
     const convex = getConvexClient();
     convex.setAuth(token);
-    const result = await convex.mutation(api.users.deductToken, {});
+
+    const body: ChatRequest = await request.json();
+    const { messages, mode, context } = body;
+
+    // Illustrated costs 6 tokens (1 story + 5 image gen), dialogue costs 1
+    const tokenCost = mode === "illustrated" ? 6 : 1;
+    const result = await convex.mutation(api.users.deductToken, { count: tokenCost });
 
     if (!result.success) {
       return Response.json(
@@ -220,16 +237,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body: ChatRequest = await request.json();
-    const { messages, context } = body;
-
     const systemPrompt = buildSystemPrompt(context);
     const url = new URL(request.url);
     const useStreaming = url.searchParams.get("stream") === "true";
 
     const openRouterBody = {
       model: "deepseek/deepseek-chat",
-      max_tokens: 1024,
+      max_tokens: 2048,
       stream: useStreaming,
       messages: [
         { role: "system", content: systemPrompt },

@@ -10,4 +10,33 @@ export default defineSchema({
     tokens: v.number(),
     createdAt: v.number(),
   }).index("by_clerk_id", ["clerkId"]),
+
+  sessions: defineTable({
+    seriesId: v.string(),
+    chapterNum: v.number(),
+    userId: v.string(),
+    userName: v.string(),
+    userImage: v.optional(v.string()),
+    characterName: v.string(),
+    mode: v.optional(v.string()),
+    startBeatIndex: v.optional(v.number()),
+    startedAt: v.number(),
+    lastBeatAt: v.number(),
+    beatCount: v.number(),
+  })
+    .index("by_chapter", ["seriesId", "chapterNum"])
+    .index("by_user", ["userId"]),
+
+  beats: defineTable({
+    sessionId: v.id("sessions"),
+    index: v.number(),
+    userChoice: v.string(),
+    narration: v.string(),
+    speaker: v.optional(v.string()),
+    dialogue: v.optional(v.string()),
+    location: v.optional(v.string()),
+    choices: v.array(v.string()),
+    panelUrl: v.optional(v.string()),
+    createdAt: v.number(),
+  }).index("by_session", ["sessionId", "index"]),
 });

@@ -122,24 +122,12 @@ export function EpisodeDialogueBox({ speaker, text, beatIndex, onTextComplete, o
               <p className={`text-base font-semibold ${speakerColor}`}>{speaker}</p>
             </div>
           )}
-          <div className="flex items-end gap-4">
-            <div className="flex-1">
-              <p className="text-white text-base sm:text-lg leading-relaxed min-h-[3rem]">
-                {text ? text.slice(0, revealedChars) : ""}
-              </p>
-              {isComplete && (
-                <p className="text-white/30 text-xs mt-2 animate-pulse">Tap to continue</p>
-              )}
-            </div>
-            {isComplete && onTakeControl && (
-              <button
-                onClick={(e) => { e.stopPropagation(); onTakeControl(); }}
-                className="flex-shrink-0 inline-flex items-center gap-2 px-4 h-10 rounded-full bg-violet-600/30 hover:bg-violet-600/40 border border-violet-500/50 text-violet-300 shadow-[0_0_14px_rgba(139,92,246,0.35)] hover:shadow-[0_0_20px_rgba(139,92,246,0.5)] transition-all text-sm font-medium"
-                title="Start chat"
-              >
-                <ChatBubbleLeftRightIcon className="w-4 h-4" />
-                Start chat
-              </button>
+          <div>
+            <p className="text-white text-base sm:text-lg leading-relaxed min-h-[3rem]">
+              {text ? text.slice(0, revealedChars) : ""}
+            </p>
+            {isComplete && (
+              <p className="text-white/30 text-xs mt-2 animate-pulse">Tap to continue</p>
             )}
           </div>
         </div>

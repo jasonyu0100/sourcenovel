@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
-const INITIAL_TOKENS = 10;
+const INITIAL_TOKENS = 20;
 
 export const createOrGetUser = mutation({
   args: {
@@ -65,8 +65,10 @@ export const getTokenBalance = query({
 });
 
 export const deductToken = mutation({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    count: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return { success: false, error: "Not authenticated" };
 
@@ -76,9 +78,11 @@ export const deductToken = mutation({
       .unique();
 
     if (!user) return { success: false, error: "User not found" };
-    if (user.tokens <= 0) return { success: false, error: "No tokens remaining" };
 
-    await ctx.db.patch(user._id, { tokens: user.tokens - 1 });
-    return { success: true, remaining: user.tokens - 1 };
+    const cost = args.count ?? 1;
+    if (user.tokens < cost) return { success: false, error: "No tokens remaining" };
+
+    await ctx.db.patch(user._id, { tokens: user.tokens - cost });
+    return { success: true, remaining: user.tokens - cost };
   },
 });

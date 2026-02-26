@@ -2,8 +2,10 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { createPortal } from "react-dom";
-import { XMarkIcon, MusicalNoteIcon, SpeakerWaveIcon, SpeakerXMarkIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon, MusicalNoteIcon, SpeakerWaveIcon, SpeakerXMarkIcon, ArrowLeftIcon, BoltIcon } from "@heroicons/react/24/outline";
 import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/solid";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import type { EpisodeChapterData, EpisodeData } from "@/lib/episode-types";
 import { buildStoryContext } from "@/lib/episode-context";
 import { loadEpisodeData, loadInteractiveModule, loadChapterRoute, loadChapterMemory, loadSeriesContext, loadArcContext, loadCharacterProfiles } from "@/lib/episode-data";
@@ -32,20 +34,25 @@ interface EpisodePlayerProps {
   chapterData: EpisodeChapterData;
   seriesId: string;
   onClose: () => void;
+  replaySessionId?: string | null;
 }
 
-export function EpisodePlayer({ chapterData, seriesId, onClose }: EpisodePlayerProps) {
+export function EpisodePlayer({ chapterData, seriesId, onClose, replaySessionId }: EpisodePlayerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [textComplete, setTextComplete] = useState(false);
   const [bgmEnabled, setBgmEnabled] = useState(true);
   const [ttsEnabled, setTtsEnabled] = useState(true);
   const [bgmPlaying, setBgmPlaying] = useState(false);
-  const [interactiveMode, setInteractiveMode] = useState(false);
+  const [interactiveMode, setInteractiveMode] = useState(!!replaySessionId);
   const [showEndScreen, setShowEndScreen] = useState(false);
   const [episodeData, setEpisodeData] = useState<EpisodeData | null>(null);
   const [showCharacterPicker, setShowCharacterPicker] = useState(false);
   const [playAsCharacter, setPlayAsCharacter] = useState<string | null>(null);
+  const [sessionMode, setSessionMode] = useState<"illustrated" | "dialogue">("dialogue");
+  const [showModePicker, setShowModePicker] = useState(false);
+  const [activeReplayId, setActiveReplayId] = useState<string | null>(replaySessionId ?? null);
+  const [expandedBubble, setExpandedBubble] = useState<string | null>(null);
   const [interactiveModule, setInteractiveModule] = useState<string | null>(null);
   const [chapterRoute, setChapterRoute] = useState<string | null>(null);
   const [chapterMemory, setChapterMemory] = useState<string | null>(null);
@@ -61,6 +68,12 @@ export function EpisodePlayer({ chapterData, seriesId, onClose }: EpisodePlayerP
   const bgmRef = useRef<HTMLAudioElement | null>(null);
   const ttsRef = useRef<HTMLAudioElement | null>(null);
   const isNavigating = useRef(false);
+
+  // Alternate reality sessions for this chapter
+  const chapterSessions = useQuery(
+    api.sessions.getChapterSessions,
+    { seriesId, chapterNum: chapterData.chapterNum }
+  );
 
   const { beats } = chapterData;
   const currentBeat = beats[currentIndex];
@@ -292,11 +305,20 @@ export function EpisodePlayer({ chapterData, seriesId, onClose }: EpisodePlayerP
   }, [ttsEnabled]);
 
   const handleTakeControl = useCallback(() => {
+    setActiveReplayId(null);
+    // Always show mode picker first
+    setShowModePicker(true);
+  }, []);
+
+  const handleSelectMode = useCallback((mode: "illustrated" | "dialogue") => {
+    setSessionMode(mode);
+    setShowModePicker(false);
     if (episodeData && episodeData.characters.length > 1) {
       setShowCharacterPicker(true);
     } else {
       // Only one character or no episodeData — go straight to interactive
       setPlayAsCharacter(episodeData?.defaultCharacter || null);
+      setShowEndScreen(false);
       setInteractiveMode(true);
     }
   }, [episodeData]);
@@ -439,15 +461,146 @@ export function EpisodePlayer({ chapterData, seriesId, onClose }: EpisodePlayerP
 
       {/* Tap zones — always active; dialogue box (z-30) overlaps bottom portion */}
       <button
-        onClick={goToPrev}
+        onClick={() => { setExpandedBubble(null); goToPrev(); }}
         className="absolute left-0 top-0 w-1/3 h-full z-20 focus:outline-none"
         aria-label="Previous"
       />
       <button
-        onClick={goToNext}
+        onClick={() => { setExpandedBubble(null); goToNext(); }}
         className="absolute right-0 top-0 w-2/3 h-full z-20 focus:outline-none"
         aria-label="Next"
       />
+
+      {/* Alternate timeline bubbles — right edge */}
+      {!interactiveMode && (() => {
+        const allSessions = chapterSessions?.filter(s => s.beatCount > 0) ?? [];
+        if (allSessions.length === 0) return null;
+
+        // Sort by beat count descending, highlighted first
+        const sorted = [...allSessions].sort((a, b) => {
+          const aHighlighted = a.startBeatIndex === currentIndex ? 1 : 0;
+          const bHighlighted = b.startBeatIndex === currentIndex ? 1 : 0;
+          if (aHighlighted !== bHighlighted) return bHighlighted - aHighlighted;
+          return b.beatCount - a.beatCount;
+        });
+        const ordered = sorted;
+
+        return (
+          <div className="absolute right-3 z-[25] pointer-events-none flex flex-col items-center gap-3" style={{ top: "50%", transform: "translateY(-50%)" }}>
+            {ordered.slice(0, 5).map((session) => {
+              const isExpanded = expandedBubble === session._id;
+              const isHighlighted = session.startBeatIndex === currentIndex;
+              const isIllustrated = session.mode === "illustrated";
+              const charSlug = session.characterName.toLowerCase().replace(/\s+/g, "-");
+              const charImg = `${API_BASE}/${seriesId}/world/characters/${charSlug}.jpg`;
+
+              const accentBorder = isIllustrated ? "border-violet-400" : "border-sky-400";
+              const dimBorder = isIllustrated ? "border-violet-500/30" : "border-sky-500/30";
+              const accentGlow = isIllustrated ? "shadow-[0_0_16px_rgba(139,92,246,0.4)]" : "shadow-[0_0_16px_rgba(56,189,248,0.4)]";
+              const accentText = isIllustrated ? "text-violet-300" : "text-sky-300";
+              const accentBgHover = isIllustrated ? "hover:bg-violet-500/30" : "hover:bg-sky-500/30";
+              const accentBorderBtn = isIllustrated ? "border-violet-500/40" : "border-sky-500/40";
+
+              return (
+                <div key={session._id} className="flex items-center gap-2 pointer-events-auto">
+                  {/* Expanded detail card */}
+                  {isExpanded && (
+                    <div
+                      className={`flex items-center gap-3 px-4 py-3 rounded-2xl bg-black/85 backdrop-blur-xl border shadow-2xl mr-1 ${
+                        isIllustrated ? "border-violet-500/20" : "border-sky-500/20"
+                      }`}
+                      style={{ animation: "fadeIn 0.2s ease-out" }}
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className="text-white/90 text-sm font-medium truncate">{session.userName}</p>
+                        <p className="text-white/40 text-[11px]">
+                          as <span className={accentText}>{session.characterName}</span>
+                        </p>
+                        <div className="flex items-center gap-1.5 mt-1">
+                          <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-semibold uppercase tracking-wider ${
+                            isIllustrated ? "bg-violet-500/20 text-violet-300" : "bg-sky-500/20 text-sky-300"
+                          }`}>
+                            {isIllustrated ? (
+                              <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0 0 22.5 18.75V5.25A2.25 2.25 0 0 0 20.25 3H3.75A2.25 2.25 0 0 0 1.5 5.25v13.5A2.25 2.25 0 0 0 3.75 21Z" />
+                              </svg>
+                            ) : (
+                              <ChatBubbleLeftRightIcon className="w-2.5 h-2.5" />
+                            )}
+                            {isIllustrated ? "Illustrated" : "Dialogue"}
+                          </span>
+                          <span className="text-white/25 text-[10px]">{session.beatCount} {session.beatCount === 1 ? "beat" : "beats"}</span>
+                        </div>
+                      </div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveReplayId(session._id);
+                          setPlayAsCharacter(null);
+                          setInteractiveMode(true);
+                          setExpandedBubble(null);
+                        }}
+                        className={`shrink-0 px-3 py-1.5 rounded-full ${isIllustrated ? "bg-violet-500/20" : "bg-sky-500/20"} ${accentBgHover} border ${accentBorderBtn} ${accentText} text-[11px] font-medium transition-all`}
+                      >
+                        Watch
+                      </button>
+                    </div>
+                  )}
+                  {/* Bubble: character circle + user badge + name */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setExpandedBubble(isExpanded ? null : session._id);
+                    }}
+                    className="relative flex flex-col items-center gap-1 group"
+                  >
+                    {/* Character circle */}
+                    <div className={`relative w-14 h-14 rounded-full overflow-hidden border-[2.5px] transition-all duration-300 ${
+                      isExpanded
+                        ? `${accentBorder} ${accentGlow} scale-110`
+                        : isHighlighted
+                          ? `${accentBorder} ${accentGlow} group-hover:scale-110`
+                          : `${dimBorder} opacity-70 group-hover:opacity-100 group-hover:scale-110`
+                    }`}>
+                      <img
+                        src={charImg}
+                        alt={session.characterName}
+                        className="w-full h-full object-cover object-top"
+                      />
+                      {/* Pulse ring on highlighted */}
+                      {isHighlighted && (
+                        <div className={`absolute inset-0 rounded-full border-2 ${accentBorder} animate-ping opacity-20`} style={{ animationDuration: "3s" }} />
+                      )}
+                    </div>
+                    {/* User avatar badge — always visible */}
+                    <div className={`absolute -top-1 -right-1 w-7 h-7 rounded-full overflow-hidden border-2 border-black/80 ${accentGlow}`}>
+                      {session.userImage ? (
+                        <img src={session.userImage} alt={session.userName} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className={`w-full h-full ${isIllustrated ? "bg-violet-600" : "bg-sky-600"} flex items-center justify-center`}>
+                          <span className="text-[10px] text-white font-bold">{session.userName[0]}</span>
+                        </div>
+                      )}
+                    </div>
+                    {/* Name label */}
+                    <span className={`text-[10px] font-medium leading-none max-w-[60px] truncate transition-all ${
+                      isHighlighted || isExpanded ? "text-white/80" : "text-white/40 group-hover:text-white/60"
+                    }`}>
+                      {session.userName.split(" ")[0]}
+                    </span>
+                  </button>
+                </div>
+              );
+            })}
+            {/* Overflow count */}
+            {ordered.length > 5 && (
+              <div className="pointer-events-auto w-10 h-10 rounded-full bg-black/50 backdrop-blur-md border border-white/15 flex items-center justify-center">
+                <span className="text-white/40 text-[10px] font-bold">+{ordered.length - 5}</span>
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       {/* Dialogue box */}
       <EpisodeDialogueBox
@@ -462,17 +615,25 @@ export function EpisodePlayer({ chapterData, seriesId, onClose }: EpisodePlayerP
         episodeData={episodeData}
       />
 
-      {/* Silent beat bottom bar — tap to continue + take control */}
+      {/* Silent beat bottom bar — tap to continue */}
       {!currentBeat?.dialogue && (
-        <div className="absolute bottom-6 left-0 right-0 z-30 flex items-center justify-center gap-4">
+        <div className="absolute bottom-6 left-0 right-0 z-30 flex items-center justify-center">
           <span className="text-white/30 text-sm animate-pulse pointer-events-none">Tap to continue</span>
+        </div>
+      )}
+
+      {/* Floating Interact button — above dialogue */}
+      {!interactiveMode && !showEndScreen && (textComplete || !currentBeat?.dialogue) && (
+        <div
+          className="absolute left-0 right-0 z-[35] flex justify-center pointer-events-none"
+          style={{ bottom: currentBeat?.dialogue ? "12rem" : "4rem" }}
+        >
           <button
             onClick={(e) => { e.stopPropagation(); handleTakeControl(); }}
-            className="inline-flex items-center gap-2 px-4 h-10 rounded-full bg-violet-600/30 hover:bg-violet-600/40 border border-violet-500/50 text-violet-300 shadow-[0_0_14px_rgba(139,92,246,0.35)] hover:shadow-[0_0_20px_rgba(139,92,246,0.5)] transition-all text-sm font-medium"
-            title="Start chat"
+            className="pointer-events-auto inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl bg-violet-600/40 hover:bg-violet-600/50 border border-violet-400/50 text-violet-200 hover:text-white shadow-[0_0_20px_rgba(139,92,246,0.4)] hover:shadow-[0_0_30px_rgba(139,92,246,0.6)] transition-all text-sm font-semibold backdrop-blur-md"
           >
-            <ChatBubbleLeftRightIcon className="w-4 h-4" />
-            Start chat
+            <ChatBubbleLeftRightIcon className="w-5 h-5" />
+            Interact
           </button>
         </div>
       )}
@@ -491,7 +652,7 @@ export function EpisodePlayer({ chapterData, seriesId, onClose }: EpisodePlayerP
                 className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-violet-500/20 hover:bg-violet-500/30 border border-violet-500/40 rounded-xl text-violet-300 text-sm font-medium transition-all"
               >
                 <ChatBubbleLeftRightIcon className="w-4 h-4" />
-                Start chat
+                Interact
               </button>
               <button
                 onClick={onClose}
@@ -540,16 +701,86 @@ export function EpisodePlayer({ chapterData, seriesId, onClose }: EpisodePlayerP
         </div>
       )}
 
+      {/* Mode picker overlay */}
+      {showModePicker && (
+        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/80 backdrop-blur-md">
+          <div className="text-center mb-8">
+            <p className="text-violet-400 text-xs uppercase tracking-[0.25em] font-semibold mb-2">Choose Mode</p>
+            <div className="w-16 h-px bg-gradient-to-r from-transparent via-violet-500 to-transparent mx-auto" />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 px-6 max-w-md w-full">
+            {/* Dialogue — default / recommended */}
+            <button
+              onClick={() => handleSelectMode("dialogue")}
+              className="group relative flex flex-col items-center rounded-xl border-2 overflow-hidden transition-all duration-200 hover:scale-105 border-violet-500/60 shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.5)]"
+            >
+              <div className="relative w-full aspect-[4/3] overflow-hidden bg-gradient-to-b from-violet-900/60 via-violet-950/80 to-black flex items-center justify-center">
+                <ChatBubbleLeftRightIcon className="w-14 h-14 text-violet-400/80 transition-transform duration-300 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+                <div className="absolute top-2 right-2 px-1.5 py-0.5 bg-violet-500/80 backdrop-blur-sm rounded text-[9px] uppercase tracking-wider text-white font-bold">
+                  Recommended
+                </div>
+                <div className="absolute bottom-2 left-0 right-0 flex justify-center">
+                  <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-violet-500/30 backdrop-blur-sm">
+                    <BoltIcon className="w-3 h-3 text-violet-300" />
+                    <span className="text-violet-200 text-[11px] font-semibold">1 token / interaction</span>
+                  </div>
+                </div>
+              </div>
+              <div className="w-full px-3 py-3 text-center bg-violet-950/60">
+                <p className="text-white font-semibold text-sm tracking-wide">Dialogue</p>
+                <p className="text-white/40 text-[10px] mt-0.5">Story and choices</p>
+                <p className="text-violet-400/40 text-[9px] mt-0.5">Faster — text only</p>
+              </div>
+            </button>
+
+            {/* Illustrated */}
+            <button
+              onClick={() => handleSelectMode("illustrated")}
+              className="group relative flex flex-col items-center rounded-xl border-2 overflow-hidden transition-all duration-200 hover:scale-105 border-white/10 hover:border-white/30 shadow-lg"
+            >
+              <div className="relative w-full aspect-[4/3] overflow-hidden bg-gradient-to-b from-slate-800/60 via-slate-900/80 to-black flex items-center justify-center">
+                <svg className="w-14 h-14 text-slate-500/80 transition-transform duration-300 group-hover:scale-110" fill="none" viewBox="0 0 24 24" strokeWidth={1.2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0 0 22.5 18.75V5.25A2.25 2.25 0 0 0 20.25 3H3.75A2.25 2.25 0 0 0 1.5 5.25v13.5A2.25 2.25 0 0 0 3.75 21Z" />
+                </svg>
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+                <div className="absolute bottom-2 left-0 right-0 flex justify-center">
+                  <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-amber-500/20 backdrop-blur-sm">
+                    <BoltIcon className="w-3 h-3 text-amber-400" />
+                    <span className="text-amber-300 text-[11px] font-semibold">6 tokens / interaction</span>
+                  </div>
+                </div>
+              </div>
+              <div className="w-full px-3 py-3 text-center bg-black/60">
+                <p className="text-white font-semibold text-sm tracking-wide">Illustrated</p>
+                <p className="text-white/40 text-[10px] mt-0.5">Manga panels + story</p>
+                <p className="text-amber-400/40 text-[9px] mt-0.5">Slower — images each beat</p>
+              </div>
+            </button>
+          </div>
+
+          <button
+            onClick={() => setShowModePicker(false)}
+            className="mt-8 px-6 py-2 text-slate-500 hover:text-slate-300 text-sm transition-all"
+          >
+            Cancel
+          </button>
+        </div>
+      )}
+
       {/* Interactive mode overlay */}
       {interactiveMode && (
         <EpisodeInteractive
           storyContext={buildStoryContext(seriesId, chapterData, currentIndex, episodeData, chapterRoute, chapterMemory, seriesContext, arcContext, characterProfiles)}
           playAsCharacter={playAsCharacter}
+          sessionMode={sessionMode}
           interactiveModule={interactiveModule}
           bgmPlaying={bgmPlaying}
           onToggleBgm={toggleBgm}
-          onClose={() => setInteractiveMode(false)}
+          onClose={() => { setInteractiveMode(false); setActiveReplayId(null); }}
           onBackToEpisodes={onClose}
+          replaySessionId={activeReplayId}
         />
       )}
     </div>,

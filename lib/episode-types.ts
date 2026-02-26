@@ -43,3 +43,23 @@ export interface EpisodeData {
   characters: EpisodeCharacter[];
   locations: EpisodeLocation[];
 }
+
+export interface PanelRequest {
+  seriesId: string;
+  narration: string;
+  speaker: string | null;
+  dialogue: string | null;
+  location: string | null;
+  povCharacter: string;
+  characterSlugs: string[];
+  previousPanelUrl: string | null;
+}
+
+export interface PanelSubmitResponse {
+  predictionId: string;
+}
+
+export interface PanelStatusResponse {
+  status: "starting" | "processing" | "succeeded" | "failed";
+  panelUrl: string | null;
+}
