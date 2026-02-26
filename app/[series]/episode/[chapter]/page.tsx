@@ -13,6 +13,8 @@ export default function EpisodeChapterPage() {
   const seriesId = params.series as string;
   const chapterNum = parseInt(params.chapter as string, 10);
   const replaySessionId = searchParams.get("session");
+  const initialBeat = searchParams.get("beat");
+  const initialBeatIndex = initialBeat ? parseInt(initialBeat, 10) : undefined;
 
   const [chapterData, setChapterData] = useState<EpisodeChapterData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -70,6 +72,7 @@ export default function EpisodeChapterPage() {
       seriesId={seriesId}
       onClose={() => router.push(`/${seriesId}`)}
       replaySessionId={replaySessionId}
+      initialBeatIndex={initialBeatIndex}
     />
   );
 }

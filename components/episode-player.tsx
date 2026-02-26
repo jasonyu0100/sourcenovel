@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { createPortal } from "react-dom";
 import { XMarkIcon, MusicalNoteIcon, SpeakerWaveIcon, SpeakerXMarkIcon, ArrowLeftIcon, BoltIcon } from "@heroicons/react/24/outline";
 import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/solid";
+import { useAuth } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { EpisodeChapterData, EpisodeData } from "@/lib/episode-types";
@@ -35,10 +36,12 @@ interface EpisodePlayerProps {
   seriesId: string;
   onClose: () => void;
   replaySessionId?: string | null;
+  initialBeatIndex?: number;
 }
 
-export function EpisodePlayer({ chapterData, seriesId, onClose, replaySessionId }: EpisodePlayerProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+export function EpisodePlayer({ chapterData, seriesId, onClose, replaySessionId, initialBeatIndex }: EpisodePlayerProps) {
+  const { isSignedIn } = useAuth();
+  const [currentIndex, setCurrentIndex] = useState(initialBeatIndex && initialBeatIndex > 0 ? initialBeatIndex : 0);
   const [mounted, setMounted] = useState(false);
   const [textComplete, setTextComplete] = useState(false);
   const [bgmEnabled, setBgmEnabled] = useState(true);
@@ -51,6 +54,7 @@ export function EpisodePlayer({ chapterData, seriesId, onClose, replaySessionId 
   const [playAsCharacter, setPlayAsCharacter] = useState<string | null>(null);
   const [sessionMode, setSessionMode] = useState<"illustrated" | "dialogue">("dialogue");
   const [showModePicker, setShowModePicker] = useState(false);
+  const [showSignInPrompt, setShowSignInPrompt] = useState(false);
   const [activeReplayId, setActiveReplayId] = useState<string | null>(replaySessionId ?? null);
   const [expandedBubble, setExpandedBubble] = useState<string | null>(null);
   const [interactiveModule, setInteractiveModule] = useState<string | null>(null);
@@ -99,6 +103,17 @@ export function EpisodePlayer({ chapterData, seriesId, onClose, replaySessionId 
     const slugs = episodeData.characters.map(c => c.slug);
     loadCharacterProfiles(seriesId, slugs).then(setCharacterProfiles);
   }, [seriesId, episodeData]);
+
+  // Update URL with current beat position (for auth redirect preservation)
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (currentIndex > 0) {
+      url.searchParams.set("beat", String(currentIndex));
+    } else {
+      url.searchParams.delete("beat");
+    }
+    window.history.replaceState({}, "", url.toString());
+  }, [currentIndex]);
 
   // Lock body scroll
   useEffect(() => {
@@ -305,10 +320,14 @@ export function EpisodePlayer({ chapterData, seriesId, onClose, replaySessionId 
   }, [ttsEnabled]);
 
   const handleTakeControl = useCallback(() => {
+    if (!isSignedIn) {
+      setShowSignInPrompt(true);
+      return;
+    }
     setActiveReplayId(null);
     // Always show mode picker first
     setShowModePicker(true);
-  }, []);
+  }, [isSignedIn]);
 
   const handleSelectMode = useCallback((mode: "illustrated" | "dialogue") => {
     setSessionMode(mode);
@@ -471,120 +490,74 @@ export function EpisodePlayer({ chapterData, seriesId, onClose, replaySessionId 
         aria-label="Next"
       />
 
-      {/* Alternate timeline bubbles — right edge */}
+      {/* Alternate timelines — right edge */}
       {!interactiveMode && (() => {
         const allSessions = chapterSessions?.filter(s => s.beatCount > 0) ?? [];
         if (allSessions.length === 0) return null;
 
-        // Sort by beat count descending, highlighted first
         const sorted = [...allSessions].sort((a, b) => {
-          const aHighlighted = a.startBeatIndex === currentIndex ? 1 : 0;
-          const bHighlighted = b.startBeatIndex === currentIndex ? 1 : 0;
-          if (aHighlighted !== bHighlighted) return bHighlighted - aHighlighted;
+          const aHl = a.startBeatIndex === currentIndex ? 1 : 0;
+          const bHl = b.startBeatIndex === currentIndex ? 1 : 0;
+          if (aHl !== bHl) return bHl - aHl;
           return b.beatCount - a.beatCount;
         });
-        const ordered = sorted;
 
         return (
-          <div className="absolute right-3 z-[25] pointer-events-none flex flex-col items-center gap-3" style={{ top: "50%", transform: "translateY(-50%)" }}>
-            {ordered.slice(0, 5).map((session) => {
+          <div className="absolute right-3 z-[25] pointer-events-none flex flex-col items-center gap-4" style={{ top: "50%", transform: "translateY(-50%)" }}>
+            {sorted.slice(0, 5).map((session) => {
               const isExpanded = expandedBubble === session._id;
-              const isHighlighted = session.startBeatIndex === currentIndex;
               const isIllustrated = session.mode === "illustrated";
               const charSlug = session.characterName.toLowerCase().replace(/\s+/g, "-");
               const charImg = `${API_BASE}/${seriesId}/world/characters/${charSlug}.jpg`;
 
-              const accentBorder = isIllustrated ? "border-violet-400" : "border-sky-400";
-              const dimBorder = isIllustrated ? "border-violet-500/30" : "border-sky-500/30";
-              const accentGlow = isIllustrated ? "shadow-[0_0_16px_rgba(139,92,246,0.4)]" : "shadow-[0_0_16px_rgba(56,189,248,0.4)]";
-              const accentText = isIllustrated ? "text-violet-300" : "text-sky-300";
-              const accentBgHover = isIllustrated ? "hover:bg-violet-500/30" : "hover:bg-sky-500/30";
-              const accentBorderBtn = isIllustrated ? "border-violet-500/40" : "border-sky-500/40";
-
               return (
-                <div key={session._id} className="flex items-center gap-2 pointer-events-auto">
-                  {/* Expanded detail card */}
+                <div key={session._id} className="relative flex items-center pointer-events-auto">
+                  {/* Popover — anchored left of bubble */}
                   {isExpanded && (
-                    <div
-                      className={`flex items-center gap-3 px-4 py-3 rounded-2xl bg-black/85 backdrop-blur-xl border shadow-2xl mr-1 ${
-                        isIllustrated ? "border-violet-500/20" : "border-sky-500/20"
-                      }`}
-                      style={{ animation: "fadeIn 0.2s ease-out" }}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveReplayId(session._id);
+                        setPlayAsCharacter(null);
+                        setInteractiveMode(true);
+                        setExpandedBubble(null);
+                      }}
+                      className="absolute right-full mr-2 flex items-center gap-2.5 px-3 py-2 rounded-xl bg-black/80 backdrop-blur-md whitespace-nowrap hover:bg-black/90 transition-all"
+                      style={{ animation: "fadeIn 0.15s ease-out" }}
                     >
-                      <div className="flex-1 min-w-0">
-                        <p className="text-white/90 text-sm font-medium truncate">{session.userName}</p>
-                        <p className="text-white/40 text-[11px]">
-                          as <span className={accentText}>{session.characterName}</span>
+                      <img src={charImg} alt={session.characterName} className="w-8 h-8 rounded-full object-cover object-top shrink-0" />
+                      <div className="min-w-0 text-left">
+                        <p className="text-white text-[11px] font-medium leading-tight">{session.userName}</p>
+                        <p className="text-white/40 text-[10px] leading-tight">
+                          as {session.characterName} · {session.beatCount} {session.beatCount === 1 ? "beat" : "beats"} · {isIllustrated ? "Illustrated" : "Dialogue"}
                         </p>
-                        <div className="flex items-center gap-1.5 mt-1">
-                          <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-semibold uppercase tracking-wider ${
-                            isIllustrated ? "bg-violet-500/20 text-violet-300" : "bg-sky-500/20 text-sky-300"
-                          }`}>
-                            {isIllustrated ? (
-                              <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0 0 22.5 18.75V5.25A2.25 2.25 0 0 0 20.25 3H3.75A2.25 2.25 0 0 0 1.5 5.25v13.5A2.25 2.25 0 0 0 3.75 21Z" />
-                              </svg>
-                            ) : (
-                              <ChatBubbleLeftRightIcon className="w-2.5 h-2.5" />
-                            )}
-                            {isIllustrated ? "Illustrated" : "Dialogue"}
-                          </span>
-                          <span className="text-white/25 text-[10px]">{session.beatCount} {session.beatCount === 1 ? "beat" : "beats"}</span>
-                        </div>
                       </div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setActiveReplayId(session._id);
-                          setPlayAsCharacter(null);
-                          setInteractiveMode(true);
-                          setExpandedBubble(null);
-                        }}
-                        className={`shrink-0 px-3 py-1.5 rounded-full ${isIllustrated ? "bg-violet-500/20" : "bg-sky-500/20"} ${accentBgHover} border ${accentBorderBtn} ${accentText} text-[11px] font-medium transition-all`}
-                      >
-                        Watch
-                      </button>
-                    </div>
+                      <span className="text-white/50 text-[10px] ml-1">Watch</span>
+                    </button>
                   )}
-                  {/* Bubble: character circle + user badge + name */}
+                  {/* Avatar bubble — user photo, character badge below */}
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       setExpandedBubble(isExpanded ? null : session._id);
                     }}
-                    className="relative flex flex-col items-center gap-1 group"
+                    className="flex flex-col items-center gap-1 group"
                   >
-                    {/* Character circle */}
-                    <div className={`relative w-14 h-14 rounded-full overflow-hidden border-[2.5px] transition-all duration-300 ${
+                    <div className={`w-11 h-11 rounded-full overflow-hidden transition-all duration-200 ${
                       isExpanded
-                        ? `${accentBorder} ${accentGlow} scale-110`
-                        : isHighlighted
-                          ? `${accentBorder} ${accentGlow} group-hover:scale-110`
-                          : `${dimBorder} opacity-70 group-hover:opacity-100 group-hover:scale-110`
+                        ? "ring-2 ring-white scale-110"
+                        : "ring-1 ring-white/20 opacity-70 group-hover:opacity-100 group-hover:ring-white/40"
                     }`}>
-                      <img
-                        src={charImg}
-                        alt={session.characterName}
-                        className="w-full h-full object-cover object-top"
-                      />
-                      {/* Pulse ring on highlighted */}
-                      {isHighlighted && (
-                        <div className={`absolute inset-0 rounded-full border-2 ${accentBorder} animate-ping opacity-20`} style={{ animationDuration: "3s" }} />
-                      )}
-                    </div>
-                    {/* User avatar badge — always visible */}
-                    <div className={`absolute -top-1 -right-1 w-7 h-7 rounded-full overflow-hidden border-2 border-black/80 ${accentGlow}`}>
                       {session.userImage ? (
                         <img src={session.userImage} alt={session.userName} className="w-full h-full object-cover" />
                       ) : (
-                        <div className={`w-full h-full ${isIllustrated ? "bg-violet-600" : "bg-sky-600"} flex items-center justify-center`}>
-                          <span className="text-[10px] text-white font-bold">{session.userName[0]}</span>
+                        <div className="w-full h-full bg-white/15 flex items-center justify-center">
+                          <span className="text-sm text-white font-semibold">{session.userName[0]}</span>
                         </div>
                       )}
                     </div>
-                    {/* Name label */}
-                    <span className={`text-[10px] font-medium leading-none max-w-[60px] truncate transition-all ${
-                      isHighlighted || isExpanded ? "text-white/80" : "text-white/40 group-hover:text-white/60"
+                    <span className={`text-[10px] leading-none ${
+                      isExpanded ? "text-white font-medium" : "text-white/40"
                     }`}>
                       {session.userName.split(" ")[0]}
                     </span>
@@ -592,11 +565,8 @@ export function EpisodePlayer({ chapterData, seriesId, onClose, replaySessionId 
                 </div>
               );
             })}
-            {/* Overflow count */}
-            {ordered.length > 5 && (
-              <div className="pointer-events-auto w-10 h-10 rounded-full bg-black/50 backdrop-blur-md border border-white/15 flex items-center justify-center">
-                <span className="text-white/40 text-[10px] font-bold">+{ordered.length - 5}</span>
-              </div>
+            {sorted.length > 5 && (
+              <span className="text-white/30 text-[10px] font-medium pointer-events-none">+{sorted.length - 5}</span>
             )}
           </div>
         );
@@ -698,6 +668,33 @@ export function EpisodePlayer({ chapterData, seriesId, onClose, replaySessionId 
           >
             Cancel
           </button>
+        </div>
+      )}
+
+      {/* Sign-in prompt overlay */}
+      {showSignInPrompt && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md">
+          <div className="max-w-sm w-full mx-4 rounded-2xl bg-black/70 backdrop-blur-xl border border-white/10 p-8 text-center shadow-2xl">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4">
+              <ChatBubbleLeftRightIcon className="w-6 h-6 text-violet-400" />
+            </div>
+            <p className="text-white text-lg font-semibold mb-2">Sign in to interact</p>
+            <p className="text-white/40 text-sm mb-6">Create a free account to play interactive episodes and make choices that shape the story.</p>
+            <div className="space-y-3">
+              <a
+                href={`/sign-in?redirect_url=${encodeURIComponent(`/${seriesId}/episode/${chapterData.chapterNum}?beat=${currentIndex}`)}`}
+                className="block w-full px-5 py-3 bg-violet-600 hover:bg-violet-500 rounded-xl text-white text-sm font-medium transition-all text-center"
+              >
+                Sign in
+              </a>
+              <button
+                onClick={() => setShowSignInPrompt(false)}
+                className="w-full px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-slate-300 hover:text-white text-sm transition-all"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

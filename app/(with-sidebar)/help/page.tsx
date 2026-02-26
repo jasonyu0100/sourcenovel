@@ -29,8 +29,12 @@ const SECTIONS = [
         a: "Interactive episodes let you step into the story as one of the characters. An AI narrator describes scenes and presents choices — your decisions shape what happens next, creating a unique experience every time.",
       },
       {
+        q: "What's the difference between Dialogue and Illustrated mode?",
+        a: "Dialogue mode is text-only — story narration and choices, costing 1 token per interaction. Illustrated mode generates a manga panel for each beat, costing 6 tokens per interaction. Illustrated mode is slower (15–30s per panel) but more visually immersive.",
+      },
+      {
         q: "Can I replay interactive episodes?",
-        a: "Yes. Each playthrough creates different scenes based on your choices. You can replay episodes as many times as you like to explore different paths.",
+        a: "Yes. Each playthrough creates different scenes based on your choices. You can also watch other players' playthroughs by tapping the timeline bubbles that appear on the right edge during episodes.",
       },
       {
         q: "What's the difference between chapters and episodes?",
@@ -39,19 +43,23 @@ const SECTIONS = [
     ],
   },
   {
-    title: "Account & Billing",
+    title: "Tokens",
     items: [
       {
-        q: "How do I change my plan?",
-        a: "Go to Plans from the sidebar to view available tiers. You can upgrade or downgrade at any time — changes take effect at the start of your next billing cycle.",
+        q: "What are tokens?",
+        a: "Tokens power interactive episodes. Each interaction — choosing an action, writing a custom response, or continuing the story — costs tokens. Dialogue mode costs 1 token per interaction. Illustrated mode costs 6 tokens per interaction. Reading published chapters and browsing the library is always free.",
       },
       {
-        q: "Can I cancel my subscription?",
-        a: "Yes, you can cancel at any time from your account settings. You'll retain access until the end of your current billing period.",
+        q: "Do I get any free tokens?",
+        a: "Yes — every new account starts with 20 free tokens so you can try the interactive experience.",
       },
       {
-        q: "What payment methods are accepted?",
-        a: "We accept all major credit cards, debit cards, and Apple Pay through our secure payment processor.",
+        q: "Do tokens expire?",
+        a: "No. Tokens stay in your account until you use them.",
+      },
+      {
+        q: "Can I buy more tokens?",
+        a: "Token refills are coming soon. We're working on adding purchasable token packs — check the Plans page for updates.",
       },
     ],
   },
@@ -63,8 +71,8 @@ const SECTIONS = [
         a: "SourceNovel works best on the latest versions of Chrome, Firefox, Safari, and Edge. Mobile browsers on iOS and Android are fully supported.",
       },
       {
-        q: "Why is image generation slow?",
-        a: "AI image generation typically takes 10-30 seconds per scene. The quality and consistency of generated images requires significant processing. Pro plan users get priority queue access.",
+        q: "Why is image generation slow in Illustrated mode?",
+        a: "AI image generation typically takes 15–30 seconds per panel. Each panel is generated with character and location reference images to maintain visual consistency, which requires significant processing.",
       },
       {
         q: "My interactive episode isn't loading. What should I do?",

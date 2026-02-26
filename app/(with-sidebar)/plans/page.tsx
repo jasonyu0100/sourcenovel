@@ -47,7 +47,7 @@ const FAQ = [
   },
   {
     q: "Do I get any free tokens?",
-    a: "Yes — every new account starts with 50 free tokens so you can try the interactive experience.",
+    a: "Yes — every new account starts with 20 free tokens so you can try the interactive experience.",
   },
   {
     q: "What payment methods do you accept?",
@@ -90,8 +90,14 @@ export default function PlansPage() {
           </SignedIn>
         </div>
 
+        {/* Coming soon notice */}
+        <div className="mb-8 px-5 py-4 rounded-xl border border-amber-500/20 bg-amber-500/[0.04] text-center">
+          <p className="text-amber-300/90 text-sm font-medium">Token refills are coming soon</p>
+          <p className="text-amber-300/40 text-xs mt-1">Purchasing is not yet available. New accounts start with 20 free tokens.</p>
+        </div>
+
         {/* Token Packs */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20 opacity-50 pointer-events-none select-none">
           {PACKS.map((pack) => (
             <div
               key={pack.name}
