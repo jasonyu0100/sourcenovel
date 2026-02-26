@@ -137,20 +137,6 @@ export default function HelpPage() {
             </div>
           ))}
         </div>
-
-        {/* Contact */}
-        <div className="mt-16 text-center rounded-2xl border border-slate-800/50 bg-white/[0.02] p-8">
-          <h3 className="text-lg font-bold text-white mb-2">Still need help?</h3>
-          <p className="text-slate-400 text-sm mb-4">
-            Can&apos;t find what you&apos;re looking for? Reach out and we&apos;ll get back to you.
-          </p>
-          <a
-            href="mailto:support@sourcenovel.com"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 border border-slate-700 hover:bg-white/10 text-white text-sm font-medium transition-colors"
-          >
-            Contact Support
-          </a>
-        </div>
       </div>
     </div>
   );
