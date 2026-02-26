@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { BookOpenIcon, PlayIcon } from "@heroicons/react/24/outline";
+import { BookOpenIcon, PlayIcon, ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
 import type { SeriesEntry } from "@/lib/types";
 import { getSeriesList } from "@/lib/series";
 import { API_BASE } from "@/lib/constants";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 export default function HomePage() {
   const [seriesList, setSeriesList] = useState<SeriesEntry[]>([]);
@@ -103,9 +105,36 @@ export default function HomePage() {
             <h2 className="text-sm font-bold text-white group-hover:text-violet-200 transition-colors leading-snug">
               {series.title}
             </h2>
+            <SeriesStats seriesId={series.id} />
           </Link>
         ))}
       </div>
+    </div>
+  );
+}
+
+function SeriesStats({ seriesId }: { seriesId: string }) {
+  const plays = useQuery(api.interactions.getSeriesPlayCount, { seriesId });
+  const interactions = useQuery(api.interactions.getSeriesInteractionCount, { seriesId });
+
+  const hasPlays = plays != null && plays > 0;
+  const hasInteractions = interactions != null && interactions > 0;
+  if (!hasPlays && !hasInteractions) return null;
+
+  return (
+    <div className="flex items-center gap-2 mt-1">
+      {hasPlays && (
+        <span className="flex items-center gap-1 text-slate-500 text-[11px]">
+          <PlayIcon className="w-3 h-3" />
+          {plays.toLocaleString()}
+        </span>
+      )}
+      {hasInteractions && (
+        <span className="flex items-center gap-1 text-slate-500 text-[11px]">
+          <ChatBubbleLeftRightIcon className="w-3 h-3" />
+          {interactions.toLocaleString()}
+        </span>
+      )}
     </div>
   );
 }

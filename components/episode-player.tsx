@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { XMarkIcon, MusicalNoteIcon, SpeakerWaveIcon, SpeakerXMarkIcon, ArrowLeftIcon, BoltIcon } from "@heroicons/react/24/outline";
 import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/solid";
 import { useAuth } from "@clerk/nextjs";
-import { useQuery } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { EpisodeChapterData, EpisodeData } from "@/lib/episode-types";
 import { buildStoryContext } from "@/lib/episode-context";
@@ -85,18 +85,25 @@ export function EpisodePlayer({ chapterData, seriesId, onClose, replaySessionId,
   const bgmRef = useRef<HTMLAudioElement | null>(null);
   const ttsRef = useRef<HTMLAudioElement | null>(null);
   const isNavigating = useRef(false);
+  const playRecordedRef = useRef(false);
 
-  // Alternate reality sessions for this chapter
-  const chapterSessions = useQuery(
-    api.sessions.getChapterSessions,
+  // Alternate reality interactions for this chapter
+  const chapterInteractions = useQuery(
+    api.interactions.getChapterInteractions,
     { seriesId, chapterNum: chapterData.chapterNum }
   );
+
+  const recordPlay = useMutation(api.interactions.recordEpisodePlay);
 
   const { beats } = chapterData;
   const currentBeat = beats[currentIndex];
 
   useEffect(() => {
     setMounted(true);
+    if (!playRecordedRef.current) {
+      playRecordedRef.current = true;
+      recordPlay({ seriesId, chapterNum: chapterData.chapterNum });
+    }
     loadEpisodeData(seriesId, chapterData.chapterNum).then(setEpisodeData);
     loadInteractiveModule(seriesId).then(setInteractiveModule);
     loadChapterRoute(seriesId, chapterData.chapterNum).then(setChapterRoute);
@@ -505,7 +512,7 @@ export function EpisodePlayer({ chapterData, seriesId, onClose, replaySessionId,
 
       {/* Alternate timelines — right edge */}
       {!interactiveMode && (() => {
-        const allSessions = chapterSessions?.filter(s => s.beatCount > 0) ?? [];
+        const allSessions = chapterInteractions?.filter((s: { beatCount: number }) => s.beatCount > 0) ?? [];
         if (allSessions.length === 0) return null;
 
         const sorted = [...allSessions].sort((a, b) => {

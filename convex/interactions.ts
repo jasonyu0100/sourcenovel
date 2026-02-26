@@ -9,7 +9,7 @@ export const generateUploadUrl = mutation({
 
 export const storePanelImage = mutation({
   args: {
-    sessionId: v.id("sessions"),
+    interactionId: v.id("interactions"),
     index: v.number(),
     storageId: v.id("_storage"),
   },
@@ -19,8 +19,8 @@ export const storePanelImage = mutation({
 
     const beat = await ctx.db
       .query("beats")
-      .withIndex("by_session", (q) =>
-        q.eq("sessionId", args.sessionId).eq("index", args.index)
+      .withIndex("by_interaction", (q) =>
+        q.eq("interactionId", args.interactionId).eq("index", args.index)
       )
       .unique();
 
@@ -32,7 +32,7 @@ export const storePanelImage = mutation({
   },
 });
 
-export const createSession = mutation({
+export const createInteraction = mutation({
   args: {
     seriesId: v.string(),
     chapterNum: v.number(),
@@ -49,7 +49,7 @@ export const createSession = mutation({
       .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
       .unique();
 
-    return await ctx.db.insert("sessions", {
+    return await ctx.db.insert("interactions", {
       seriesId: args.seriesId,
       chapterNum: args.chapterNum,
       userId: identity.subject,
@@ -67,7 +67,7 @@ export const createSession = mutation({
 
 export const addBeat = mutation({
   args: {
-    sessionId: v.id("sessions"),
+    interactionId: v.id("interactions"),
     userChoice: v.string(),
     narration: v.string(),
     speaker: v.optional(v.string()),
@@ -76,13 +76,13 @@ export const addBeat = mutation({
     choices: v.array(v.string()),
   },
   handler: async (ctx, args) => {
-    const session = await ctx.db.get(args.sessionId);
-    if (!session) throw new Error("Session not found");
+    const interaction = await ctx.db.get(args.interactionId);
+    if (!interaction) throw new Error("Interaction not found");
 
-    const beatIndex = session.beatCount;
+    const beatIndex = interaction.beatCount;
 
     const beatId = await ctx.db.insert("beats", {
-      sessionId: args.sessionId,
+      interactionId: args.interactionId,
       index: beatIndex,
       userChoice: args.userChoice,
       narration: args.narration,
@@ -93,7 +93,7 @@ export const addBeat = mutation({
       createdAt: Date.now(),
     });
 
-    await ctx.db.patch(args.sessionId, {
+    await ctx.db.patch(args.interactionId, {
       lastBeatAt: Date.now(),
       beatCount: beatIndex + 1,
     });
@@ -102,31 +102,29 @@ export const addBeat = mutation({
   },
 });
 
-export const getSessionBeats = query({
-  args: { sessionId: v.id("sessions") },
+export const getInteractionBeats = query({
+  args: { interactionId: v.id("interactions") },
   handler: async (ctx, args) => {
     return await ctx.db
       .query("beats")
-      .withIndex("by_session", (q) => q.eq("sessionId", args.sessionId))
+      .withIndex("by_interaction", (q) => q.eq("interactionId", args.interactionId))
       .collect();
   },
 });
 
-export const getChapterSessions = query({
+export const getChapterInteractions = query({
   args: {
     seriesId: v.string(),
     chapterNum: v.number(),
   },
   handler: async (ctx, args) => {
-    const chapterSessions = await ctx.db
-      .query("sessions")
+    return await ctx.db
+      .query("interactions")
       .withIndex("by_chapter", (q) =>
         q.eq("seriesId", args.seriesId).eq("chapterNum", args.chapterNum)
       )
       .order("desc")
       .take(20);
-
-    return chapterSessions;
   },
 });
 
@@ -135,34 +133,31 @@ export const getChoicesAtBeat = query({
     seriesId: v.string(),
     chapterNum: v.number(),
     beatIndex: v.number(),
-    excludeSessionId: v.optional(v.id("sessions")),
+    excludeInteractionId: v.optional(v.id("interactions")),
   },
   handler: async (ctx, args) => {
-    // Get all sessions for this chapter (active and complete)
-    const sessions = await ctx.db
-      .query("sessions")
+    const interactions = await ctx.db
+      .query("interactions")
       .withIndex("by_chapter", (q) =>
         q.eq("seriesId", args.seriesId).eq("chapterNum", args.chapterNum)
       )
       .collect();
 
-    if (sessions.length === 0) return [];
+    if (interactions.length === 0) return [];
 
-    // For each session, get the beat at this index
     const choiceMap = new Map<
       string,
-      { choice: string; count: number; sessionId: string; userName: string; userImage?: string }
+      { choice: string; count: number; interactionId: string; userName: string; userImage?: string }
     >();
 
-    for (const session of sessions) {
-      // Skip the current user's active session
-      if (args.excludeSessionId && session._id === args.excludeSessionId) continue;
-      if (args.beatIndex >= session.beatCount) continue;
+    for (const interaction of interactions) {
+      if (args.excludeInteractionId && interaction._id === args.excludeInteractionId) continue;
+      if (args.beatIndex >= interaction.beatCount) continue;
 
       const beat = await ctx.db
         .query("beats")
-        .withIndex("by_session", (q) =>
-          q.eq("sessionId", session._id).eq("index", args.beatIndex)
+        .withIndex("by_interaction", (q) =>
+          q.eq("interactionId", interaction._id).eq("index", args.beatIndex)
         )
         .unique();
 
@@ -175,9 +170,9 @@ export const getChoicesAtBeat = query({
         choiceMap.set(beat.userChoice, {
           choice: beat.userChoice,
           count: 1,
-          sessionId: session._id,
-          userName: session.userName,
-          userImage: session.userImage,
+          interactionId: interaction._id,
+          userName: interaction.userName,
+          userImage: interaction.userImage,
         });
       }
     }
@@ -186,9 +181,62 @@ export const getChoicesAtBeat = query({
   },
 });
 
-export const getSession = query({
-  args: { sessionId: v.id("sessions") },
+export const getInteraction = query({
+  args: { interactionId: v.id("interactions") },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.sessionId);
+    return await ctx.db.get(args.interactionId);
+  },
+});
+
+// --- Episode play tracking ---
+
+export const recordEpisodePlay = mutation({
+  args: {
+    seriesId: v.string(),
+    chapterNum: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    return await ctx.db.insert("episodePlays", {
+      seriesId: args.seriesId,
+      chapterNum: args.chapterNum,
+      userId: identity?.subject ?? undefined,
+      startedAt: Date.now(),
+    });
+  },
+});
+
+export const getSeriesPlayCount = query({
+  args: { seriesId: v.string() },
+  handler: async (ctx, args) => {
+    const plays = await ctx.db
+      .query("episodePlays")
+      .withIndex("by_series", (q) => q.eq("seriesId", args.seriesId))
+      .collect();
+    return plays.length;
+  },
+});
+
+export const getSeriesInteractionCount = query({
+  args: { seriesId: v.string() },
+  handler: async (ctx, args) => {
+    const interactions = await ctx.db
+      .query("interactions")
+      .withIndex("by_chapter", (q) => q.eq("seriesId", args.seriesId))
+      .collect();
+    return interactions.length;
+  },
+});
+
+export const getChapterPlayCount = query({
+  args: { seriesId: v.string(), chapterNum: v.number() },
+  handler: async (ctx, args) => {
+    const plays = await ctx.db
+      .query("episodePlays")
+      .withIndex("by_series_chapter", (q) =>
+        q.eq("seriesId", args.seriesId).eq("chapterNum", args.chapterNum)
+      )
+      .collect();
+    return plays.length;
   },
 });

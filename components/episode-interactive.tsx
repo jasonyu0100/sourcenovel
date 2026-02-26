@@ -154,21 +154,21 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, sessionMode 
   const [panelElapsed, setPanelElapsed] = useState(0);
   const previousPanelUrlRef = useRef<string | null>(null);
 
-  // Session persistence state
-  const sessionIdRef = useRef<Id<"sessions"> | null>(null);
-  const sessionReadyRef = useRef<Promise<Id<"sessions"> | null>>(Promise.resolve(null));
-  const sessionCreatedRef = useRef(false);
-  const createSession = useMutation(api.sessions.createSession);
-  const addBeatMutation = useMutation(api.sessions.addBeat);
-  const storePanelImage = useMutation(api.sessions.storePanelImage);
-  const generateUploadUrl = useMutation(api.sessions.generateUploadUrl);
+  // Interaction persistence state
+  const interactionIdRef = useRef<Id<"interactions"> | null>(null);
+  const interactionReadyRef = useRef<Promise<Id<"interactions"> | null>>(Promise.resolve(null));
+  const interactionCreatedRef = useRef(false);
+  const createInteraction = useMutation(api.interactions.createInteraction);
+  const addBeatMutation = useMutation(api.interactions.addBeat);
+  const storePanelImage = useMutation(api.interactions.storePanelImage);
+  const generateUploadUrl = useMutation(api.interactions.generateUploadUrl);
   const lastUserChoiceRef = useRef<string>("Begin the scene");
 
   // Replay mode
   const isReplay = !!replaySessionId;
   const replayBeats = useQuery(
-    api.sessions.getSessionBeats,
-    replaySessionId ? { sessionId: replaySessionId as Id<"sessions"> } : "skip"
+    api.interactions.getInteractionBeats,
+    replaySessionId ? { interactionId: replaySessionId as Id<"interactions"> } : "skip"
   );
   const [replayIndex, setReplayIndex] = useState(0);
 
@@ -179,21 +179,21 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, sessionMode 
     setMounted(true);
     document.body.style.overflow = "hidden";
 
-    // Create session on mount (not in replay mode)
+    // Create interaction on mount (not in replay mode)
     // Guard against React StrictMode double-mount
-    if (!isReplay && !sessionCreatedRef.current) {
-      sessionCreatedRef.current = true;
-      const sessionPromise = createSession({
+    if (!isReplay && !interactionCreatedRef.current) {
+      interactionCreatedRef.current = true;
+      const interactionPromise = createInteraction({
         seriesId: storyContext.seriesId,
         chapterNum: storyContext.chapterNum,
         characterName: playAsCharacter || storyContext.povCharacter,
         mode: sessionMode,
         startBeatIndex: storyContext.beatIndex,
       }).then(id => {
-        sessionIdRef.current = id;
+        interactionIdRef.current = id;
         return id;
       }).catch(() => null);
-      sessionReadyRef.current = sessionPromise;
+      interactionReadyRef.current = interactionPromise;
     }
 
     return () => {
@@ -478,10 +478,10 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, sessionMode 
         setCurrentLocation(finalBeat.location);
       }
 
-      // Persist beat to Convex — await session creation if still in flight
-      const sid = sessionIdRef.current ?? await sessionReadyRef.current;
+      // Persist beat to Convex — await interaction creation if still in flight
+      const sid = interactionIdRef.current ?? await interactionReadyRef.current;
       const panelBeatIndex = sid ? (await addBeatMutation({
-        sessionId: sid,
+        interactionId: sid,
         userChoice: lastUserChoiceRef.current,
         narration: finalBeat.narration,
         speaker: finalBeat.speaker ?? undefined,
@@ -519,7 +519,7 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, sessionMode 
   };
 
   // Generate a manga panel for a beat
-  const generatePanel = async (beat: StoryBeat, beatIndex: number, locationChanged = false, sid?: Id<"sessions"> | null) => {
+  const generatePanel = async (beat: StoryBeat, beatIndex: number, locationChanged = false, sid?: Id<"interactions"> | null) => {
     const episodeData = storyContext.episodeData;
     if (!beat.narration) return;
 
@@ -610,8 +610,8 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, sessionMode 
       if (panelUrl) {
         // Upload to Convex file storage for permanent persistence
         let storedUrl = panelUrl;
-        const activeSessionId = sid ?? sessionIdRef.current;
-        if (activeSessionId) {
+        const activeInteractionId = sid ?? interactionIdRef.current;
+        if (activeInteractionId) {
           try {
             const blob = await fetch(panelUrl).then(r => r.blob());
             const uploadUrl = await generateUploadUrl();
@@ -622,7 +622,7 @@ export function EpisodeInteractive({ storyContext, playAsCharacter, sessionMode 
             });
             const { storageId } = await uploadRes.json();
             storedUrl = await storePanelImage({
-              sessionId: activeSessionId,
+              interactionId: activeInteractionId,
               index: beatIndex,
               storageId,
             });

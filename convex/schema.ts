@@ -11,7 +11,7 @@ export default defineSchema({
     createdAt: v.number(),
   }).index("by_clerk_id", ["clerkId"]),
 
-  sessions: defineTable({
+  interactions: defineTable({
     seriesId: v.string(),
     chapterNum: v.number(),
     userId: v.string(),
@@ -27,8 +27,18 @@ export default defineSchema({
     .index("by_chapter", ["seriesId", "chapterNum"])
     .index("by_user", ["userId"]),
 
+  episodePlays: defineTable({
+    seriesId: v.string(),
+    chapterNum: v.number(),
+    userId: v.optional(v.string()),
+    startedAt: v.number(),
+  })
+    .index("by_series", ["seriesId"])
+    .index("by_series_chapter", ["seriesId", "chapterNum"])
+    .index("by_user", ["userId"]),
+
   beats: defineTable({
-    sessionId: v.id("sessions"),
+    interactionId: v.id("interactions"),
     index: v.number(),
     userChoice: v.string(),
     narration: v.string(),
@@ -38,5 +48,5 @@ export default defineSchema({
     choices: v.array(v.string()),
     panelUrl: v.optional(v.string()),
     createdAt: v.number(),
-  }).index("by_session", ["sessionId", "index"]),
+  }).index("by_interaction", ["interactionId", "index"]),
 });

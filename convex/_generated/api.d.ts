@@ -9,7 +9,7 @@
  */
 
 import type * as cleanup from "../cleanup.js";
-import type * as sessions from "../sessions.js";
+import type * as interactions from "../interactions.js";
 import type * as users from "../users.js";
 
 import type {
@@ -20,7 +20,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   cleanup: typeof cleanup;
-  sessions: typeof sessions;
+  interactions: typeof interactions;
   users: typeof users;
 }>;
 
