@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useParams } from "next/navigation";
 import Link from "next/link";
-import { BookOpenIcon, MusicalNoteIcon, PhotoIcon, ChevronRightIcon, ClockIcon, EllipsisHorizontalIcon, ArrowDownTrayIcon, PlayIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { BookOpenIcon, MusicalNoteIcon, PhotoIcon, ChevronRightIcon, ClockIcon, EllipsisHorizontalIcon, ArrowDownTrayIcon, PlayIcon, ArrowLeftIcon, GlobeAltIcon } from "@heroicons/react/24/outline";
 import type { SeriesEntry, PageImage } from "@/lib/types";
 import { getSeriesEntry, getMusicPath, getAllPageImages, getAllChapterInfo, getContentManifest, getAllChapterVideos, type ChapterInfo, type ChapterVideo } from "@/lib/series";
 import { ImageFeed } from "@/components/image-feed";
@@ -45,6 +45,7 @@ function SeriesPageContent() {
   const [episodeChapters, setEpisodeChapters] = useState<{ chapterNum: number; title: string; pageCount: number; thumbnail: string | null }[]>([]);
   const [hasEpisodes, setHasEpisodes] = useState(false);
   const [hasPages, setHasPages] = useState(false);
+  const [hasWorldMap, setHasWorldMap] = useState(false);
   const [openPagesOnLoad, setOpenPagesOnLoad] = useState(false);
   const [generatingEpub, setGeneratingEpub] = useState(false);
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
@@ -80,18 +81,28 @@ function SeriesPageContent() {
 
           // Quick existence checks for intro screen
           const firstChapter = (series.chapters || [])[0];
-          if (firstChapter) {
-            try {
-              const [episodeRes, manifestRes] = await Promise.all([
-                fetch(`${API_BASE}/${seriesId}/chapters/${firstChapter}/episode.json`, { method: "HEAD" }),
-                fetch(`${API_BASE}/${seriesId}/manifest.json`).then(r => r.ok ? r.json() : null).catch(() => null),
-              ]);
-              if (episodeRes.ok) setHasEpisodes(true);
-              if (manifestRes?.chapters?.some((c: { pages?: (number | { number: number })[] }) => c.pages && c.pages.length > 0)) {
-                setHasPages(true);
-              }
-            } catch {}
-          }
+          try {
+            const checks: Promise<unknown>[] = [
+              fetch(`${API_BASE}/${seriesId}/world/world-map.json`, { method: "HEAD" })
+                .then(r => { if (r.ok) setHasWorldMap(true); })
+                .catch(() => {}),
+            ];
+            if (firstChapter) {
+              checks.push(
+                fetch(`${API_BASE}/${seriesId}/chapters/${firstChapter}/episode.json`, { method: "HEAD" })
+                  .then(r => { if (r.ok) setHasEpisodes(true); })
+                  .catch(() => {}),
+                fetch(`${API_BASE}/${seriesId}/manifest.json`).then(r => r.ok ? r.json() : null)
+                  .then(manifestRes => {
+                    if (manifestRes?.chapters?.some((c: { pages?: (number | { number: number })[] }) => c.pages && c.pages.length > 0)) {
+                      setHasPages(true);
+                    }
+                  })
+                  .catch(() => {}),
+              );
+            }
+            await Promise.all(checks);
+          } catch {}
 
           setIntroReady(true);
 
@@ -241,21 +252,14 @@ function SeriesPageContent() {
                   Begin Episode 1
                 </Link>
               )}
-              {hasPages && (
-                <button
-                  onClick={() => {
-                    dismissIntro();
-                    if (allPages.length > 0) {
-                      openMangaReader(savedPageIndex !== null && savedPageIndex > 0 ? savedPageIndex : 0);
-                    } else {
-                      setOpenPagesOnLoad(true);
-                    }
-                  }}
-                  className="inline-flex items-center justify-center gap-2 w-full max-w-xs px-8 py-3 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-sm font-medium shadow-lg shadow-blue-600/25 hover:shadow-blue-500/40 transition-all duration-300"
+              {hasWorldMap && (
+                <Link
+                  href={`/${seriesId}/world`}
+                  className="inline-flex items-center justify-center gap-2 w-full max-w-xs px-8 py-3 rounded-full bg-violet-600/20 hover:bg-violet-600/30 border border-violet-500/30 text-violet-300 hover:text-white text-sm font-medium shadow-[0_0_20px_rgba(139,92,246,0.2)] hover:shadow-[0_0_30px_rgba(139,92,246,0.4)] transition-all duration-300"
                 >
-                  <BookOpenIcon className="w-5 h-5" />
-                  Read Pages
-                </button>
+                  <GlobeAltIcon className="w-5 h-5" />
+                  Explore World
+                </Link>
               )}
               <button
                 onClick={dismissIntro}
@@ -385,6 +389,15 @@ function SeriesPageContent() {
                     title="Start Episode"
                   >
                     <PlayIcon className="w-5 h-5" />
+                  </Link>
+                )}
+                {hasWorldMap && (
+                  <Link
+                    href={`/${seriesId}/world`}
+                    className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-violet-600/20 hover:bg-violet-600/30 border border-violet-500/30 text-violet-400 shadow-[0_0_14px_rgba(139,92,246,0.25)] hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] transition-all"
+                    title="Explore World"
+                  >
+                    <GlobeAltIcon className="w-5 h-5" />
                   </Link>
                 )}
                 {(entry.chapters?.length ?? 0) > 0 && (

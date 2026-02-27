@@ -1,0 +1,9 @@
+# Prism Appraisal Shop
+
+Idris's modest establishment on the Terrace's mid-tier commercial district. The shop where a Paragon pretends to be a retired jeweller. He appraises Prisms — rare crystals ranked S through C that amplify an Adept's Discipline — and he does it well enough that people come from both Thrones without asking why someone this good charges so little. The shop is his camouflage. A legend hiding behind a counter, weighing crystals that hum differently when he touches them because his Aether Discipline reads their fundamental nature the way normal Adepts read surface resonance.
+
+The interior is small and precise — dark wood display cases with glass tops, each Prism resting on black velvet under soft directional lighting. The walls are lined with reference texts and resonance charts that Idris hasn't needed to consult in years. A calibration station sits at the back — brass instruments, a magnification loupe, and a resonance plate that vibrates faintly when a Prism is placed on it. The ambient light is warm — amber wall sconces, a desk lamp with a green glass shade. It smells faintly of wood polish and ozone. A kettle sits on a shelf behind the counter. The front window faces a quiet lane off the main commercial artery, and through it the tiered architecture of the Terrace rises in illuminated layers.
+
+```
+manga anime style, intimate Prism appraisal shop interior, dark wood display cases with glass tops, rare crystals on black velvet glowing faintly, brass instruments and magnification loupe on wooden desk, resonance charts on walls, warm amber wall sconce lighting, green glass desk lamp, kettle on shelf, view through front window of tiered sci-fi space station architecture, cozy atmospheric, soft warm light with crystal glow highlights, detailed interior background art, cel shading
+```

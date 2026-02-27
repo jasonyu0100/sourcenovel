@@ -1,0 +1,9 @@
+# Terrace Market
+
+The commercial heart of the Ninth Terrace's mid-tier — a covered bazaar where the station's accelerated time turns into economic advantage. Artisans who need a week of uninterrupted work get it in a single outside day. Rare materials age faster here. Prisms that take months to stabilise elsewhere are market-ready in weeks. The result is a bazaar unlike any in known space — goods that shouldn't exist yet, crafted by people who have more time than anyone outside.
+
+A multi-level covered market built into the Terrace's terraced architecture, with walkways connecting stalls across three tiers. The upper tier specialises in Prisms and Discipline-related equipment — resonance amplifiers, calibration tools, cultivation aids. The middle tier is general commerce — food, textiles, technology, information brokers. The lower tier is the workshop level, where artisans work openly, their Disciplines part of the production process. The market is never quiet — the time dilation means there's always someone on a deadline. Warm lighting from hanging lanterns mixes with the cooler glow of display cases and holographic price boards. The air carries competing scents — grilled protein from a food stall, ozone from a Discipline forge, something floral from a cultivator's workshop. Narrow lanes widen into small plazas where people negotiate, argue, and occasionally demonstrate products with small Discipline displays.
+
+```
+manga anime style, multi-level covered bazaar in space station, terraced architecture with walkways connecting three tiers, hanging warm lanterns mixed with holographic displays, merchant stalls with glowing crystals and exotic goods, narrow bustling lanes widening into plazas, artisans working with visible energy effects, warm amber and cool blue mixed lighting, detailed crowd of diverse sci-fi characters, atmospheric perspective depth, lively market energy, detailed background art, cel shading
+```

@@ -1,0 +1,9 @@
+# Observatory Deck
+
+The highest publicly accessible point on the Ninth Terrace — an open viewing platform above the Council tier, where the station's artificial atmosphere thins and the void presses close. This is where people come to think, to grieve, to make decisions they can't undo. The Terrace's time dilation is felt most strongly here — standing at the edge, watching ships arrive and depart in what feels like minutes, the disconnect between inside-time and outside-time becomes visceral. A week of agonising over a choice while the universe outside barely notices a day has passed.
+
+A circular platform with a transparent crystalline dome overhead — engineered to be invisible, so it feels like standing in open space. The floor is dark stone with inlaid guidance lights that lead to the edge — a waist-high barrier of the same carved stone as the Grand Promenade's balustrade. Beyond it: the void, the stars, the distant lights of ships in transit. The Terrace's tiered architecture drops away below in illuminated rings. Benches are set back from the edge — simple stone, no cushions. A small memorial wall on one side lists names of Terrace residents who chose to leave permanently — not dead, just gone, their accelerated time exhausted. The lighting is minimal — just the stars and the soft glow of the guidance strips. It is very quiet up here.
+
+```
+manga anime style, observatory deck at apex of space station, circular platform with transparent crystalline dome showing vast starfield, dark stone floor with soft inlaid guidance lights, carved stone barrier at edge overlooking void, tiered illuminated space station architecture falling away below, distant ships in transit, memorial wall with engraved names, minimal lighting from stars and floor strips, profound solitude, atmospheric vast scale, Makoto Shinkai starfield detail, cel shading
+```

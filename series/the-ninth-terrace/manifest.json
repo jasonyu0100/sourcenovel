@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-26T04:32:39.857Z",
+  "generated": "2026-02-27T03:19:13.181Z",
   "chapters": [
     {
       "number": 1,
@@ -946,8 +946,36 @@
         "image": "corridor.jpg"
       },
       {
+        "file": "council-chambers.md",
+        "image": "council-chambers.jpg"
+      },
+      {
+        "file": "cultivation-halls.md",
+        "image": "cultivation-halls.jpg"
+      },
+      {
+        "file": "driftnet-lounge.md",
+        "image": "driftnet-lounge.jpg"
+      },
+      {
+        "file": "envoy-wing.md",
+        "image": "envoy-wing.jpg"
+      },
+      {
         "file": "grand-promenade.md",
         "image": "grand-promenade.jpg"
+      },
+      {
+        "file": "lower-docks.md",
+        "image": "lower-docks.jpg"
+      },
+      {
+        "file": "observatory-deck.md",
+        "image": "observatory-deck.jpg"
+      },
+      {
+        "file": "prism-appraisal-shop.md",
+        "image": "prism-appraisal-shop.jpg"
       },
       {
         "file": "quarters-cool.md",
@@ -956,6 +984,10 @@
       {
         "file": "shared-quarters.md",
         "image": "shared-quarters.jpg"
+      },
+      {
+        "file": "terrace-market.md",
+        "image": "terrace-market.jpg"
       },
       {
         "file": "transport-bay-wide.md",

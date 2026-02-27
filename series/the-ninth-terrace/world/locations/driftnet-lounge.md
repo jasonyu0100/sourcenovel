@@ -1,0 +1,9 @@
+# DriftNet Lounge
+
+The Terrace's premier social venue — a bar, intelligence exchange, and neutral meeting ground wrapped in expensive subtlety. The DriftNet is the virtual network connecting both Thrones across light-years, and this lounge takes its name seriously: information flows here as freely as the drinks. Operatives from both Thrones maintain quiet presences. Retired Adepts hold court. Information brokers work the room. Gossip is currency and silence is expensive. This is where you go to hear what both sides are saying — and to be seen hearing it.
+
+The space is divided into a main floor and a mezzanine ring above. The main floor has a long curved bar of dark polished wood backed by floating shelves of bottles lit from behind in shifting colours. Seating is arranged in clusters — high-backed booths for privacy, open tables for performance. The mezzanine offers a view of everything below through a glass-and-metal railing, with smaller tables for quieter conversations. The aesthetic is sophisticated dark — slate walls, copper accents, warm downlighting that flatters everyone. Holographic news tickers run along the ceiling in both Throne ciphers, showing headlines from across known space. A stage area near the back occasionally hosts musical performances. The clientele is the Terrace's elite — Adepts, merchants, diplomats, and people who are none of these things but dress like they could be.
+
+```
+manga anime style, upscale lounge bar in space station, long curved dark wood bar with floating illuminated bottle shelves, high-backed private booths and open tables, mezzanine level with glass railing overlooking main floor, slate walls with copper accents, warm sophisticated downlighting, holographic news tickers along ceiling, well-dressed sci-fi clientele in elegant dark attire, atmospheric haze, rich amber and copper tones, detailed interior art, cel shading
+```

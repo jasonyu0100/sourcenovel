@@ -49,4 +49,26 @@ export default defineSchema({
     panelUrl: v.optional(v.string()),
     createdAt: v.number(),
   }).index("by_interaction", ["interactionId", "index"]),
+
+  worldConversations: defineTable({
+    seriesId: v.string(),
+    locationSlug: v.string(),
+    characterSlug: v.string(),
+    userId: v.string(),
+    userName: v.string(),
+    userImage: v.optional(v.string()),
+    startedAt: v.number(),
+    lastMessageAt: v.number(),
+    messageCount: v.number(),
+  })
+    .index("by_user_character", ["userId", "seriesId", "characterSlug"])
+    .index("by_series", ["seriesId"]),
+
+  worldMessages: defineTable({
+    conversationId: v.id("worldConversations"),
+    index: v.number(),
+    role: v.string(),
+    content: v.string(),
+    createdAt: v.number(),
+  }).index("by_conversation", ["conversationId", "index"]),
 });
