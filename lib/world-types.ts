@@ -9,6 +9,7 @@ export interface WorldMapLocation {
   description: string;
   image: string;
   connections: WorldConnection[];
+  children?: WorldMapLocation[]; // fractal sub-locations
 }
 
 export interface WorldMapCluster {

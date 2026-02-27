@@ -1,0 +1,72 @@
+{
+  "id": "tensions-rising",
+  "name": "Tensions Rising",
+  "description": "Both Thrones have issued recall orders. The Council of Nine convenes an emergency session. Envoys are arriving. Old alliances fracture under new pressure — and two former partners find themselves on opposite sides of a closing door.",
+  "characters": [
+    {
+      "slug": "idris",
+      "name": "Idris Vael",
+      "profile": "characters/idris.md",
+      "startLocation": "prism-appraisal-shop",
+      "faction": null,
+      "goals": [
+        "Protect the Ninth Terrace's neutrality",
+        "Avoid being dragged back into Throne politics",
+        "Keep watch over the Prism trade for signs of escalation"
+      ],
+      "personality": "Quiet, watchful, dry humor. Dangerous when pushed past tolerance. Still loves Sera but won't admit it. Pretends to be retired."
+    },
+    {
+      "slug": "sera",
+      "name": "Sera Kaine",
+      "profile": "characters/sera.md",
+      "startLocation": "command-spire",
+      "faction": "sovereignty",
+      "goals": [
+        "Execute the Sovereignty's recall directive",
+        "Assess the Ninth Terrace's strategic value",
+        "Find a reason — any reason — to see Idris again"
+      ],
+      "personality": "Strategic, composed, furious beneath the surface. Political instinct masks genuine conflict. Youngest Vice-Commandant in Sovereignty history."
+    },
+    {
+      "slug": "valeria-caine",
+      "name": "Valeria Caine",
+      "profile": "characters/valeria-caine.md",
+      "startLocation": "council-chambers",
+      "faction": null,
+      "goals": [
+        "Maintain the Council's authority during the crisis",
+        "Prevent either Throne from gaining leverage",
+        "Keep Idris from doing something stupid"
+      ],
+      "personality": "Sharp, politically astute, protective of the Terrace. Sees everything, says only what serves her purpose."
+    },
+    {
+      "slug": "reva-orin",
+      "name": "Reva Orin",
+      "profile": "characters/reva-orin.md",
+      "startLocation": "transport-bay-wide",
+      "faction": "sovereignty",
+      "goals": [
+        "Deliver the recall orders to all Sovereignty personnel on the Terrace",
+        "Evaluate Sera's loyalty under pressure",
+        "Secure the Sovereignty's position before the Ascendancy moves"
+      ],
+      "personality": "Military discipline, no nonsense. Respects strength, despises hesitation. Sera's superior officer."
+    },
+    {
+      "slug": "maren-caul",
+      "name": "Maren Caul",
+      "profile": "characters/maren-caul.md",
+      "startLocation": "ascendancy-pavilion",
+      "faction": "ascendancy",
+      "goals": [
+        "Present the Ascendancy's claims to the Council",
+        "Secure access to the Cultivation Halls",
+        "Undermine Sovereignty influence on the Terrace"
+      ],
+      "personality": "Ancient authority wearing a pleasant face. Every word is a move in a game that started centuries ago."
+    }
+  ]
+}
