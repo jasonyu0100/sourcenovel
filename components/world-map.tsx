@@ -44,59 +44,47 @@ function hexToRgba(hex: string, alpha: number): string {
 }
 
 /**
- * BFS layout on a hexagonal grid (pointy-top, axial coordinates).
- * 6 equidistant directions instead of 8 — produces cleaner spacing
- * and naturally supports hub nodes with many connections.
- * Deterministic via slug-seeded rotation.
- *
- * Axial hex directions (q, r):
- *   E (+1,0)  NE (+1,-1)  NW (0,-1)  W (-1,0)  SW (-1,+1)  SE (0,+1)
+ * BFS layout on a square grid rendered isometrically.
+ * Each cell (col, row) maps to screen via standard isometric projection.
+ * Size-N tiles occupy N×N cells on the grid — size 2 is literally 2× wide.
+ * Deterministic via slug-seeded direction preference.
  */
 
-const HEX_DIRECTIONS: [number, number][] = [
-  [1, 0],   // E
-  [1, -1],  // NE
-  [0, -1],  // NW
-  [-1, 0],  // W
-  [-1, 1],  // SW
-  [0, 1],   // SE
-];
+const CELL_SIZE = 100;
+const CELL_W = CELL_SIZE * 1.8; // isometric cell width
+const CELL_H = CELL_SIZE * 0.9; // isometric cell height (2:1)
 
-function hashSlug(slug: string): number {
-  let h = 0;
-  for (let i = 0; i < slug.length; i++) {
-    h = ((h << 5) - h + slug.charCodeAt(i)) | 0;
-  }
-  return Math.abs(h);
-}
-
-/** Convert axial hex (q, r) to isometric screen coordinates.
- *  Classic isometric: x maps diag-right, r maps diag-left, y is squished. */
-function hexToPixel(q: number, r: number, size: number): { x: number; y: number } {
-  const TILE_W = size * 1.8;
-  const TILE_H = size * 0.9;
+/** Convert grid (col, row) to isometric screen pixel. */
+function cellToPixel(col: number, row: number): { x: number; y: number } {
   return {
-    x: (q - r) * TILE_W / 2,
-    y: (q + r) * TILE_H / 2,
+    x: (col - row) * CELL_W / 2,
+    y: (col + row) * CELL_H / 2,
   };
 }
 
-interface HexLayoutResult {
+interface GridLayoutResult {
   positions: Map<string, { x: number; y: number }>;
-  hexCoords: Map<string, { q: number; r: number }>;
+  gridCoords: Map<string, { col: number; row: number }>;
+  /** Maps every occupied cell key "col,row" → location slug */
+  cellToSlug: Map<string, string>;
+  /** Maps slug → tile size */
+  sizeMap: Map<string, number>;
 }
 
-function computeHexLayout(
+function computeGridLayout(
   locations: WorldMapLocation[],
   rootSlug: string,
   cx: number,
   cy: number,
-): HexLayoutResult {
+): GridLayoutResult {
   const positions = new Map<string, { x: number; y: number }>();
   const occupied = new Set<string>();
+  const cellToSlugMap = new Map<string, string>();
+  const sizeMap = new Map<string, number>();
   const adjacency = new Map<string, Set<string>>();
 
   for (const loc of locations) {
+    sizeMap.set(loc.slug, loc.size ?? 2);
     if (!adjacency.has(loc.slug)) adjacency.set(loc.slug, new Set());
     for (const conn of loc.connections) {
       adjacency.get(loc.slug)!.add(conn.target);
@@ -105,114 +93,138 @@ function computeHexLayout(
     }
   }
 
-  const hexKey = (q: number, r: number) => `${q},${r}`;
-  const HEX_SIZE = 100; // spacing between hex centers
+  const cellKey = (c: number, r: number) => `${c},${r}`;
 
-  const toPixel = (q: number, r: number) => {
-    const p = hexToPixel(q, r, HEX_SIZE);
+  // Mark all N×N cells as occupied for a tile anchored at (ac, ar)
+  const markOccupied = (ac: number, ar: number, size: number, slug: string) => {
+    for (let dc = 0; dc < size; dc++) {
+      for (let dr = 0; dr < size; dr++) {
+        const key = cellKey(ac + dc, ar + dr);
+        occupied.add(key);
+        cellToSlugMap.set(key, slug);
+      }
+    }
+  };
+
+  // Check if an N×N block at anchor (ac, ar) is fully free
+  const canPlace = (ac: number, ar: number, size: number) => {
+    for (let dc = 0; dc < size; dc++) {
+      for (let dr = 0; dr < size; dr++) {
+        if (occupied.has(cellKey(ac + dc, ar + dr))) return false;
+      }
+    }
+    return true;
+  };
+
+  // Pixel center of a size-N tile anchored at (ac, ar)
+  const tileCenterPixel = (ac: number, ar: number, size: number) => {
+    const centerCol = ac + (size - 1) / 2;
+    const centerRow = ar + (size - 1) / 2;
+    const p = cellToPixel(centerCol, centerRow);
     return { x: cx + p.x, y: cy + p.y };
   };
 
-  const rootPixel = toPixel(0, 0);
-  positions.set(rootSlug, rootPixel);
-  occupied.add(hexKey(0, 0));
-  const gridPos = new Map<string, { q: number; r: number }>();
-  gridPos.set(rootSlug, { q: 0, r: 0 });
+  const gridCoords = new Map<string, { col: number; row: number }>();
+
+  // All edge-adjacent anchor positions where a C×C child touches a P×P parent at (pa,pr)
+  const edgeAdjacentAnchors = (pa: number, pr: number, P: number, C: number) => {
+    const anchors: { col: number; row: number }[] = [];
+    // Right edge: child col = pa+P, row slides along parent height
+    for (let r = pr - (C - 1); r <= pr + (P - 1); r++) anchors.push({ col: pa + P, row: r });
+    // Left edge: child col = pa-C
+    for (let r = pr - (C - 1); r <= pr + (P - 1); r++) anchors.push({ col: pa - C, row: r });
+    // Bottom edge: child row = pr+P, col slides along parent width
+    for (let c = pa - (C - 1); c <= pa + (P - 1); c++) anchors.push({ col: c, row: pr + P });
+    // Top edge: child row = pr-C
+    for (let c = pa - (C - 1); c <= pa + (P - 1); c++) anchors.push({ col: c, row: pr - C });
+    return anchors;
+  };
+
+  // Count how many occupied cells border a candidate anchor position (compactness score)
+  const compactnessScore = (ac: number, ar: number, size: number) => {
+    let score = 0;
+    // Check cells just outside the N×N block on all 4 sides
+    for (let i = 0; i < size; i++) {
+      if (occupied.has(cellKey(ac - 1, ar + i))) score++;     // left
+      if (occupied.has(cellKey(ac + size, ar + i))) score++;   // right
+      if (occupied.has(cellKey(ac + i, ar - 1))) score++;     // top
+      if (occupied.has(cellKey(ac + i, ar + size))) score++;   // bottom
+    }
+    return score;
+  };
+
+  // Place root at origin
+  const rootSize = sizeMap.get(rootSlug) ?? 2;
+  markOccupied(0, 0, rootSize, rootSlug);
+  gridCoords.set(rootSlug, { col: 0, row: 0 });
+  positions.set(rootSlug, tileCenterPixel(0, 0, rootSize));
 
   const queue: string[] = [rootSlug];
   const visited = new Set<string>([rootSlug]);
 
   while (queue.length > 0) {
     const parentSlug = queue.shift()!;
-    const parentHex = gridPos.get(parentSlug)!;
+    const parentAnchor = gridCoords.get(parentSlug)!;
+    const parentSize = sizeMap.get(parentSlug) ?? 2;
     const neighbors = adjacency.get(parentSlug);
     if (!neighbors) continue;
 
     const unplaced = Array.from(neighbors).filter((n) => !visited.has(n));
     if (unplaced.length === 0) continue;
 
-    // Find directions already used by placed neighbors
-    const usedDirs = new Set<number>();
-    Array.from(neighbors).forEach((n) => {
-      const ng = gridPos.get(n);
-      if (!ng) return;
-      const dq = ng.q - parentHex.q;
-      const dr = ng.r - parentHex.r;
-      const dirIdx = HEX_DIRECTIONS.findIndex(
-        ([a, b]) => Math.sign(dq) === a && Math.sign(dr) === b,
-      );
-      if (dirIdx >= 0) usedDirs.add(dirIdx);
-    });
-
-    // Prioritize unused directions, then used ones
-    const availableDirs: number[] = [];
-    for (let i = 0; i < 6; i++) {
-      if (!usedDirs.has(i)) availableDirs.push(i);
-    }
-    for (let i = 0; i < 6; i++) {
-      if (usedDirs.has(i)) availableDirs.push(i);
-    }
-
-    const parentSeed = hashSlug(parentSlug);
-    const startOffset = parentSeed % 6;
-
     for (let ci = 0; ci < unplaced.length; ci++) {
       const childSlug = unplaced[ci];
-      const sectorSize = Math.max(1, Math.floor(availableDirs.length / unplaced.length));
-      const primaryIdx = (ci * sectorSize + startOffset) % availableDirs.length;
+      const childSize = sizeMap.get(childSlug) ?? 2;
 
-      // Build ordered direction list spiralling out from primary
-      const orderedDirs: number[] = [];
-      for (let offset = 0; offset < 6; offset++) {
-        const left = (primaryIdx + offset) % availableDirs.length;
-        const right = (primaryIdx - offset + availableDirs.length) % availableDirs.length;
-        if (!orderedDirs.includes(availableDirs[left])) {
-          orderedDirs.push(availableDirs[left]);
-        }
-        if (!orderedDirs.includes(availableDirs[right])) {
-          orderedDirs.push(availableDirs[right]);
-        }
-      }
+      // Get all edge-adjacent positions and filter to those that fit
+      const candidates = edgeAdjacentAnchors(parentAnchor.col, parentAnchor.row, parentSize, childSize)
+        .filter(({ col, row }) => canPlace(col, row, childSize));
 
-      let placed = false;
-      for (const dirIdx of orderedDirs) {
-        const [dq, dr] = HEX_DIRECTIONS[dirIdx];
-        for (let dist = 1; dist <= 4; dist++) {
-          const q = parentHex.q + dq * dist;
-          const r = parentHex.r + dr * dist;
-          const key = hexKey(q, r);
-          if (!occupied.has(key)) {
-            occupied.add(key);
-            gridPos.set(childSlug, { q, r });
-            positions.set(childSlug, toPixel(q, r));
-            visited.add(childSlug);
-            queue.push(childSlug);
-            placed = true;
-            break;
-          }
-        }
-        if (placed) break;
-      }
+      if (candidates.length > 0) {
+        // Score each candidate: maximize compactness, break ties with angular spread
+        const rootCenterCol = (rootSize - 1) / 2;
+        const rootCenterRow = (rootSize - 1) / 2;
 
-      // Fallback: spiral outward from parent
-      if (!placed) {
-        for (let ring = 1; ring < 20 && !placed; ring++) {
-          // Walk hex ring at distance `ring`
-          let hq = parentHex.q + HEX_DIRECTIONS[4][0] * ring;
-          let hr = parentHex.r + HEX_DIRECTIONS[4][1] * ring;
-          for (let side = 0; side < 6 && !placed; side++) {
-            for (let step = 0; step < ring && !placed; step++) {
-              const key = hexKey(hq, hr);
-              if (!occupied.has(key)) {
-                occupied.add(key);
-                gridPos.set(childSlug, { q: hq, r: hr });
-                positions.set(childSlug, toPixel(hq, hr));
+        // Ideal angle for this child (evenly distribute around parent)
+        const idealAngle = (ci / unplaced.length) * Math.PI * 2;
+
+        const scored = candidates.map(({ col, row }) => {
+          const compact = compactnessScore(col, row, childSize);
+          // Child center relative to root center
+          const childCenterCol = col + (childSize - 1) / 2;
+          const childCenterRow = row + (childSize - 1) / 2;
+          const angle = Math.atan2(childCenterRow - rootCenterRow, childCenterCol - rootCenterCol);
+          // Angular difference from ideal (smaller = better spread)
+          let angleDiff = Math.abs(angle - idealAngle);
+          if (angleDiff > Math.PI) angleDiff = Math.PI * 2 - angleDiff;
+          // Primary: compactness (higher=better). Secondary: angular spread (lower diff=better)
+          return { col, row, score: compact * 10 - angleDiff };
+        });
+        scored.sort((a, b) => b.score - a.score);
+
+        const best = scored[0];
+        markOccupied(best.col, best.row, childSize, childSlug);
+        gridCoords.set(childSlug, { col: best.col, row: best.row });
+        positions.set(childSlug, tileCenterPixel(best.col, best.row, childSize));
+        visited.add(childSlug);
+        queue.push(childSlug);
+      } else {
+        // Fallback: scan outward in rings from parent anchor
+        let placed = false;
+        for (let ring = 1; ring < 30 && !placed; ring++) {
+          for (let c = -ring; c <= ring && !placed; c++) {
+            for (let r = -ring; r <= ring && !placed; r++) {
+              if (Math.abs(c) !== ring && Math.abs(r) !== ring) continue;
+              const ac = parentAnchor.col + c;
+              const ar = parentAnchor.row + r;
+              if (canPlace(ac, ar, childSize)) {
+                markOccupied(ac, ar, childSize, childSlug);
+                gridCoords.set(childSlug, { col: ac, row: ar });
+                positions.set(childSlug, tileCenterPixel(ac, ar, childSize));
                 visited.add(childSlug);
                 queue.push(childSlug);
                 placed = true;
               }
-              hq += HEX_DIRECTIONS[side][0];
-              hr += HEX_DIRECTIONS[side][1];
             }
           }
         }
@@ -220,23 +232,21 @@ function computeHexLayout(
     }
   }
 
-  // Handle disconnected nodes
+  // Handle disconnected nodes — find nearest free spot to existing tiles
   for (const loc of locations) {
     if (!visited.has(loc.slug)) {
-      for (let ring = 1; ring < 20; ring++) {
+      const s = sizeMap.get(loc.slug) ?? 2;
+      for (let ring = 1; ring < 30; ring++) {
         let found = false;
-        let hq = HEX_DIRECTIONS[4][0] * ring;
-        let hr = HEX_DIRECTIONS[4][1] * ring;
-        for (let side = 0; side < 6 && !found; side++) {
-          for (let step = 0; step < ring && !found; step++) {
-            const key = hexKey(hq, hr);
-            if (!occupied.has(key)) {
-              occupied.add(key);
-              positions.set(loc.slug, toPixel(hq, hr));
+        for (let c = -ring; c <= ring && !found; c++) {
+          for (let r = -ring; r <= ring && !found; r++) {
+            if (Math.abs(c) !== ring && Math.abs(r) !== ring) continue;
+            if (canPlace(c, r, s)) {
+              markOccupied(c, r, s, loc.slug);
+              gridCoords.set(loc.slug, { col: c, row: r });
+              positions.set(loc.slug, tileCenterPixel(c, r, s));
               found = true;
             }
-            hq += HEX_DIRECTIONS[side][0];
-            hr += HEX_DIRECTIONS[side][1];
           }
         }
         if (found) break;
@@ -244,7 +254,7 @@ function computeHexLayout(
     }
   }
 
-  return { positions, hexCoords: gridPos };
+  return { positions, gridCoords, cellToSlug: cellToSlugMap, sizeMap };
 }
 
 export function WorldMap({
@@ -342,24 +352,16 @@ export function WorldMap({
     return map;
   }, [locations]);
 
-  // Compute hex layout
-  const hexLayout = useMemo(() => {
+  // Compute grid layout
+  const gridLayout = useMemo(() => {
     const cx = canvasSize.width / 2;
     const cy = canvasSize.height / 2;
-    return computeHexLayout(locations, defaultLocation, cx, cy);
+    return computeGridLayout(locations, defaultLocation, cx, cy);
   }, [locations, defaultLocation, canvasSize.width, canvasSize.height]);
 
-  const nodePositions = hexLayout.positions;
-  const hexCoords = hexLayout.hexCoords;
-
-  // Reverse map: hex key → slug (for tile image lookup)
-  const hexKeyToSlug = useMemo(() => {
-    const map = new Map<string, string>();
-    hexCoords.forEach(({ q, r }, slug) => {
-      map.set(`${q},${r}`, slug);
-    });
-    return map;
-  }, [hexCoords]);
+  const nodePositions = gridLayout.positions;
+  const gridCellToSlug = gridLayout.cellToSlug;
+  const tileSizeMap = gridLayout.sizeMap;
 
   const getNodePos = useCallback(
     (slug: string) => nodePositions.get(slug) || { x: 0, y: 0 },
@@ -526,114 +528,122 @@ export function WorldMap({
 
     // --- Isometric grid with location image tiles ---
     {
-      const ISO_SIZE = 100;
-      const tileW = ISO_SIZE * 1.8;
-      const tileH = ISO_SIZE * 0.9;
       const gridCx = w / 2;
       const gridCy = h / 2;
+      const halfCW = CELL_W * 0.5;
+      const halfCH = CELL_H * 0.5;
       const extent = 14;
-      const hw = tileW * 0.5;
-      const hh = tileH * 0.5;
 
-      // Helper: draw diamond path at pixel center
-      const diamondPath = (cx2: number, cy2: number) => {
+      // Helper: draw diamond path at pixel center spanning gridSize cells
+      const diamondPath = (cx2: number, cy2: number, gridSize = 1) => {
+        const dhw = halfCW * gridSize;
+        const dhh = halfCH * gridSize;
         ctx.beginPath();
-        ctx.moveTo(cx2, cy2 - hh);
-        ctx.lineTo(cx2 + hw, cy2);
-        ctx.lineTo(cx2, cy2 + hh);
-        ctx.lineTo(cx2 - hw, cy2);
+        ctx.moveTo(cx2, cy2 - dhh);
+        ctx.lineTo(cx2 + dhw, cy2);
+        ctx.lineTo(cx2, cy2 + dhh);
+        ctx.lineTo(cx2 - dhw, cy2);
         ctx.closePath();
       };
 
+      // Pass 1: empty grid cells (checkerboard)
       for (let q = -extent; q <= extent; q++) {
         for (let r = -extent; r <= extent; r++) {
-          const px = gridCx + (q - r) * tileW / 2;
-          const py = gridCy + (q + r) * tileH / 2;
-          const hexKey = `${q},${r}`;
-          const locSlug = hexKeyToSlug.get(hexKey);
-          const locData = locSlug ? locationMap.get(locSlug) : null;
-          const img = locSlug ? imagesRef.current.get(locSlug) : null;
-          const isHovered = locSlug === hoveredSlug;
-          const isConnected = locSlug ? hoveredConnections.has(locSlug) : false;
-          const isDimmed = hoveredSlug && !isHovered && !isConnected;
+          const key = `${q},${r}`;
+          if (gridCellToSlug.has(key)) continue; // occupied by a location tile
+          const p = cellToPixel(q, r);
+          const px = gridCx + p.x;
+          const py = gridCy + p.y;
+          const isLight = (q + r) % 2 === 0;
+          diamondPath(px, py);
+          ctx.fillStyle = isLight ? "rgba(148, 163, 184, 0.02)" : "rgba(10, 10, 20, 0.2)";
+          ctx.fill();
+          ctx.strokeStyle = "rgba(148, 163, 184, 0.05)";
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
 
-          if (locData && img && img.complete && img.naturalWidth > 0) {
-            // --- Location tile: draw image clipped to diamond ---
+      // Pass 2: location tiles (sized diamonds)
+      for (const loc of locations) {
+        const pos = nodePositions.get(loc.slug);
+        if (!pos) continue;
+        const size = tileSizeMap.get(loc.slug) ?? 2;
+        const px = pos.x;
+        const py = pos.y;
+        const img = imagesRef.current.get(loc.slug);
+        const isHovered = loc.slug === hoveredSlug;
+        const isConnected = hoveredConnections.has(loc.slug);
+        const isDimmed = hoveredSlug && !isHovered && !isConnected;
 
-            // Drop shadow for 3D depth
+        if (img && img.complete && img.naturalWidth > 0) {
+          // Drop shadow for 3D depth
+          ctx.save();
+          diamondPath(px + 3, py + 5, size);
+          ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+          ctx.fill();
+          ctx.restore();
+
+          // Colored border (faction color)
+          const clusterId = locToCluster.get(loc.slug) || "";
+          const color = getColor(clusterId);
+          ctx.save();
+          diamondPath(px, py, size);
+          ctx.lineWidth = isHovered ? 3 : 2;
+          ctx.strokeStyle = isHovered ? "#ffffff" : isDimmed ? "rgba(60, 60, 80, 0.4)" : color;
+          ctx.stroke();
+          ctx.restore();
+
+          // Clip to diamond and draw image
+          ctx.save();
+          diamondPath(px, py, size);
+          ctx.clip();
+
+          const aspect = img.naturalWidth / img.naturalHeight;
+          const sTileW = CELL_W * size;
+          const sTileH = CELL_H * size;
+          const drawW = sTileW;
+          const drawH = sTileW / aspect;
+          const finalW = drawH < sTileH ? sTileH * aspect : drawW;
+          const finalH = drawH < sTileH ? sTileH : drawH;
+          ctx.globalAlpha = isDimmed ? 0.15 : 0.85;
+          ctx.drawImage(img, px - finalW / 2, py - finalH / 2, finalW, finalH);
+          ctx.globalAlpha = 1;
+
+          // Vignette overlay for depth
+          const vigR = halfCW * size;
+          const vigGrad = ctx.createRadialGradient(px, py, 0, px, py, vigR);
+          vigGrad.addColorStop(0, "transparent");
+          vigGrad.addColorStop(0.7, "transparent");
+          vigGrad.addColorStop(1, "rgba(0, 0, 0, 0.5)");
+          ctx.fillStyle = vigGrad;
+          diamondPath(px, py, size);
+          ctx.fill();
+
+          ctx.restore();
+
+          // Hover glow
+          if (isHovered) {
             ctx.save();
-            diamondPath(px + 3, py + 5);
-            ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-            ctx.fill();
-            ctx.restore();
-
-            // Colored border (faction color)
-            const clusterId = locToCluster.get(locSlug!) || "";
-            const color = getColor(clusterId);
-            ctx.save();
-            diamondPath(px, py);
-            ctx.lineWidth = isHovered ? 3 : 2;
-            ctx.strokeStyle = isHovered ? "#ffffff" : isDimmed ? "rgba(60, 60, 80, 0.4)" : color;
+            diamondPath(px, py, size);
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 16;
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
             ctx.stroke();
+            ctx.shadowBlur = 0;
             ctx.restore();
-
-            // Clip to diamond and draw image
-            ctx.save();
-            diamondPath(px, py);
-            ctx.clip();
-
-            const aspect = img.naturalWidth / img.naturalHeight;
-            const drawW = tileW;
-            const drawH = tileW / aspect;
-            const finalW = drawH < tileH ? tileH * aspect : drawW;
-            const finalH = drawH < tileH ? tileH : drawH;
-            ctx.globalAlpha = isDimmed ? 0.15 : 1;
-            ctx.drawImage(img, px - finalW / 2, py - finalH / 2, finalW, finalH);
-            ctx.globalAlpha = 1;
-
-            // Vignette overlay for depth
-            const vigGrad = ctx.createRadialGradient(px, py, 0, px, py, hw);
-            vigGrad.addColorStop(0, "transparent");
-            vigGrad.addColorStop(0.7, "transparent");
-            vigGrad.addColorStop(1, "rgba(0, 0, 0, 0.5)");
-            ctx.fillStyle = vigGrad;
-            diamondPath(px, py);
-            ctx.fill();
-
-            ctx.restore();
-
-            // Hover glow
-            if (isHovered) {
-              ctx.save();
-              diamondPath(px, py);
-              ctx.shadowColor = color;
-              ctx.shadowBlur = 16;
-              ctx.strokeStyle = color;
-              ctx.lineWidth = 2;
-              ctx.stroke();
-              ctx.shadowBlur = 0;
-              ctx.restore();
-            }
-          } else if (locData) {
-            // Location tile without loaded image — dark fill with border
-            const clusterId = locToCluster.get(locSlug!) || "";
-            const color = getColor(clusterId);
-            diamondPath(px, py);
-            ctx.fillStyle = isDimmed ? "rgba(15, 15, 25, 0.6)" : "rgba(20, 20, 35, 0.8)";
-            ctx.fill();
-            ctx.strokeStyle = isDimmed ? "rgba(60, 60, 80, 0.3)" : color;
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
-          } else {
-            // Empty grid tile — subtle checkerboard
-            const isLight = (q + r) % 2 === 0;
-            diamondPath(px, py);
-            ctx.fillStyle = isLight ? "rgba(148, 163, 184, 0.02)" : "rgba(10, 10, 20, 0.2)";
-            ctx.fill();
-            ctx.strokeStyle = "rgba(148, 163, 184, 0.05)";
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
           }
+        } else {
+          // Location tile without loaded image — dark fill with border
+          const clusterId = locToCluster.get(loc.slug) || "";
+          const color = getColor(clusterId);
+          diamondPath(px, py, size);
+          ctx.fillStyle = isDimmed ? "rgba(15, 15, 25, 0.6)" : "rgba(20, 20, 35, 0.8)";
+          ctx.fill();
+          ctx.strokeStyle = isDimmed ? "rgba(60, 60, 80, 0.3)" : color;
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
         }
       }
     }
@@ -838,7 +848,8 @@ export function WorldMap({
           : isConnected
             ? "rgba(255, 255, 255, 0.85)"
             : "rgba(203, 213, 225, 0.65)";
-      ctx.fillText(loc.name, pos.x, pos.y + 30);
+      const locSize = tileSizeMap.get(loc.slug) ?? 2;
+      ctx.fillText(loc.name, pos.x, pos.y + (CELL_H / 2) * locSize + 10);
       ctx.restore();
     }
 
@@ -1158,7 +1169,7 @@ export function WorldMap({
     canvasSize, pan, zoom, hoveredSlug, highlightCharacter, movingCharacters, imagesLoaded, charImagesLoaded,
     locations, outgoingEdges, locToCluster, clusters, getNodePos,
     locationMap, interchangeSlugs, nodePositions, clusterColorMap,
-    charactersByLocation, characters,
+    charactersByLocation, characters, gridCellToSlug, tileSizeMap,
   ]);
 
   // --- Camera focus animation ---

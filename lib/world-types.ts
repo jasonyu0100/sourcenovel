@@ -8,6 +8,7 @@ export interface WorldMapLocation {
   name: string;
   description: string;
   image: string;
+  size?: 1 | 2 | 3; // tile scale: 1=small, 2=medium (default), 3=large
   connections: WorldConnection[];
   children?: WorldMapLocation[]; // fractal sub-locations
 }
