@@ -114,34 +114,6 @@ export function EncounterPlaybackBox({
 
   return (
     <>
-      {/* Top-right encounter legend */}
-      <div className="fixed top-6 right-6 z-50 flex items-center gap-2">
-        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full backdrop-blur-sm border ${
-          encounterType === "crossover"
-            ? "bg-rose-500/15 border-rose-400/30"
-            : encounterType === "near-miss"
-              ? "bg-orange-500/15 border-orange-400/30"
-              : "bg-amber-500/15 border-amber-400/30"
-        }`}>
-          <span className="text-xs">
-            {encounterType === "crossover" ? "⚔" : encounterType === "near-miss" ? "💨" : "⚡"}
-          </span>
-          <span className={`text-xs font-medium ${
-            encounterType === "crossover"
-              ? "text-rose-300"
-              : encounterType === "near-miss"
-                ? "text-orange-300"
-                : "text-amber-300"
-          }`}>
-            {encounterType === "crossover"
-              ? `Paths crossed — ${locationName}`
-              : encounterType === "near-miss"
-                ? `Near miss at ${locationName}`
-                : `Encounter at ${locationName}`}
-          </span>
-        </div>
-      </div>
-
       {/* Click backdrop to advance */}
       <div
         className="fixed inset-0 z-30"

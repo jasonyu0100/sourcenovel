@@ -85,20 +85,6 @@ export function TurnPlaybackBox({
 
   return (
     <>
-      {/* Top-right legend */}
-      <div className="fixed top-6 right-6 z-50 flex items-center gap-2">
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/15 backdrop-blur-sm border border-violet-400/20">
-          <div className="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
-          <span className="text-xs font-medium text-violet-300">
-            Turn {turnNumber}
-          </span>
-          <span className="text-xs text-violet-400/60">·</span>
-          <span className="text-xs text-violet-400/80">
-            {actionIndex + 1} of {totalActions}
-          </span>
-        </div>
-      </div>
-
       {/* Click backdrop to advance */}
       <div
         className="fixed inset-0 z-30"
