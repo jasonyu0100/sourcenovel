@@ -7,45 +7,256 @@ interface WorldMapProps {
   seriesId: string;
   clusters: WorldMapCluster[];
   locations: WorldMapLocation[];
+  defaultLocation: string;
   onSelectLocation: (slug: string) => void;
 }
 
-// Force simulation node
-interface SimNode {
-  slug: string;
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  cluster: string;
-}
-
-// Canvas constants
-const NODE_RADIUS = 32;
+// Metro map constants
+const STATION_RADIUS = 22;
+const INTERCHANGE_RADIUS = 26;
+const HIT_RADIUS = 30;
+const GRID_X = 140;
+const GRID_Y = 140;
+const LINE_WIDTH = 4;
 const MIN_ZOOM = 0.3;
 const MAX_ZOOM = 3;
+const NEUTRAL_COLOR = "#94a3b8";
 
-// Force constants
-const REPULSION = 8000;
-const SPRING_K = 0.015;
-const SPRING_REST = 140;
-const CLUSTER_GRAVITY = 0.008;
-const CENTER_GRAVITY = 0.0005;
-const DAMPING = 0.85;
-const VELOCITY_THRESHOLD = 0.1;
+function hexToRgba(hex: string, alpha: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
-const defaultBlobColor = { r: 139, g: 92, b: 246, a: 0.08 };
+/**
+ * BFS layout with organic directional spread.
+ * Each child picks a grid direction away from its parent,
+ * spreading outward in 8 metro-legal directions.
+ * Deterministic via slug-seeded rotation.
+ */
 
-function parseRgba(str: string): { r: number; g: number; b: number; a: number } {
-  const m = str.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*([\d.]*)\)/);
-  if (!m) return defaultBlobColor;
-  return { r: +m[1], g: +m[2], b: +m[3], a: m[4] ? +m[4] : 1 };
+const DIRECTIONS: [number, number][] = [
+  [1, 0],   // E
+  [1, -1],  // NE
+  [0, -1],  // N
+  [-1, -1], // NW
+  [-1, 0],  // W
+  [-1, 1],  // SW
+  [0, 1],   // S
+  [1, 1],   // SE
+];
+
+function hashSlug(slug: string): number {
+  let h = 0;
+  for (let i = 0; i < slug.length; i++) {
+    h = ((h << 5) - h + slug.charCodeAt(i)) | 0;
+  }
+  return Math.abs(h);
+}
+
+function computeMetroLayout(
+  locations: WorldMapLocation[],
+  rootSlug: string,
+  cx: number,
+  cy: number,
+): Map<string, { x: number; y: number }> {
+  const positions = new Map<string, { x: number; y: number }>();
+  const occupied = new Set<string>();
+  const adjacency = new Map<string, Set<string>>();
+
+  for (const loc of locations) {
+    if (!adjacency.has(loc.slug)) adjacency.set(loc.slug, new Set());
+    for (const conn of loc.connections) {
+      adjacency.get(loc.slug)!.add(conn.target);
+      if (!adjacency.has(conn.target)) adjacency.set(conn.target, new Set());
+      adjacency.get(conn.target)!.add(loc.slug);
+    }
+  }
+
+  const gridKey = (gx: number, gy: number) => `${gx},${gy}`;
+
+  positions.set(rootSlug, { x: cx, y: cy });
+  occupied.add(gridKey(0, 0));
+  const gridPos = new Map<string, { gx: number; gy: number }>();
+  gridPos.set(rootSlug, { gx: 0, gy: 0 });
+
+  const queue: string[] = [rootSlug];
+  const visited = new Set<string>([rootSlug]);
+
+  while (queue.length > 0) {
+    const parentSlug = queue.shift()!;
+    const parentGrid = gridPos.get(parentSlug)!;
+    const neighbors = adjacency.get(parentSlug);
+    if (!neighbors) continue;
+
+    const unplaced = Array.from(neighbors).filter((n) => !visited.has(n));
+    if (unplaced.length === 0) continue;
+
+    // Find directions already used by placed neighbors
+    const usedDirs = new Set<number>();
+    Array.from(neighbors).forEach((n) => {
+      const ng = gridPos.get(n);
+      if (!ng) return;
+      const dx = Math.sign(ng.gx - parentGrid.gx);
+      const dy = Math.sign(ng.gy - parentGrid.gy);
+      const dirIdx = DIRECTIONS.findIndex(([a, b]) => a === dx && b === dy);
+      if (dirIdx >= 0) usedDirs.add(dirIdx);
+    });
+
+    const availableDirs: number[] = [];
+    for (let i = 0; i < 8; i++) {
+      if (!usedDirs.has(i)) availableDirs.push(i);
+    }
+    for (let i = 0; i < 8; i++) {
+      if (usedDirs.has(i)) availableDirs.push(i);
+    }
+
+    const parentSeed = hashSlug(parentSlug);
+    const startOffset = parentSeed % 8;
+
+    for (let ci = 0; ci < unplaced.length; ci++) {
+      const childSlug = unplaced[ci];
+      const sectorSize = Math.max(1, Math.floor(availableDirs.length / unplaced.length));
+      const primaryIdx = (ci * sectorSize + startOffset) % availableDirs.length;
+
+      const orderedDirs: number[] = [];
+      for (let offset = 0; offset < 8; offset++) {
+        const left = (primaryIdx + offset) % 8;
+        const right = (primaryIdx - offset + 8) % 8;
+        if (!orderedDirs.includes(availableDirs[left % availableDirs.length])) {
+          orderedDirs.push(availableDirs[left % availableDirs.length]);
+        }
+        if (!orderedDirs.includes(availableDirs[right % availableDirs.length])) {
+          orderedDirs.push(availableDirs[right % availableDirs.length]);
+        }
+      }
+
+      let placed = false;
+      for (const dirIdx of orderedDirs) {
+        const [dx, dy] = DIRECTIONS[dirIdx];
+        for (let dist = 1; dist <= 4; dist++) {
+          const gx = parentGrid.gx + dx * dist;
+          const gy = parentGrid.gy + dy * dist;
+          const key = gridKey(gx, gy);
+          if (!occupied.has(key)) {
+            occupied.add(key);
+            gridPos.set(childSlug, { gx, gy });
+            positions.set(childSlug, {
+              x: cx + gx * GRID_X,
+              y: cy + gy * GRID_Y,
+            });
+            visited.add(childSlug);
+            queue.push(childSlug);
+            placed = true;
+            break;
+          }
+        }
+        if (placed) break;
+      }
+
+      if (!placed) {
+        for (let r = 1; r < 20; r++) {
+          let found = false;
+          for (let dx = -r; dx <= r && !found; dx++) {
+            for (let dy = -r; dy <= r && !found; dy++) {
+              if (Math.abs(dx) !== r && Math.abs(dy) !== r) continue;
+              const gx = parentGrid.gx + dx;
+              const gy = parentGrid.gy + dy;
+              const key = gridKey(gx, gy);
+              if (!occupied.has(key)) {
+                occupied.add(key);
+                gridPos.set(childSlug, { gx, gy });
+                positions.set(childSlug, {
+                  x: cx + gx * GRID_X,
+                  y: cy + gy * GRID_Y,
+                });
+                visited.add(childSlug);
+                queue.push(childSlug);
+                found = true;
+              }
+            }
+          }
+          if (found) break;
+        }
+      }
+    }
+  }
+
+  // Handle disconnected nodes
+  for (const loc of locations) {
+    if (!visited.has(loc.slug)) {
+      for (let r = 1; r < 20; r++) {
+        let found = false;
+        for (let dx = -r; dx <= r && !found; dx++) {
+          for (let dy = -r; dy <= r && !found; dy++) {
+            const key = gridKey(dx, dy);
+            if (!occupied.has(key)) {
+              occupied.add(key);
+              positions.set(loc.slug, {
+                x: cx + dx * GRID_X,
+                y: cy + dy * GRID_Y,
+              });
+              found = true;
+            }
+          }
+        }
+        if (found) break;
+      }
+    }
+  }
+
+  return positions;
+}
+
+/**
+ * Metro-style routing between two points.
+ * Returns waypoints using horizontal/vertical segments + 45° diagonals.
+ */
+function metroRoute(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+): { x: number; y: number }[] {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const adx = Math.abs(dx);
+  const ady = Math.abs(dy);
+
+  // Nearly aligned — straight line
+  if (adx < 2 || ady < 2) {
+    return [{ x: x1, y: y1 }, { x: x2, y: y2 }];
+  }
+
+  const signX = Math.sign(dx);
+  const signY = Math.sign(dy);
+  const diag = Math.min(adx, ady);
+
+  if (adx >= ady) {
+    // Horizontal first, then 45° diagonal to destination
+    const straightLen = adx - diag;
+    return [
+      { x: x1, y: y1 },
+      { x: x1 + signX * straightLen, y: y1 },
+      { x: x2, y: y2 },
+    ];
+  } else {
+    // Vertical first, then 45° diagonal to destination
+    const straightLen = ady - diag;
+    return [
+      { x: x1, y: y1 },
+      { x: x1, y: y1 + signY * straightLen },
+      { x: x2, y: y2 },
+    ];
+  }
 }
 
 export function WorldMap({
   seriesId,
   clusters,
   locations,
+  defaultLocation,
   onSelectLocation,
 }: WorldMapProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -58,11 +269,10 @@ export function WorldMap({
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 });
   const imagesRef = useRef<Map<string, HTMLImageElement>>(new Map());
   const [imagesLoaded, setImagesLoaded] = useState(0);
-  const [simTick, setSimTick] = useState(0);
 
   const locationMap = useMemo(
     () => new Map(locations.map((l) => [l.slug, l])),
-    [locations]
+    [locations],
   );
 
   const locToCluster = useMemo(() => {
@@ -74,6 +284,45 @@ export function WorldMap({
     }
     return map;
   }, [clusters]);
+
+  // Build color lookup from cluster data
+  const clusterColorMap = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const c of clusters) {
+      if (c.color) map.set(c.id, c.color);
+    }
+    return map;
+  }, [clusters]);
+
+  const getColor = useCallback(
+    (clusterId: string) => clusterColorMap.get(clusterId) || NEUTRAL_COLOR,
+    [clusterColorMap],
+  );
+
+  const getColorDim = useCallback(
+    (clusterId: string) => {
+      const c = clusterColorMap.get(clusterId);
+      if (!c) return "rgba(148, 163, 184, 0.15)";
+      return hexToRgba(c, 0.15);
+    },
+    [clusterColorMap],
+  );
+
+  // Identify interchange stations (connected to nodes in different clusters)
+  const interchangeSlugs = useMemo(() => {
+    const set = new Set<string>();
+    for (const loc of locations) {
+      const myCluster = locToCluster.get(loc.slug);
+      for (const conn of loc.connections) {
+        const theirCluster = locToCluster.get(conn.target);
+        if (myCluster && theirCluster && myCluster !== theirCluster) {
+          set.add(loc.slug);
+          set.add(conn.target);
+        }
+      }
+    }
+    return set;
+  }, [locations, locToCluster]);
 
   // Build unique connection edges
   const connectionEdges = useMemo(() => {
@@ -91,186 +340,19 @@ export function WorldMap({
     return edges;
   }, [locations, locationMap]);
 
-  // --- Force-directed simulation ---
-  const nodesRef = useRef<Map<string, SimNode>>(new Map());
-  const simRunningRef = useRef(true);
-  const animFrameRef = useRef<number>(0);
+  // Compute metro layout
+  const nodePositions = useMemo(() => {
+    const cx = canvasSize.width / 2;
+    const cy = canvasSize.height / 2;
+    return computeMetroLayout(locations, defaultLocation, cx, cy);
+  }, [locations, defaultLocation, canvasSize.width, canvasSize.height]);
 
-  // Initialize simulation nodes
-  useEffect(() => {
-    const w = canvasSize.width || 800;
-    const h = canvasSize.height || 600;
-    const cx = w / 2;
-    const cy = h / 2;
-
-    // Spread clusters in a circle around center
-    const clusterAngles = new Map<string, number>();
-    clusters.forEach((c, i) => {
-      clusterAngles.set(c.id, (i / clusters.length) * Math.PI * 2 - Math.PI / 2);
-    });
-
-    const nodes = new Map<string, SimNode>();
-    for (const loc of locations) {
-      const clusterId = locToCluster.get(loc.slug) || "";
-      const angle = clusterAngles.get(clusterId) || 0;
-      const clusterR = 150;
-      const spread = 80;
-      nodes.set(loc.slug, {
-        slug: loc.slug,
-        x: cx + Math.cos(angle) * clusterR + (Math.random() - 0.5) * spread,
-        y: cy + Math.sin(angle) * clusterR + (Math.random() - 0.5) * spread,
-        vx: 0,
-        vy: 0,
-        cluster: clusterId,
-      });
-    }
-    nodesRef.current = nodes;
-    simRunningRef.current = true;
-  }, [locations, clusters, locToCluster]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Run force simulation
-  useEffect(() => {
-    let running = true;
-
-    const step = () => {
-      if (!running) return;
-      const nodes = nodesRef.current;
-      if (nodes.size === 0) return;
-
-      const w = canvasSize.width || 800;
-      const h = canvasSize.height || 600;
-      const cx = w / 2;
-      const cy = h / 2;
-
-      const arr = Array.from(nodes.values());
-
-      // Compute cluster centroids
-      const clusterSums = new Map<string, { sx: number; sy: number; n: number }>();
-      for (const n of arr) {
-        const s = clusterSums.get(n.cluster) || { sx: 0, sy: 0, n: 0 };
-        s.sx += n.x;
-        s.sy += n.y;
-        s.n++;
-        clusterSums.set(n.cluster, s);
-      }
-
-      // Reset forces
-      const forces = new Map<string, { fx: number; fy: number }>();
-      for (const n of arr) forces.set(n.slug, { fx: 0, fy: 0 });
-
-      // Node-node repulsion
-      for (let i = 0; i < arr.length; i++) {
-        for (let j = i + 1; j < arr.length; j++) {
-          const a = arr[i];
-          const b = arr[j];
-          const dx = b.x - a.x;
-          const dy = b.y - a.y;
-          const dist = Math.max(Math.sqrt(dx * dx + dy * dy), 1);
-          const force = REPULSION / (dist * dist);
-          const fx = (dx / dist) * force;
-          const fy = (dy / dist) * force;
-          forces.get(a.slug)!.fx -= fx;
-          forces.get(a.slug)!.fy -= fy;
-          forces.get(b.slug)!.fx += fx;
-          forces.get(b.slug)!.fy += fy;
-        }
-      }
-
-      // Edge spring attraction
-      for (const edge of connectionEdges) {
-        const a = nodes.get(edge.a.slug);
-        const b = nodes.get(edge.b.slug);
-        if (!a || !b) continue;
-        const dx = b.x - a.x;
-        const dy = b.y - a.y;
-        const dist = Math.max(Math.sqrt(dx * dx + dy * dy), 1);
-        const displacement = dist - SPRING_REST;
-        const force = SPRING_K * displacement;
-        const fx = (dx / dist) * force;
-        const fy = (dy / dist) * force;
-        forces.get(a.slug)!.fx += fx;
-        forces.get(a.slug)!.fy += fy;
-        forces.get(b.slug)!.fx -= fx;
-        forces.get(b.slug)!.fy -= fy;
-      }
-
-      // Cluster gravity — pull toward cluster centroid
-      for (const n of arr) {
-        const s = clusterSums.get(n.cluster);
-        if (!s || s.n < 2) continue;
-        const ccx = s.sx / s.n;
-        const ccy = s.sy / s.n;
-        const f = forces.get(n.slug)!;
-        f.fx += (ccx - n.x) * CLUSTER_GRAVITY;
-        f.fy += (ccy - n.y) * CLUSTER_GRAVITY;
-      }
-
-      // Center gravity
-      for (const n of arr) {
-        const f = forces.get(n.slug)!;
-        f.fx += (cx - n.x) * CENTER_GRAVITY;
-        f.fy += (cy - n.y) * CENTER_GRAVITY;
-      }
-
-      // Apply forces with damping
-      let maxV = 0;
-      for (const n of arr) {
-        const f = forces.get(n.slug)!;
-        n.vx = (n.vx + f.fx) * DAMPING;
-        n.vy = (n.vy + f.fy) * DAMPING;
-        n.x += n.vx;
-        n.y += n.vy;
-        maxV = Math.max(maxV, Math.abs(n.vx), Math.abs(n.vy));
-      }
-
-      setSimTick((t) => t + 1);
-
-      if (maxV > VELOCITY_THRESHOLD && simRunningRef.current) {
-        animFrameRef.current = requestAnimationFrame(step);
-      } else {
-        simRunningRef.current = false;
-      }
-    };
-
-    animFrameRef.current = requestAnimationFrame(step);
-    return () => {
-      running = false;
-      cancelAnimationFrame(animFrameRef.current);
-    };
-  }, [canvasSize, connectionEdges]);
-
-  // Get node position from simulation
   const getNodePos = useCallback(
-    (slug: string) => {
-      const n = nodesRef.current.get(slug);
-      return n ? { x: n.x, y: n.y } : { x: 0, y: 0 };
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [simTick]
+    (slug: string) => nodePositions.get(slug) || { x: 0, y: 0 },
+    [nodePositions],
   );
 
-  // Compute cluster blobs from sim positions
-  const clusterBlobs = useMemo(() => {
-    return clusters.map((cluster) => {
-      const positions = cluster.locations
-        .map((slug) => nodesRef.current.get(slug))
-        .filter(Boolean)
-        .map((n) => ({ x: n!.x, y: n!.y }));
-      if (positions.length === 0) return { cluster, blob: null };
-
-      const cx = positions.reduce((s, p) => s + p.x, 0) / positions.length;
-      const cy = positions.reduce((s, p) => s + p.y, 0) / positions.length;
-      const xExtent = Math.max(...positions.map((p) => Math.abs(p.x - cx)), 0);
-      const yExtent = Math.max(...positions.map((p) => Math.abs(p.y - cy)), 0);
-      const margin = NODE_RADIUS + 40;
-      const rx = Math.max(xExtent + margin, margin);
-      const ry = Math.max(yExtent + margin, margin);
-      return { cluster, blob: { cx, cy, rx, ry } };
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clusters, simTick]);
-
-  // Preload location images
+  // Preload location images for tooltips
   useEffect(() => {
     let loaded = 0;
     for (const loc of locations) {
@@ -294,7 +376,10 @@ export function WorldMap({
     const container = canvasRef.current?.parentElement;
     if (!container) return;
     const updateSize = () => {
-      setCanvasSize({ width: container.clientWidth, height: container.clientHeight });
+      setCanvasSize({
+        width: container.clientWidth,
+        height: container.clientHeight,
+      });
     };
     updateSize();
     const ro = new ResizeObserver(updateSize);
@@ -315,23 +400,22 @@ export function WorldMap({
       const my = (sy - pan.y - h / 2) / zoom + h / 2;
       return { mx, my };
     },
-    [pan, zoom]
+    [pan, zoom],
   );
 
   const getNodeAtPosition = useCallback(
     (clientX: number, clientY: number): WorldMapLocation | null => {
       const coords = getMapCoords(clientX, clientY);
       if (!coords) return null;
-      const hitRadius = NODE_RADIUS + 8;
       for (const loc of locations) {
         const pos = getNodePos(loc.slug);
         const dx = coords.mx - pos.x;
         const dy = coords.my - pos.y;
-        if (dx * dx + dy * dy < hitRadius * hitRadius) return loc;
+        if (dx * dx + dy * dy < HIT_RADIUS * HIT_RADIUS) return loc;
       }
       return null;
     },
-    [getMapCoords, locations, getNodePos]
+    [getMapCoords, locations, getNodePos],
   );
 
   // --- Draw ---
@@ -349,276 +433,321 @@ export function WorldMap({
     canvas.height = h * dpr;
     ctx.scale(dpr, dpr);
 
-    // Clear
-    ctx.clearRect(0, 0, w, h);
-
     // Background
     ctx.fillStyle = "#0a0a0f";
     ctx.fillRect(0, 0, w, h);
 
     // Subtle ambient glow
     const ambientGrad = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w * 0.6);
-    ambientGrad.addColorStop(0, "rgba(139, 92, 246, 0.04)");
+    ambientGrad.addColorStop(0, "rgba(139, 92, 246, 0.03)");
     ambientGrad.addColorStop(1, "transparent");
     ctx.fillStyle = ambientGrad;
     ctx.fillRect(0, 0, w, h);
 
-    // Starfield
-    const starSeed = [
-      [0.1, 0.2, 0.3], [0.3, 0.6, 0.2], [0.5, 0.1, 0.25], [0.7, 0.4, 0.15],
-      [0.9, 0.8, 0.2], [0.15, 0.9, 0.25], [0.85, 0.15, 0.2], [0.45, 0.75, 0.35],
-      [0.25, 0.45, 0.15], [0.65, 0.25, 0.2], [0.35, 0.85, 0.18], [0.75, 0.55, 0.22],
-      [0.55, 0.35, 0.12], [0.82, 0.72, 0.28], [0.18, 0.68, 0.16],
-    ];
-    for (const [sx, sy, alpha] of starSeed) {
-      ctx.beginPath();
-      ctx.arc(sx * w, sy * h, 0.8, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-      ctx.fill();
-    }
-
-    // Apply pan + zoom transform
+    // Apply pan + zoom
     ctx.save();
     ctx.translate(pan.x + w / 2, pan.y + h / 2);
     ctx.scale(zoom, zoom);
     ctx.translate(-w / 2, -h / 2);
 
-    // Cluster that the hovered node belongs to
-    const hoveredClusterId = hoveredSlug ? locToCluster.get(hoveredSlug) || null : null;
+    // --- Cluster region shading ---
+    for (const cluster of clusters) {
+      const clusterNodes = cluster.locations
+        .map((slug) => nodePositions.get(slug))
+        .filter(Boolean) as { x: number; y: number }[];
+      if (clusterNodes.length < 2) continue;
 
-    // --- Cluster blobs ---
-    for (const { cluster, blob } of clusterBlobs) {
-      if (!blob) continue;
-      const isActive = hoveredClusterId === cluster.id;
-      const color = parseRgba(cluster.color || "");
-      const opacity = isActive ? Math.min(color.a * 3, 0.3) : color.a;
+      const color = clusterColorMap.get(cluster.id) || NEUTRAL_COLOR;
+      // Compute bounding center and max radius
+      let avgX = 0, avgY = 0;
+      for (const p of clusterNodes) { avgX += p.x; avgY += p.y; }
+      avgX /= clusterNodes.length;
+      avgY /= clusterNodes.length;
+      let maxDist = 0;
+      for (const p of clusterNodes) {
+        const d = Math.sqrt((p.x - avgX) ** 2 + (p.y - avgY) ** 2);
+        if (d > maxDist) maxDist = d;
+      }
+      const regionRadius = maxDist + GRID_X * 0.9;
 
-      ctx.save();
-      ctx.translate(blob.cx, blob.cy);
-      const scaleX = blob.rx;
-      const scaleY = blob.ry;
-      ctx.scale(scaleX / 100, scaleY / 100);
-      const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, 100);
-      grad.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, ${opacity})`);
-      grad.addColorStop(1, "transparent");
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(0, 0, 100, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-
-      // Cluster label
-      ctx.font = "600 10px system-ui";
-      ctx.textAlign = "center";
-      ctx.fillStyle = isActive ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.13)";
-      ctx.letterSpacing = "2px";
-      ctx.fillText(
-        cluster.name.toUpperCase(),
-        blob.cx,
-        blob.cy - blob.ry - 8
+      const regionGrad = ctx.createRadialGradient(
+        avgX, avgY, 0,
+        avgX, avgY, regionRadius,
       );
+      regionGrad.addColorStop(0, hexToRgba(color, 0.08));
+      regionGrad.addColorStop(0.7, hexToRgba(color, 0.03));
+      regionGrad.addColorStop(1, "transparent");
+      ctx.fillStyle = regionGrad;
+      ctx.beginPath();
+      ctx.arc(avgX, avgY, regionRadius, 0, Math.PI * 2);
+      ctx.fill();
     }
 
-    // --- Connection edges ---
-    for (const pass of ["intra", "cross"] as const) {
-      for (const edge of connectionEdges) {
-        const { a, b } = edge;
-        const sameCluster = locToCluster.get(a.slug) === locToCluster.get(b.slug);
-        if (pass === "intra" && !sameCluster) continue;
-        if (pass === "cross" && sameCluster) continue;
+    // Connected slugs for hover highlighting
+    const hoveredConnections = new Set<string>();
+    if (hoveredSlug) {
+      const loc = locationMap.get(hoveredSlug);
+      if (loc) {
+        for (const conn of loc.connections) {
+          hoveredConnections.add(conn.target);
+        }
+      }
+      // Also add reverse connections
+      for (const l of locations) {
+        for (const c of l.connections) {
+          if (c.target === hoveredSlug) hoveredConnections.add(l.slug);
+        }
+      }
+    }
 
-        const isActive = hoveredSlug === a.slug || hoveredSlug === b.slug;
-        const posA = getNodePos(a.slug);
-        const posB = getNodePos(b.slug);
-        const ax = posA.x;
-        const ay = posA.y;
-        const bx = posB.x;
-        const by = posB.y;
+    // --- Metro lines (connections) ---
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
 
-        if (sameCluster) {
-          ctx.setLineDash([]);
-          ctx.lineWidth = isActive ? 2.5 : 1.5;
-          ctx.strokeStyle = isActive
-            ? "rgba(167, 139, 250, 0.5)"
-            : "rgba(255, 255, 255, 0.07)";
+    for (const edge of connectionEdges) {
+      const { a, b } = edge;
+      const posA = getNodePos(a.slug);
+      const posB = getNodePos(b.slug);
+
+      const clusterA = locToCluster.get(a.slug);
+      const clusterB = locToCluster.get(b.slug);
+      const bothNeutral = !clusterA && !clusterB;
+      const sameFaction = clusterA && clusterB && clusterA === clusterB;
+      const crossFaction = clusterA && clusterB && clusterA !== clusterB;
+      // One neutral + one faction = gateway edge
+      const gatewayEdge = (clusterA && !clusterB) || (!clusterA && clusterB);
+      const factionColor = clusterA || clusterB;
+      const isActive =
+        hoveredSlug === a.slug || hoveredSlug === b.slug;
+      const isDimmed = hoveredSlug && !isActive;
+
+      // Determine line color
+      let lineColor: string;
+      if (sameFaction) {
+        lineColor = getColor(clusterA!);
+      } else if (bothNeutral) {
+        lineColor = NEUTRAL_COLOR;
+      } else if (gatewayEdge) {
+        // Fade from neutral to faction color — use faction color
+        lineColor = getColor(factionColor!);
+      } else {
+        lineColor = "#6b7280";
+      }
+
+      // Apply dimming/highlighting
+      if (isDimmed) {
+        if (sameFaction) {
+          lineColor = getColorDim(clusterA!);
+        } else if (bothNeutral) {
+          lineColor = "rgba(148, 163, 184, 0.1)";
         } else {
-          ctx.setLineDash([8, 5]);
-          ctx.lineWidth = isActive ? 3 : 2;
-          ctx.strokeStyle = isActive
-            ? "rgba(167, 139, 250, 0.6)"
-            : "rgba(167, 139, 250, 0.12)";
+          lineColor = "rgba(148, 163, 184, 0.1)";
         }
+      } else if (isActive) {
+        ctx.shadowColor = sameFaction
+          ? getColor(clusterA!)
+          : bothNeutral
+            ? "rgba(148, 163, 184, 0.4)"
+            : `rgba(148, 163, 184, 0.4)`;
+        ctx.shadowBlur = 8;
+      }
 
-        if (isActive) {
-          ctx.save();
-          ctx.shadowColor = sameCluster
-            ? "rgba(139, 92, 246, 0.3)"
-            : "rgba(139, 92, 246, 0.5)";
-          ctx.shadowBlur = sameCluster ? 6 : 10;
-        }
+      ctx.strokeStyle = lineColor;
+      ctx.lineWidth = isActive ? LINE_WIDTH + 1 : LINE_WIDTH;
 
-        // Draw curved path
+      if (crossFaction) {
+        ctx.setLineDash([8, 6]);
+        ctx.lineWidth = isActive ? 3.5 : 2.5;
+      } else if (gatewayEdge) {
+        ctx.setLineDash([12, 4]);
+        ctx.lineWidth = isActive ? LINE_WIDTH : LINE_WIDTH - 1;
+      } else {
+        ctx.setLineDash([]);
+      }
+
+      // Draw metro route
+      const route = metroRoute(posA.x, posA.y, posB.x, posB.y);
+      ctx.beginPath();
+      ctx.moveTo(route[0].x, route[0].y);
+      for (let i = 1; i < route.length; i++) {
+        ctx.lineTo(route[i].x, route[i].y);
+      }
+      ctx.stroke();
+
+      // Connection label on hover
+      if (isActive && edge.label) {
+        ctx.save();
+        ctx.setLineDash([]);
+        ctx.shadowColor = "transparent";
+        ctx.shadowBlur = 0;
+        const midIdx = Math.floor(route.length / 2);
+        const labelPt = route[midIdx];
+        const labelX = midIdx === 0
+          ? (route[0].x + route[route.length - 1].x) / 2
+          : labelPt.x;
+        const labelY = midIdx === 0
+          ? (route[0].y + route[route.length - 1].y) / 2
+          : labelPt.y;
+
+        ctx.font = "500 9px system-ui";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        const metrics = ctx.measureText(edge.label);
+        const padX = 8;
+        const padY = 4;
+
+        ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
         ctx.beginPath();
-        ctx.moveTo(ax, ay);
-        const dx = bx - ax;
-        const dy = by - ay;
-        const curvature = sameCluster ? 0.08 : 0.12;
-        const midX = (ax + bx) / 2;
-        const midY = (ay + by) / 2;
-        const cpx = midX - dy * curvature;
-        const cpy = midY + dx * curvature;
-        ctx.quadraticCurveTo(cpx, cpy, bx, by);
-        ctx.stroke();
+        ctx.roundRect(
+          labelX - metrics.width / 2 - padX,
+          labelY - 24 - padY,
+          metrics.width + padX * 2,
+          16 + padY * 2,
+          6,
+        );
+        ctx.fill();
 
-        // Gateway diamond marker for cross-cluster connections
-        if (!sameCluster && !isActive) {
-          const mx = midX - (dy * curvature) / 2;
-          const my = midY + (dx * curvature) / 2;
-          ctx.save();
-          ctx.setLineDash([]);
-          ctx.translate(mx, my);
-          ctx.rotate(Math.atan2(dy, dx));
-          ctx.beginPath();
-          ctx.moveTo(0, -4);
-          ctx.lineTo(4, 0);
-          ctx.lineTo(0, 4);
-          ctx.lineTo(-4, 0);
-          ctx.closePath();
-          ctx.fillStyle = "rgba(167, 139, 250, 0.2)";
-          ctx.fill();
-          ctx.strokeStyle = "rgba(167, 139, 250, 0.3)";
-          ctx.lineWidth = 1;
-          ctx.stroke();
-          ctx.restore();
-        }
+        ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
+        ctx.fillText(edge.label, labelX, labelY - 14);
+        ctx.restore();
+      }
 
-        // Connection label on hover
-        if (isActive && edge.label) {
-          ctx.save();
-          ctx.setLineDash([]);
-          const labelX = midX - (dy * curvature) / 2;
-          const labelY = midY + (dx * curvature) / 2 - 10;
-          ctx.font = "500 9px system-ui";
-          ctx.textAlign = "center";
-          ctx.textBaseline = "bottom";
-          const metrics = ctx.measureText(edge.label);
-          const padX = 6, padY = 3;
-          ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-          ctx.beginPath();
-          ctx.roundRect(
-            labelX - metrics.width / 2 - padX,
-            labelY - 10 - padY,
-            metrics.width + padX * 2,
-            14 + padY * 2,
-            4
-          );
-          ctx.fill();
-          ctx.fillStyle = "rgba(196, 181, 253, 0.9)";
-          ctx.fillText(edge.label, labelX, labelY);
-          ctx.restore();
-        }
-
-        if (isActive) ctx.restore();
+      // Reset shadow
+      if (isActive) {
+        ctx.shadowColor = "transparent";
+        ctx.shadowBlur = 0;
       }
     }
     ctx.setLineDash([]);
 
-    // --- Location nodes ---
+    // --- Station thumbnails ---
     for (const loc of locations) {
       const pos = getNodePos(loc.slug);
-      const lx = pos.x;
-      const ly = pos.y;
       const isHovered = hoveredSlug === loc.slug;
-      const isClusterActive = hoveredClusterId === locToCluster.get(loc.slug);
-      const r = isHovered ? NODE_RADIUS + 4 : NODE_RADIUS;
+      const isConnected = hoveredConnections.has(loc.slug);
+      const isDimmed = hoveredSlug && !isHovered && !isConnected;
+      const isInterchange = interchangeSlugs.has(loc.slug);
+      const clusterId = locToCluster.get(loc.slug) || "";
+      const color = getColor(clusterId);
+      const r = isInterchange ? INTERCHANGE_RADIUS : STATION_RADIUS;
+      const stationR = isHovered ? r + 3 : r;
+      const borderWidth = isHovered ? 3 : 2.5;
+      const img = imagesRef.current.get(loc.slug);
 
       // Hover glow
       if (isHovered) {
-        const glowGrad = ctx.createRadialGradient(lx, ly, r * 0.5, lx, ly, r * 2.5);
-        glowGrad.addColorStop(0, "rgba(139, 92, 246, 0.25)");
+        ctx.save();
+        const glowGrad = ctx.createRadialGradient(
+          pos.x, pos.y, stationR,
+          pos.x, pos.y, stationR * 2.5,
+        );
+        glowGrad.addColorStop(0, `${color}50`);
         glowGrad.addColorStop(1, "transparent");
         ctx.fillStyle = glowGrad;
         ctx.beginPath();
-        ctx.arc(lx, ly, r * 2.5, 0, Math.PI * 2);
+        ctx.arc(pos.x, pos.y, stationR * 2.5, 0, Math.PI * 2);
         ctx.fill();
+        ctx.restore();
       }
 
-      // Dark backdrop
+      // Dark shadow ring for depth
       ctx.beginPath();
-      ctx.arc(lx, ly, r + 2, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(10, 10, 15, 0.8)";
+      ctx.arc(pos.x, pos.y, stationR + borderWidth + 1, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
       ctx.fill();
 
-      // Border ring
+      // Colored border ring
       ctx.beginPath();
-      ctx.arc(lx, ly, r, 0, Math.PI * 2);
-      ctx.strokeStyle = isHovered
-        ? "rgba(167, 139, 250, 0.8)"
-        : isClusterActive
-          ? "rgba(255, 255, 255, 0.2)"
-          : "rgba(255, 255, 255, 0.1)";
-      ctx.lineWidth = isHovered ? 2.5 : 1.5;
-      ctx.stroke();
+      ctx.arc(pos.x, pos.y, stationR + borderWidth, 0, Math.PI * 2);
+      ctx.fillStyle = isDimmed
+        ? "rgba(60, 60, 80, 0.4)"
+        : isHovered
+          ? "#ffffff"
+          : color;
+      ctx.fill();
 
-      // Clip and draw image
-      const img = imagesRef.current.get(loc.slug);
+      // Clip and draw image thumbnail (or fallback)
       ctx.save();
       ctx.beginPath();
-      ctx.arc(lx, ly, r - 1, 0, Math.PI * 2);
+      ctx.arc(pos.x, pos.y, stationR, 0, Math.PI * 2);
       ctx.clip();
 
-      if (img) {
-        const aspect = img.width / img.height;
-        let sw = r * 2, sh = r * 2;
-        if (aspect > 1) sw = sh * aspect;
-        else sh = sw / aspect;
-        ctx.drawImage(img, lx - sw / 2, ly - sh / 2, sw, sh);
+      if (img && img.complete && img.naturalWidth > 0) {
+        // Draw image centered/cropped to fill circle
+        const aspect = img.naturalWidth / img.naturalHeight;
+        const drawSize = stationR * 2;
+        let sw = drawSize, sh = drawSize;
+        if (aspect > 1) sw = drawSize * aspect;
+        else sh = drawSize / aspect;
+        ctx.globalAlpha = isDimmed ? 0.2 : 1;
+        ctx.drawImage(
+          img,
+          pos.x - sw / 2, pos.y - sh / 2,
+          sw, sh,
+        );
+        ctx.globalAlpha = 1;
       } else {
-        const fallbackGrad = ctx.createLinearGradient(lx - r, ly - r, lx + r, ly + r);
-        fallbackGrad.addColorStop(0, "#1e293b");
-        fallbackGrad.addColorStop(1, "#0f172a");
-        ctx.fillStyle = fallbackGrad;
-        ctx.fillRect(lx - r, ly - r, r * 2, r * 2);
+        // Fallback: solid dark fill
+        ctx.fillStyle = isDimmed ? "rgba(30, 30, 40, 0.8)" : "#1a1a2e";
+        ctx.fill();
       }
-
-      // Overlay gradient
-      const overlayGrad = ctx.createLinearGradient(lx, ly - r, lx, ly + r);
-      overlayGrad.addColorStop(0, "transparent");
-      overlayGrad.addColorStop(
-        1,
-        isHovered ? "rgba(88, 28, 135, 0.5)" : "rgba(0, 0, 0, 0.3)"
-      );
-      ctx.fillStyle = overlayGrad;
-      ctx.fillRect(lx - r, ly - r, r * 2, r * 2);
-
       ctx.restore();
 
-      // Location label
-      ctx.font = isHovered ? "600 11px system-ui" : "11px system-ui";
+      // Subtle inner vignette on thumbnail
+      if (!isDimmed) {
+        ctx.save();
+        const vignetteGrad = ctx.createRadialGradient(
+          pos.x, pos.y, stationR * 0.5,
+          pos.x, pos.y, stationR,
+        );
+        vignetteGrad.addColorStop(0, "transparent");
+        vignetteGrad.addColorStop(1, "rgba(0, 0, 0, 0.35)");
+        ctx.fillStyle = vignetteGrad;
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, stationR, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // Station label
+      ctx.font = isHovered
+        ? "600 11px system-ui"
+        : "500 10px system-ui";
       ctx.textAlign = "center";
       ctx.textBaseline = "top";
-      ctx.fillStyle = isHovered
-        ? "rgba(196, 181, 253, 1)"
-        : isClusterActive
-          ? "rgba(203, 213, 225, 0.8)"
-          : "rgba(100, 116, 139, 0.7)";
-      ctx.fillText(loc.name, lx, ly + r + 6);
+
+      // Text shadow for readability
+      ctx.save();
+      ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
+      ctx.shadowBlur = 4;
+      ctx.fillStyle = isDimmed
+        ? "rgba(100, 116, 139, 0.3)"
+        : isHovered
+          ? "#ffffff"
+          : isConnected
+            ? "rgba(255, 255, 255, 0.85)"
+            : "rgba(203, 213, 225, 0.65)";
+      ctx.fillText(loc.name, pos.x, pos.y + stationR + 6);
+      ctx.restore();
     }
 
     ctx.restore();
 
     // --- Fixed UI: Title ---
-    ctx.font = "600 16px system-ui";
-    ctx.textAlign = "center";
-    ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
-    ctx.fillText("The Ninth Terrace", w / 2, 36);
     ctx.font = "500 9px system-ui";
-    ctx.fillStyle = "rgba(167, 139, 250, 0.6)";
+    ctx.textAlign = "center";
+    ctx.fillStyle = "rgba(167, 139, 250, 0.5)";
     ctx.letterSpacing = "3px";
     ctx.fillText("EXPLORE", w / 2, 20);
+    ctx.letterSpacing = "0px";
+
+    ctx.font = "600 16px system-ui";
+    ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+    ctx.fillText("The Ninth Terrace", w / 2, 36);
   }, [
     canvasSize, pan, zoom, hoveredSlug, imagesLoaded, locations,
-    connectionEdges, clusterBlobs, locToCluster, clusters, getNodePos,
+    connectionEdges, locToCluster, clusters, getNodePos,
+    locationMap, interchangeSlugs, nodePositions, clusterColorMap,
   ]);
 
   // --- Interaction handlers ---
@@ -644,7 +773,7 @@ export function WorldMap({
         }
       }
     },
-    [isPanning, lastMouse, getNodeAtPosition]
+    [isPanning, lastMouse, getNodeAtPosition],
   );
 
   const handleMouseDown = useCallback(
@@ -658,7 +787,7 @@ export function WorldMap({
         if (canvasRef.current) canvasRef.current.style.cursor = "grabbing";
       }
     },
-    [getNodeAtPosition, onSelectLocation]
+    [getNodeAtPosition, onSelectLocation],
   );
 
   const handleMouseUp = useCallback(() => {
@@ -672,45 +801,51 @@ export function WorldMap({
       const factor = e.deltaY > 0 ? 0.92 : 1.08;
       setZoom((z) => Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, z * factor)));
     },
-    []
+    [],
   );
 
   // Touch support
   const lastTouchRef = useRef<{ x: number; y: number } | null>(null);
   const lastPinchRef = useRef<number | null>(null);
 
-  const handleTouchStart = useCallback((e: React.TouchEvent<HTMLCanvasElement>) => {
-    if (e.touches.length === 1) {
-      const t = e.touches[0];
-      const node = getNodeAtPosition(t.clientX, t.clientY);
-      if (node) {
-        onSelectLocation(node.slug);
-      } else {
-        lastTouchRef.current = { x: t.clientX, y: t.clientY };
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent<HTMLCanvasElement>) => {
+      if (e.touches.length === 1) {
+        const t = e.touches[0];
+        const node = getNodeAtPosition(t.clientX, t.clientY);
+        if (node) {
+          onSelectLocation(node.slug);
+        } else {
+          lastTouchRef.current = { x: t.clientX, y: t.clientY };
+        }
       }
-    }
-  }, [getNodeAtPosition, onSelectLocation]);
+    },
+    [getNodeAtPosition, onSelectLocation],
+  );
 
-  const handleTouchMove = useCallback((e: React.TouchEvent<HTMLCanvasElement>) => {
-    e.preventDefault();
-    if (e.touches.length === 1 && lastTouchRef.current) {
-      const t = e.touches[0];
-      setPan((p) => ({
-        x: p.x + t.clientX - lastTouchRef.current!.x,
-        y: p.y + t.clientY - lastTouchRef.current!.y,
-      }));
-      lastTouchRef.current = { x: t.clientX, y: t.clientY };
-    } else if (e.touches.length === 2) {
-      const dx = e.touches[0].clientX - e.touches[1].clientX;
-      const dy = e.touches[0].clientY - e.touches[1].clientY;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (lastPinchRef.current !== null) {
-        const factor = dist / lastPinchRef.current;
-        setZoom((z) => Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, z * factor)));
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent<HTMLCanvasElement>) => {
+      e.preventDefault();
+      if (e.touches.length === 1 && lastTouchRef.current) {
+        const t = e.touches[0];
+        setPan((p) => ({
+          x: p.x + t.clientX - lastTouchRef.current!.x,
+          y: p.y + t.clientY - lastTouchRef.current!.y,
+        }));
+        lastTouchRef.current = { x: t.clientX, y: t.clientY };
+      } else if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (lastPinchRef.current !== null) {
+          const factor = dist / lastPinchRef.current;
+          setZoom((z) => Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, z * factor)));
+        }
+        lastPinchRef.current = dist;
       }
-      lastPinchRef.current = dist;
-    }
-  }, []);
+    },
+    [],
+  );
 
   const handleTouchEnd = useCallback(() => {
     lastTouchRef.current = null;
@@ -719,6 +854,9 @@ export function WorldMap({
 
   // Hovered location for tooltip
   const hoveredLoc = hoveredSlug ? locationMap.get(hoveredSlug) : null;
+  const hoveredCluster = hoveredSlug
+    ? clusters.find((c) => c.id === locToCluster.get(hoveredSlug))
+    : null;
 
   return (
     <div className="relative w-full h-full">
@@ -736,24 +874,74 @@ export function WorldMap({
         onTouchEnd={handleTouchEnd}
       />
 
-      {/* Hover tooltip */}
+      {/* Hover tooltip with image */}
       {hoveredLoc && (
         <div
           className="absolute z-20 pointer-events-none"
           style={{
-            left: hoverPos.x + 16,
-            top: hoverPos.y - 8,
-            maxWidth: 240,
+            left: hoverPos.x + 20,
+            top: hoverPos.y - 12,
+            maxWidth: 280,
           }}
         >
-          <div className="bg-black/80 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2 shadow-xl">
-            <p className="text-sm font-medium text-white">{hoveredLoc.name}</p>
-            <p className="text-xs text-slate-400 mt-0.5 line-clamp-2">
-              {hoveredLoc.description}
-            </p>
+          <div className="bg-black/90 backdrop-blur-md border border-white/10 rounded-lg shadow-2xl overflow-hidden">
+            {/* Location thumbnail */}
+            <div className="w-full h-24 relative overflow-hidden">
+              <img
+                src={`/series/${seriesId}/world/locations/${hoveredLoc.image}`}
+                alt={hoveredLoc.name}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            </div>
+            <div className="px-3 py-2">
+              <div className="flex items-center gap-2 mb-1">
+                <div
+                  className="w-2 h-2 rounded-full"
+                  style={{
+                    backgroundColor: getColor(
+                      locToCluster.get(hoveredLoc.slug) || "",
+                    ),
+                  }}
+                />
+                <span className="text-[10px] uppercase tracking-wider text-slate-500">
+                  {hoveredCluster?.name || "Unknown"}
+                </span>
+              </div>
+              <p className="text-sm font-medium text-white">
+                {hoveredLoc.name}
+              </p>
+              <p className="text-xs text-slate-400 mt-0.5 line-clamp-2">
+                {hoveredLoc.description}
+              </p>
+            </div>
           </div>
         </div>
       )}
+
+      {/* Metro line legend */}
+      <div className="absolute bottom-6 left-6 z-30 flex flex-col gap-1.5">
+        {clusters.map((c) => (
+          <div key={c.id} className="flex items-center gap-2">
+            <div
+              className="w-5 h-1 rounded-full"
+              style={{ backgroundColor: getColor(c.id) }}
+            />
+            <span className="text-[10px] text-slate-500 uppercase tracking-wider">
+              {c.name}
+            </span>
+          </div>
+        ))}
+        <div className="flex items-center gap-2">
+          <div
+            className="w-5 h-1 rounded-full"
+            style={{ backgroundColor: NEUTRAL_COLOR }}
+          />
+          <span className="text-[10px] text-slate-500 uppercase tracking-wider">
+            Neutral
+          </span>
+        </div>
+      </div>
 
       {/* Zoom controls */}
       <div className="absolute bottom-6 right-6 z-30 flex flex-col gap-1">

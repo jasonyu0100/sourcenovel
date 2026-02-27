@@ -1,0 +1,9 @@
+# Signal Array
+
+The edge of Sovereignty space rendered as architecture. A communications platform extending from Vantage Station's outermost ring — a forest of antenna spires and relay dishes pointed at the dark between stars. Inside, operators monitor data streams from across the frontier: border patrols, trade convoys, diplomatic channels, and the encrypted frequencies that officially don't exist. The room is dim, lit mostly by scrolling data feeds and the pale blue glow of active comm links. Every intelligence report that reaches Command Spire passes through here first. Every order that leaves Vantage is transmitted from these arrays. The Sovereignty's information advantage over the Ascendancy isn't inherited — it's engineered, maintained, and fiercely defended. The antenna field outside the viewport stretches into the void like a mechanical forest reaching for signals that haven't arrived yet.
+
+A communications platform at the edge of a space station. Interior view of a dim monitoring room with rows of operator consoles. Scrolling data feeds and comm link displays in pale blue light. Through a wide viewport, a forest of antenna spires and relay dishes extends outward into the void. The antenna array stretches into darkness like a mechanical forest. Pale blue and green monitor glow is the primary light source. Cables running along the ceiling. The atmosphere of quiet vigilance — listening to the spaces between stars.
+
+```
+manga anime style, communications platform at edge of space station, dim monitoring room with operator consoles, scrolling data feeds in pale blue light, wide viewport showing forest of antenna spires and relay dishes extending into void, mechanical antenna forest stretching into darkness, pale blue and green monitor glow as primary lighting, cables along ceiling, quiet vigilance atmosphere, listening to space, cel shading, detailed sci-fi background art, cinematic composition, no figures
+```

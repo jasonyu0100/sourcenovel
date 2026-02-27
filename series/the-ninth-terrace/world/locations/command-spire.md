@@ -1,0 +1,9 @@
+# Command Spire
+
+The nerve centre of the Sovereignty's frontier operations. A tower that rises from Vantage Station's upper hull into the void itself — the final hundred metres are transparent, so the officers working here do so surrounded by stars on three sides and the station's superstructure below. Tactical holographics dominate the space: fleet positions, resource flows, threat assessments rendered as three-dimensional light sculptures that update in real-time. Every decision made here ripples across a thousand worlds. Commandant Reva Orin stands at the central platform most days, reading the data the way the Ascendancy reads scripture — with absolute conviction that what she sees is true. The Sovereignty doesn't have temples. It has this.
+
+A command centre at the top of a space station tower. Transparent walls on three sides showing the void and stars. A central elevated command platform surrounded by tiered workstations. Three-dimensional holographic tactical displays showing fleet positions and data networks in blue and white light. The station's superstructure visible below through the transparent floor sections. Angular military architecture — sharp edges, no ornamentation. Cool blue-white lighting from holographic projections illuminating the space. The sense of absolute authority and strategic vision. Stars visible in every direction.
+
+```
+manga anime style, command centre atop space station tower, transparent walls showing void and stars on three sides, central elevated command platform, tiered workstations surrounding it, three-dimensional holographic tactical displays in blue and white light, station superstructure visible below, angular military architecture with sharp edges, cool blue-white holographic illumination, stars visible everywhere, strategic authority atmosphere, cel shading, detailed sci-fi background art, cinematic wide angle shot, no figures
+```

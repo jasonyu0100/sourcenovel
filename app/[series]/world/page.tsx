@@ -93,6 +93,7 @@ export default function WorldPage() {
           seriesId={seriesId}
           clusters={worldMap.clusters || []}
           locations={worldMap.locations}
+          defaultLocation={worldMap.defaultLocation}
           onSelectLocation={handleSelectLocation}
         />
       )}

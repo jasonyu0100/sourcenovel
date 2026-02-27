@@ -1,0 +1,9 @@
+# Vantage Concourse
+
+The first thing you see when you step off a transport at Vantage Station — and the Sovereignty designed it that way. A vast atrium carved from the station's central axis, ringed with balconies that climb thirty levels toward a transparent ceiling open to the void. Everything is new. The metal still smells like fabrication. Display screens cycle Sovereignty recruitment notices in six languages, and the floor is polished composite that reflects the star field overhead like a dark mirror. Arrival kiosks process new citizens with biometric efficiency — no lineage checks, no bloodline verification. The Sovereignty's immigration policy in architecture: show up, be useful, belong. Compared to the Ascendancy's incense-soaked pavilion, this place feels like walking into a thesis statement.
+
+A vast multi-level atrium inside a space station. Central axis design with balconies climbing thirty levels toward a transparent ceiling showing stars. Polished dark composite floors reflecting the void above like a mirror. Clean angular architecture in brushed steel and glass. Holographic display screens showing data and notices in blue-white light. Arrival kiosks with glowing interfaces lining the ground level. Blue-white ambient lighting from recessed panels. The scale of industrial ambition rendered habitable — enormous but ordered, functional but impressive. Crowds implied by the scale but no figures visible.
+
+```
+manga anime style, vast multi-level atrium inside space station, central axis with balconies climbing toward transparent ceiling showing stars, polished dark composite floors reflecting void above, clean angular brushed steel and glass architecture, holographic blue-white display screens, arrival kiosks with glowing interfaces, blue-white ambient lighting, enormous ordered functional space, industrial ambition made habitable, cel shading, detailed background art, cinematic upward perspective shot, no figures
+```

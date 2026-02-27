@@ -5,7 +5,7 @@
       "id": "ninth-terrace",
       "name": "The Ninth Terrace",
       "description": "Neutral ground between two Thrones \u2014 amber light, carved stone, and careful silence.",
-      "color": "rgba(245, 178, 41, 0.08)",
+      "color": "#f59e0b",
       "locations": [
         "observatory-deck",
         "council-chambers",
@@ -14,34 +14,38 @@
         "driftnet-lounge",
         "prism-appraisal-shop",
         "terrace-market",
-        "cultivation-halls",
-        "shared-quarters",
-        "corridor",
-        "transport-dock",
-        "lower-docks"
+        "cultivation-halls"
       ]
     },
     {
       "id": "sovereignty",
       "name": "The Sovereignty",
       "description": "Function over form. The future rendered in metal and light \u2014 not inherited, built.",
-      "color": "rgba(14, 165, 233, 0.10)",
+      "color": "#38bdf8",
       "locations": [
         "transport-interior",
         "transport-bay-wide",
         "transport-viewport-convoy",
-        "vantage-reveal"
+        "vantage-reveal",
+        "vantage-concourse",
+        "the-crucible",
+        "command-spire",
+        "signal-array"
       ]
     },
     {
       "id": "ascendancy",
       "name": "The Ascendancy",
       "description": "Ancient lineage, living tradition. Their ships carry history in every curve and carved relief.",
-      "color": "rgba(225, 29, 72, 0.08)",
+      "color": "#fb7185",
       "locations": [
         "ascendancy-pavilion",
         "ascendancy-gallery",
-        "ascendancy-overlook"
+        "ascendancy-overlook",
+        "root-gardens",
+        "ascendancy-sanctum",
+        "the-reliquary",
+        "meridian-anchorage"
       ]
     }
   ],
@@ -93,8 +97,7 @@
       "description": "Bar, intelligence exchange, and neutral ground. Gossip is currency. Silence is expensive.",
       "image": "driftnet-lounge.jpg",
       "connections": [
-        { "target": "grand-promenade", "label": "Back to the promenade's amber glow" },
-        { "target": "prism-appraisal-shop", "label": "A back alley connects the bar to the shop" },
+        { "target": "grand-promenade", "label": "Back to the promenade\u2019s amber glow" },
         { "target": "shared-quarters", "label": "A quiet corridor to the residential tier" },
         { "target": "lower-docks", "label": "Service stairs descend to the working port" }
       ]
@@ -102,12 +105,11 @@
     {
       "slug": "prism-appraisal-shop",
       "name": "Prism Appraisal Shop",
-      "description": "Idris's modest establishment. A Paragon pretending to be a retired jeweller.",
+      "description": "Idris\u2019s modest establishment. A Paragon pretending to be a retired jeweller.",
       "image": "prism-appraisal-shop.jpg",
       "connections": [
         { "target": "grand-promenade", "label": "Step back onto the tree-lined avenue" },
-        { "target": "driftnet-lounge", "label": "Through the alley to the lounge" },
-        { "target": "terrace-market", "label": "The shop opens onto the market's upper level" }
+        { "target": "terrace-market", "label": "The shop opens onto the market\u2019s upper level" }
       ]
     },
     {
@@ -117,7 +119,7 @@
       "image": "terrace-market.jpg",
       "connections": [
         { "target": "envoy-wing", "label": "The sky bridge back to the diplomatic wing" },
-        { "target": "prism-appraisal-shop", "label": "Down through the market to Idris's shop" },
+        { "target": "prism-appraisal-shop", "label": "Down through the market to Idris\u2019s shop" },
         { "target": "cultivation-halls", "label": "Freight lifts descend to the training chambers" }
       ]
     },
@@ -134,7 +136,7 @@
     {
       "slug": "shared-quarters",
       "name": "Shared Quarters",
-      "description": "Officers' quarters where two lives were built together \u2014 warm amber lighting, a weapon rack by the door.",
+      "description": "Officers\u2019 quarters where two lives were built together \u2014 warm amber lighting, a weapon rack by the door.",
       "image": "shared-quarters.jpg",
       "connections": [
         { "target": "driftnet-lounge", "label": "Back to the lounge through residential corridors" },
@@ -181,7 +183,7 @@
       "image": "transport-interior.jpg",
       "connections": [
         { "target": "transport-dock", "label": "Disembark back to the Terrace docks" },
-        { "target": "transport-bay-wide", "label": "Through the vessel's main corridor" }
+        { "target": "transport-bay-wide", "label": "Through the vessel\u2019s main corridor" }
       ]
     },
     {
@@ -207,10 +209,54 @@
     {
       "slug": "vantage-reveal",
       "name": "Vantage Station",
-      "description": "The Sovereignty's answer to the Forgetting \u2014 not inherited, built. The future in metal and light.",
+      "description": "The Sovereignty\u2019s answer to the Forgetting \u2014 not inherited, built. The future in metal and light.",
       "image": "vantage-reveal.jpg",
       "connections": [
-        { "target": "transport-viewport-convoy", "label": "Back through the formation" }
+        { "target": "transport-viewport-convoy", "label": "Back through the formation" },
+        { "target": "vantage-concourse", "label": "Docking clamps release into the station concourse" }
+      ]
+    },
+    {
+      "slug": "vantage-concourse",
+      "name": "Vantage Concourse",
+      "description": "The Sovereignty\u2019s welcome \u2014 biometric kiosks, polished composite, and a star field overhead. Show up, be useful, belong.",
+      "image": "vantage-concourse.jpg",
+      "connections": [
+        { "target": "vantage-reveal", "label": "Back to the docking approach" },
+        { "target": "the-crucible", "label": "Industrial lifts descend to the engineering levels" },
+        { "target": "command-spire", "label": "Express lift to the Command Spire" }
+      ]
+    },
+    {
+      "slug": "the-crucible",
+      "name": "The Crucible",
+      "description": "Where the Sovereignty builds tomorrow\u2019s weapons today. Sparks, schematics, and the sound of iteration.",
+      "image": "the-crucible.jpg",
+      "connections": [
+        { "target": "vantage-concourse", "label": "Lifts return to the concourse above" },
+        { "target": "command-spire", "label": "A secured corridor to the command levels" },
+        { "target": "signal-array", "label": "Data conduits run from the labs to the outer ring" }
+      ]
+    },
+    {
+      "slug": "command-spire",
+      "name": "Command Spire",
+      "description": "The nerve centre \u2014 transparent walls, tactical holographics, and the weight of a thousand worlds in every decision.",
+      "image": "command-spire.jpg",
+      "connections": [
+        { "target": "vantage-concourse", "label": "Express lift down to the concourse" },
+        { "target": "the-crucible", "label": "Through secured corridors to the engineering labs" },
+        { "target": "signal-array", "label": "A sealed transit tube to the outer ring" }
+      ]
+    },
+    {
+      "slug": "signal-array",
+      "name": "Signal Array",
+      "description": "The edge of Sovereignty space \u2014 antenna forests, encrypted frequencies, and signals that haven\u2019t arrived yet.",
+      "image": "signal-array.jpg",
+      "connections": [
+        { "target": "command-spire", "label": "The transit tube returns to Command" },
+        { "target": "the-crucible", "label": "Data conduits lead back to the labs" }
       ]
     },
     {
@@ -221,7 +267,7 @@
       "connections": [
         { "target": "lower-docks", "label": "The shuttle returns to the Terrace docks" },
         { "target": "ascendancy-gallery", "label": "Gilded corridors lead deeper into the vessel" },
-        { "target": "ascendancy-overlook", "label": "Through crystal-veined passages to the viewing platform" }
+        { "target": "root-gardens", "label": "A vine-draped archway descends to the gardens" }
       ]
     },
     {
@@ -231,7 +277,8 @@
       "image": "ascendancy-gallery.jpg",
       "connections": [
         { "target": "ascendancy-pavilion", "label": "Return through the gilded corridors" },
-        { "target": "ascendancy-overlook", "label": "A spiralling ramp ascends to the overlook" }
+        { "target": "ascendancy-overlook", "label": "A spiralling ramp ascends to the overlook" },
+        { "target": "the-reliquary", "label": "A sealed passage leads to the vault" }
       ]
     },
     {
@@ -240,8 +287,49 @@
       "description": "Where tradition meets the void \u2014 ancient vessel designs in formation, carrying ten thousand years of inherited purpose.",
       "image": "ascendancy-overlook.jpg",
       "connections": [
-        { "target": "ascendancy-pavilion", "label": "Descend to the pavilion" },
-        { "target": "ascendancy-gallery", "label": "The ramp spirals down to the gallery" }
+        { "target": "ascendancy-gallery", "label": "The ramp spirals down to the gallery" },
+        { "target": "ascendancy-sanctum", "label": "Stone corridors descend to the Sanctum" }
+      ]
+    },
+    {
+      "slug": "root-gardens",
+      "name": "The Root Gardens",
+      "description": "Ten thousand years of continuous cultivation. Species extinct everywhere else survive here because the Ascendancy never stopped tending.",
+      "image": "root-gardens.jpg",
+      "connections": [
+        { "target": "ascendancy-pavilion", "label": "Through the vine-draped arch to the pavilion" },
+        { "target": "ascendancy-sanctum", "label": "The roots reach deepest near the seat of power" }
+      ]
+    },
+    {
+      "slug": "the-reliquary",
+      "name": "The Reliquary",
+      "description": "The vault of things the Ascendancy refuses to let the universe forget. Each artefact in a pool of warm light, the surrounding darkness absolute.",
+      "image": "the-reliquary.jpg",
+      "connections": [
+        { "target": "ascendancy-gallery", "label": "Return through the sealed passage to the gallery" },
+        { "target": "ascendancy-sanctum", "label": "The vault\u2019s deepest corridor opens onto the Sanctum" }
+      ]
+    },
+    {
+      "slug": "ascendancy-sanctum",
+      "name": "Ascendancy Sanctum",
+      "description": "Where bloodline becomes authority. An obsidian disc, acoustic perfection, and ten thousand years of unbroken genealogy overhead.",
+      "image": "ascendancy-sanctum.jpg",
+      "connections": [
+        { "target": "ascendancy-overlook", "label": "Stone corridors climb to the overlook" },
+        { "target": "root-gardens", "label": "Through living roots to the gardens" },
+        { "target": "the-reliquary", "label": "The deepest corridor leads to the vault" },
+        { "target": "meridian-anchorage", "label": "A ceremonial passage to the anchorage" }
+      ]
+    },
+    {
+      "slug": "meridian-anchorage",
+      "name": "Meridian Anchorage",
+      "description": "The Ascendancy\u2019s answer to Vantage \u2014 except Meridian wasn\u2019t built. It was inherited. Ten thousand years of city lights below.",
+      "image": "meridian-anchorage.jpg",
+      "connections": [
+        { "target": "ascendancy-sanctum", "label": "The ceremonial passage returns to the Sanctum" }
       ]
     }
   ]

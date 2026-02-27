@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-27T03:19:13.181Z",
+  "generated": "2026-02-27T04:46:25.793Z",
   "chapters": [
     {
       "number": 1,
@@ -942,6 +942,26 @@
     ],
     "locations": [
       {
+        "file": "ascendancy-gallery.md",
+        "image": "ascendancy-gallery.jpg"
+      },
+      {
+        "file": "ascendancy-overlook.md",
+        "image": "ascendancy-overlook.jpg"
+      },
+      {
+        "file": "ascendancy-pavilion.md",
+        "image": "ascendancy-pavilion.jpg"
+      },
+      {
+        "file": "ascendancy-sanctum.md",
+        "image": "ascendancy-sanctum.jpg"
+      },
+      {
+        "file": "command-spire.md",
+        "image": "command-spire.jpg"
+      },
+      {
         "file": "corridor.md",
         "image": "corridor.jpg"
       },
@@ -970,6 +990,10 @@
         "image": "lower-docks.jpg"
       },
       {
+        "file": "meridian-anchorage.md",
+        "image": "meridian-anchorage.jpg"
+      },
+      {
         "file": "observatory-deck.md",
         "image": "observatory-deck.jpg"
       },
@@ -978,16 +1002,28 @@
         "image": "prism-appraisal-shop.jpg"
       },
       {
-        "file": "quarters-cool.md",
-        "image": "quarters-cool.jpg"
+        "file": "root-gardens.md",
+        "image": "root-gardens.jpg"
       },
       {
         "file": "shared-quarters.md",
         "image": "shared-quarters.jpg"
       },
       {
+        "file": "signal-array.md",
+        "image": "signal-array.jpg"
+      },
+      {
         "file": "terrace-market.md",
         "image": "terrace-market.jpg"
+      },
+      {
+        "file": "the-crucible.md",
+        "image": "the-crucible.jpg"
+      },
+      {
+        "file": "the-reliquary.md",
+        "image": "the-reliquary.jpg"
       },
       {
         "file": "transport-bay-wide.md",
@@ -1004,6 +1040,10 @@
       {
         "file": "transport-viewport-convoy.md",
         "image": "transport-viewport-convoy.jpg"
+      },
+      {
+        "file": "vantage-concourse.md",
+        "image": "vantage-concourse.jpg"
       },
       {
         "file": "vantage-reveal.md",
