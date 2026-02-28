@@ -31,6 +31,7 @@ interface EncounterRequest {
     actionType: string;
   }[];
   recentTurns: { turn: number; worldNarration: string }[];
+  relationships?: { [pairKey: string]: number };
 }
 
 interface ConversationLine {
@@ -80,7 +81,7 @@ async function callLLM(systemPrompt: string, userMessage: string, maxTokens = 20
 export async function POST(request: NextRequest) {
   try {
     const body: EncounterRequest = await request.json();
-    const { seriesId, turn, locationName, locationDescription, encounterType, characters, actions, recentTurns } = body;
+    const { seriesId, turn, locationName, locationDescription, encounterType, characters, actions, recentTurns, relationships } = body;
 
     const styleMd = await loadSeriesSource(seriesId, "style.md");
 
@@ -106,12 +107,12 @@ ${c.profile}`;
 
     const encounterTypeGuidance = encounterType === "crossover"
       ? `## Encounter Type: CROSSING PATHS
-These characters are moving in opposite directions and cross each other in transit. This is a brief, charged exchange — they meet on the path between locations. The scene should feel hurried and tense, like two ships passing. Maybe one tries to stop the other. Maybe they exchange a glance loaded with meaning. Maybe a few urgent words. Keep it SHORT (4-8 exchanges) — they are both on their way somewhere.`
+These characters cross each other in transit — a brief, charged exchange on the path between locations. Keep it VERY SHORT (2-4 exchanges). A loaded glance, a few urgent words, then they're past each other.`
       : encounterType === "near-miss"
         ? `## Encounter Type: NEAR MISS
-One character has just arrived at this location as the other is leaving. They barely overlap — a fleeting moment. This should feel like catching someone's sleeve as they turn to go. Maybe they only get a few words in. Maybe one sees the other's back disappearing. The brevity makes it poignant. Keep it SHORT (3-6 exchanges) — this is a stolen moment.`
+One character arrives as the other leaves. A fleeting overlap. Keep it VERY SHORT (2-3 exchanges) — catching someone's sleeve as they turn to go.`
         : `## Encounter Type: CONVERGENCE
-These characters have both ended up at the same location. They have time for a real exchange. Write a full dramatic scene (6-12 exchanges) with subtext, tension, and specificity.`;
+These characters have ended up at the same location. A brief but meaningful exchange. Keep it TIGHT (3-5 exchanges) — subtext and tension, no filler. Every line must shift the dynamic.`;
 
     const systemPrompt = `You are the encounter narrator for The Ninth Terrace — a sci-fi series about humanity's fracture over the question of mortality. You write dialogue-driven scenes between characters who meet.
 
@@ -125,6 +126,22 @@ ${recentContext}
 
 ## Characters Present
 ${characterDescriptions}
+
+${(() => {
+      if (!relationships || Object.keys(relationships).length === 0) return "";
+      const lines: string[] = [];
+      for (let i = 0; i < characters.length; i++) {
+        for (let j = i + 1; j < characters.length; j++) {
+          const key = [characters[i].slug, characters[j].slug].sort().join(":");
+          const score = relationships[key];
+          if (score !== undefined) {
+            const label = score >= 50 ? "strong bond" : score >= 20 ? "friendly" : score >= -20 ? "neutral" : score >= -50 ? "tense" : "hostile";
+            lines.push(`- ${characters[i].name} ↔ ${characters[j].name}: ${score} (${label})`);
+          }
+        }
+      }
+      return lines.length > 0 ? `## Relationship Scores (-100 to 100)\n${lines.join("\n")}` : "";
+    })()}
 
 ## Guidelines
 - Each character must sound distinct — their cadence, vocabulary, and emotional register should reflect their profile
@@ -151,7 +168,7 @@ Types:
 
     const userMessage = `It is Turn ${turn}. These ${characters.length} characters have converged at ${locationName}. Write their encounter scene. Stay true to each character's voice and goals. Make it feel real.`;
 
-    const responseText = await callLLM(systemPrompt, userMessage);
+    const responseText = await callLLM(systemPrompt, userMessage, 1024);
 
     // Parse the JSON response
     let conversation: ConversationLine[] = [];

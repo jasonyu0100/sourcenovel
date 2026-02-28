@@ -8,10 +8,10 @@ interface TurnPlaybackBoxProps {
   action: SimAction;
   characterName: string;
   characterImage: string;
-  characterLocation: string; // display name of current location
-  targetLocationName?: string; // resolved name for move targets
-  targetCharacterName?: string; // resolved name for interact targets
-  targetCharacterImage?: string; // image for interact targets
+  characterLocation: string;
+  targetLocationName?: string;
+  targetCharacterName?: string;
+  targetCharacterImage?: string;
   turnNumber: number;
   actionIndex: number;
   totalActions: number;
@@ -84,115 +84,91 @@ export function TurnPlaybackBox({
             : action.actionDetail;
 
   return (
-    <>
-      {/* Click backdrop to advance */}
-      <div
-        className="fixed inset-0 z-30"
-        onClick={onAdvance}
-      />
-
-      {/* Bottom dialogue box */}
+    <div className="fixed bottom-14 inset-x-0 z-40 flex justify-center pointer-events-none">
       <div
         ref={boxRef}
-        className="fixed bottom-0 inset-x-0 z-40 p-4 pb-6"
-        onClick={(e) => e.stopPropagation()}
+        className="bg-[#0f0f18]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden animate-fade-in pointer-events-auto"
+        onClick={onAdvance}
       >
-        <div className="max-w-3xl mx-auto">
-          <div className="relative bg-black/85 backdrop-blur-xl border border-white/10 rounded-2xl p-5 shadow-2xl">
-            {/* Subtle top gradient line */}
-            <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-violet-500/40 to-transparent" />
-
-            {/* Header: avatar(s) + name + mood */}
-            <div className="flex items-center gap-3 mb-3">
-              {/* Character avatar(s) */}
-              <div className="flex -space-x-2 flex-shrink-0">
-                <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-white/20 z-10">
-                  {!imageError ? (
-                    <Image
-                      src={characterImage}
-                      alt={characterName}
-                      fill
-                      className="object-cover"
-                      onError={() => setImageError(true)}
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-slate-800 flex items-center justify-center">
-                      <span className="text-white font-bold text-sm">
-                        {characterName.charAt(0)}
-                      </span>
-                    </div>
-                  )}
+        <div className="flex items-start gap-4 p-4">
+          {/* Character avatar */}
+          <div className="flex items-center -space-x-3 flex-shrink-0">
+            <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-white/20 relative">
+              {!imageError ? (
+                <Image
+                  src={characterImage}
+                  alt={characterName}
+                  fill
+                  className="object-cover"
+                  onError={() => setImageError(true)}
+                />
+              ) : (
+                <div className="w-full h-full bg-slate-800 flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">{characterName.charAt(0)}</span>
                 </div>
-                {/* Target character avatar for interact/speak with target */}
-                {action.actionType === "interact" && targetCharacterImage && (
-                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-amber-500/30 z-0 mt-1">
-                    {!targetImageError ? (
-                      <Image
-                        src={targetCharacterImage}
-                        alt={resolvedTargetChar ?? ""}
-                        fill
-                        className="object-cover"
-                        onError={() => setTargetImageError(true)}
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-slate-800 flex items-center justify-center">
-                        <span className="text-white font-bold text-xs">
-                          {resolvedTargetChar?.charAt(0) ?? "?"}
-                        </span>
-                      </div>
-                    )}
+              )}
+            </div>
+            {action.actionType === "interact" && targetCharacterImage && (
+              <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-amber-500/30 relative">
+                {!targetImageError ? (
+                  <Image
+                    src={targetCharacterImage}
+                    alt={resolvedTargetChar ?? ""}
+                    fill
+                    className="object-cover"
+                    onError={() => setTargetImageError(true)}
+                  />
+                ) : (
+                  <div className="w-full h-full bg-slate-800 flex items-center justify-center">
+                    <span className="text-white font-bold text-xs">{resolvedTargetChar?.charAt(0) ?? "?"}</span>
                   </div>
                 )}
               </div>
+            )}
+          </div>
 
-              {/* Name + location + action */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-white">
-                    {characterName}
-                  </span>
-                  <span className="text-[9px] uppercase tracking-wider text-slate-500 bg-white/5 px-1.5 py-0.5 rounded">
-                    {actionLabel}
-                  </span>
-                </div>
-                <p className="text-[10px] text-slate-500 mt-0.5">
-                  {action.actionType === "move" && resolvedTarget
-                    ? `${characterLocation} → ${resolvedTarget}`
-                    : characterLocation}
-                </p>
-              </div>
-
-              {/* Mood badge */}
-              <span className={`text-[10px] px-2 py-0.5 rounded-full border ${moodClass}`}>
+          {/* Content */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-sm font-semibold text-white">{characterName}</span>
+              <span className={`text-[9px] px-1.5 py-0.5 rounded-full border ${moodClass}`}>
                 {action.mood}
               </span>
+              <span className="text-[9px] uppercase tracking-wider text-slate-600 bg-white/5 px-1.5 py-0.5 rounded">
+                {actionLabel}
+              </span>
             </div>
+            <p className="text-xs text-slate-500 mb-1.5">
+              {action.actionType === "move" && resolvedTarget
+                ? `${characterLocation} → ${resolvedTarget}`
+                : characterLocation}
+            </p>
 
-            {/* Narration */}
-            <p className="text-sm text-slate-200 leading-relaxed mb-2">
+            <p className="text-sm text-slate-200 leading-relaxed">
               {action.narration}
             </p>
 
-            {/* Dialogue */}
             {action.dialogue && (
-              <p className="text-sm text-amber-300/90 italic pl-3 border-l-2 border-amber-500/30 mb-2">
+              <p className="text-sm text-amber-300/80 italic pl-3 border-l-2 border-amber-500/30 mt-2">
                 &ldquo;{action.dialogue}&rdquo;
               </p>
             )}
+          </div>
 
-            {/* Advance button */}
-            <div className="flex items-center justify-end mt-3">
-              <button
-                onClick={onAdvance}
-                className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-medium text-white/70 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition-all"
-              >
-                {actionIndex < totalActions - 1 ? "Next" : "Continue"}
-                <span className="text-[10px]">▸</span>
-              </button>
-            </div>
+          {/* Right: counter + advance */}
+          <div className="flex flex-col items-end gap-2 flex-shrink-0">
+            <span className="text-[10px] text-slate-600 tabular-nums">
+              {actionIndex + 1}/{totalActions}
+            </span>
+            <button
+              onClick={(e) => { e.stopPropagation(); onAdvance(); }}
+              className="px-3 py-1 text-xs font-medium rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
+            >
+              {actionIndex < totalActions - 1 ? "Next" : "Continue"}
+            </button>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

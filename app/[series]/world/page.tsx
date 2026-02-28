@@ -3,9 +3,9 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, PlayIcon } from "@heroicons/react/24/outline";
 import type { WorldMapData } from "@/lib/world-types";
-import type { ScenarioData, SimCharacterState, SimTurnResult, SimAction, PlaybackState, EncounterType } from "@/lib/simulation-types";
+import type { ScenarioData, SimCharacterState, SimTurnResult, SimAction, PlaybackState, PreGeneratedEncounter } from "@/lib/simulation-types";
 import { loadWorldMap, loadScenario, loadCharacterProfile } from "@/lib/world-data";
 import { WorldMap } from "@/components/world-map";
 import type { CharacterOnMap } from "@/components/world-map";
@@ -60,19 +60,22 @@ export default function WorldPage() {
   // Character state history: turn -> character states (for history scrubbing)
   const charHistoryRef = useRef<Map<number, SimCharacterState[]>>(new Map());
 
+  // Relationship scores: "charA:charB" (sorted) -> score (-100 to 100)
+  const [relationships, setRelationships] = useState<{ [pairKey: string]: number }>({});
+
   // Turn playback state machine
   const [playback, setPlayback] = useState<PlaybackState>({
     current: { phase: "idle" },
     turnResult: null,
     characterUpdates: [],
+    encounters: [],
+    relationshipDeltas: [],
     pendingResult: null,
   });
-  const encounterQueueRef = useRef<{ locationSlug: string; characterSlugs: string[]; encounterType: EncounterType; secondLocationSlug?: string }[]>([]);
-  const [encounterConversation, setEncounterConversation] = useState<
-    { speaker: string; speakerSlug: string; line: string; type: "dialogue" | "action" | "thought" }[] | null
-  >(null);
-  const [encounterLoading, setEncounterLoading] = useState(false);
   const isPlaybackActive = playback.current.phase !== "idle";
+
+  // Helper: make a deterministic pair key
+  const pairKey = (a: string, b: string) => [a, b].sort().join(":");
 
   useEffect(() => {
     async function load() {
@@ -243,34 +246,191 @@ export default function WorldPage() {
         };
       });
 
-      // Start sequential playback
+      // --- Detect all encounters immediately ---
+      const allEncounters: PreGeneratedEncounter[] = [];
+      const encounteredPairs = new Set<string>();
+
+      // 1. Convergence: multiple characters end at the same location
+      const locationGroups = new Map<string, string[]>();
+      for (const char of characterUpdates) {
+        const list = locationGroups.get(char.locationSlug) || [];
+        list.push(char.characterSlug);
+        locationGroups.set(char.locationSlug, list);
+      }
+      for (const [locSlug, slugs] of Array.from(locationGroups.entries())) {
+        if (slugs.length > 1) {
+          allEncounters.push({ locationSlug: locSlug, characterSlugs: slugs, encounterType: "convergence", conversation: null, loading: true });
+          for (let si = 0; si < slugs.length; si++) {
+            for (let sj = si + 1; sj < slugs.length; sj++) {
+              encounteredPairs.add(pairKey(slugs[si], slugs[sj]));
+            }
+          }
+        }
+      }
+
+      // Build movement map
+      const movements = new Map<string, { from: string; to: string }>();
+      for (const action of allActions) {
+        if (action.actionType === "move" && action.targetLocation) {
+          const prevLoc = simCharacters.find((c) => c.characterSlug === action.characterSlug)?.locationSlug;
+          if (prevLoc && prevLoc !== action.targetLocation) {
+            movements.set(action.characterSlug, { from: prevLoc, to: action.targetLocation });
+          }
+        }
+      }
+      const movingChars = Array.from(movements.entries());
+
+      // 2. Crossover
+      for (let i = 0; i < movingChars.length; i++) {
+        for (let j = i + 1; j < movingChars.length; j++) {
+          const [slugA, moveA] = movingChars[i];
+          const [slugB, moveB] = movingChars[j];
+          const pk = pairKey(slugA, slugB);
+          if (encounteredPairs.has(pk)) continue;
+          if (moveA.from === moveB.to && moveA.to === moveB.from) {
+            allEncounters.push({ locationSlug: moveA.from, secondLocationSlug: moveA.to, characterSlugs: [slugA, slugB], encounterType: "crossover", conversation: null, loading: true });
+            encounteredPairs.add(pk);
+          }
+        }
+      }
+
+      // 3. Near-miss
+      for (const [slugA, moveA] of movingChars) {
+        for (const [slugB, moveB] of movingChars) {
+          if (slugA === slugB) continue;
+          const pk = pairKey(slugA, slugB);
+          if (encounteredPairs.has(pk)) continue;
+          if (moveA.to === moveB.from) {
+            allEncounters.push({ locationSlug: moveA.to, characterSlugs: [slugA, slugB], encounterType: "near-miss", conversation: null, loading: true });
+            encounteredPairs.add(pk);
+          }
+        }
+      }
+
+      const turnResult = { turn: nextTurn, actions: allActions, worldNarration };
+      const pendingResult = {
+        turn: nextTurn,
+        characterUpdates: characterUpdates.map((c) => ({
+          characterSlug: c.characterSlug,
+          locationSlug: c.locationSlug,
+          status: c.status,
+          mood: c.mood,
+          lastAction: c.lastAction,
+        })),
+        actions: allActions,
+        worldNarration,
+      };
+
+      // Start playback immediately — encounters generate in background
       setPlayback({
         current: { phase: "playing", actionIndex: 0 },
-        turnResult: {
-          turn: nextTurn,
-          actions: allActions,
-          worldNarration,
-        },
+        turnResult,
         characterUpdates,
-        pendingResult: {
-          turn: nextTurn,
-          characterUpdates: characterUpdates.map((c) => ({
-            characterSlug: c.characterSlug,
-            locationSlug: c.locationSlug,
-            status: c.status,
-            mood: c.mood,
-            lastAction: c.lastAction,
-          })),
-          actions: allActions,
-          worldNarration,
-        },
+        encounters: allEncounters,
+        relationshipDeltas: [],
+        pendingResult,
       });
+
+      // --- Fire all encounter generations in parallel (background) ---
+      if (allEncounters.length > 0) {
+        const encounterPromises = allEncounters.map(async (enc, idx) => {
+          try {
+            const loc = worldMap.locations.find((l) => l.slug === enc.locationSlug);
+            const secondLoc = enc.secondLocationSlug ? worldMap.locations.find((l) => l.slug === enc.secondLocationSlug) : null;
+            const encounterChars = enc.characterSlugs.map((slug) => {
+              const sc = scenario.characters.find((c) => c.slug === slug);
+              return {
+                slug,
+                name: sc?.name ?? slug,
+                profile: characterProfilesRef.current.get(slug) ?? sc?.personality ?? "",
+                personality: sc?.personality ?? "",
+                faction: sc?.faction ?? null,
+                mood: characterUpdates.find((c) => c.characterSlug === slug)?.mood ?? "neutral",
+                goals: sc?.goals ?? [],
+                lastAction: characterUpdates.find((c) => c.characterSlug === slug)?.lastAction,
+              };
+            });
+
+            const encounterActions = allActions
+              .filter((a) => enc.characterSlugs.includes(a.characterSlug))
+              .map((a) => ({ characterSlug: a.characterSlug, narration: a.narration, dialogue: a.dialogue, actionType: a.actionType }));
+
+            let locationName = loc?.name ?? enc.locationSlug;
+            let locationDescription = loc?.description ?? "";
+            if (enc.encounterType === "crossover" && secondLoc) {
+              locationName = `between ${loc?.name ?? enc.locationSlug} and ${secondLoc.name}`;
+              locationDescription = `A crossing point between ${loc?.name} (${loc?.description ?? ""}) and ${secondLoc.name} (${secondLoc.description})`;
+            } else if (enc.encounterType === "near-miss") {
+              locationDescription = `${loc?.description ?? ""} — one character has just arrived as the other departs`;
+            }
+
+            const res = await fetch("/api/simulation/encounter", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                seriesId,
+                turn: nextTurn,
+                locationName,
+                locationDescription,
+                encounterType: enc.encounterType,
+                characters: encounterChars,
+                actions: encounterActions,
+                recentTurns: simTurnLog.slice(-3).map((t) => ({ turn: t.turn, worldNarration: t.worldNarration })),
+                relationships,
+              }),
+            });
+
+            if (res.ok) {
+              const data = await res.json();
+              return { idx, conversation: data.conversation };
+            }
+          } catch (err) {
+            console.error(`Encounter ${idx} generation error:`, err);
+          }
+          return { idx, conversation: [] };
+        });
+
+        // As each encounter resolves, update playback state
+        for (const promise of encounterPromises) {
+          promise.then(({ idx, conversation }) => {
+            setPlayback((prev) => {
+              const updated = [...prev.encounters];
+              updated[idx] = { ...updated[idx], conversation, loading: false };
+              return { ...prev, encounters: updated };
+            });
+          });
+        }
+
+        // After ALL encounters resolve, fire after-effects
+        Promise.all(encounterPromises).then(async (results) => {
+          const completedEncounters = allEncounters.map((enc, i) => ({
+            encounterType: enc.encounterType,
+            characterSlugs: enc.characterSlugs,
+            characterNames: enc.characterSlugs.map((s) => scenario.characters.find((c) => c.slug === s)?.name ?? s),
+            conversation: results[i]?.conversation ?? null,
+          }));
+
+          try {
+            const res = await fetch("/api/simulation/after-effects", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ encounters: completedEncounters, currentRelationships: relationships }),
+            });
+            if (res.ok) {
+              const { deltas } = await res.json();
+              setPlayback((prev) => ({ ...prev, relationshipDeltas: deltas }));
+            }
+          } catch (err) {
+            console.error("After-effects error:", err);
+          }
+        });
+      }
     } catch (err) {
       console.error("Turn error:", err);
     } finally {
       setIsProcessing(false);
     }
-  }, [scenario, worldMap, simTurn, simCharacters, simTurnLog, influences, seriesId]);
+  }, [scenario, worldMap, simTurn, simCharacters, simTurnLog, influences, seriesId, relationships, pairKey]);
 
   // Show the next player action modal, or proceed to AI phase if all collected
   const showNextPlayerAction = useCallback((roleplaySlugs: string[], index: number) => {
@@ -384,10 +544,23 @@ export default function WorldPage() {
     });
   }, []);
 
-  // Commit turn result after playback finishes
+  // Commit turn result after playback finishes (including applying relationship deltas)
   const commitTurnResult = useCallback(() => {
     if (!playback.pendingResult) return;
     const result = playback.pendingResult;
+
+    // Apply relationship deltas
+    if (playback.relationshipDeltas.length > 0) {
+      setRelationships((prev) => {
+        const next = { ...prev };
+        for (const delta of playback.relationshipDeltas) {
+          const key = pairKey(delta.characterA, delta.characterB);
+          const current = next[key] ?? 0;
+          next[key] = Math.max(-100, Math.min(100, current + delta.delta));
+        }
+        return next;
+      });
+    }
 
     setSimTurn(result.turn);
     setSimCharacters(playback.characterUpdates);
@@ -404,206 +577,48 @@ export default function WorldPage() {
       current: { phase: "idle" },
       turnResult: null,
       characterUpdates: [],
+      encounters: [],
+      relationshipDeltas: [],
       pendingResult: null,
     });
-  }, [playback]);
+  }, [playback, pairKey]);
 
-  // Generate encounter conversation via API
-  const generateEncounterConversation = useCallback(async (locationSlug: string, characterSlugs: string[], encounterType: EncounterType = "convergence", secondLocationSlug?: string) => {
-    if (!scenario || !worldMap || !playback.turnResult) return;
-
-    setEncounterConversation(null);
-    setEncounterLoading(true);
-
-    try {
-      const loc = worldMap.locations.find((l) => l.slug === locationSlug);
-      const secondLoc = secondLocationSlug ? worldMap.locations.find((l) => l.slug === secondLocationSlug) : null;
-      const encounterChars = characterSlugs.map((slug) => {
-        const sc = scenario.characters.find((c) => c.slug === slug);
-        return {
-          slug,
-          name: sc?.name ?? slug,
-          profile: characterProfilesRef.current.get(slug) ?? sc?.personality ?? "",
-          personality: sc?.personality ?? "",
-          faction: sc?.faction ?? null,
-          mood: playback.characterUpdates.find((c) => c.characterSlug === slug)?.mood ?? "neutral",
-          goals: sc?.goals ?? [],
-          lastAction: playback.characterUpdates.find((c) => c.characterSlug === slug)?.lastAction,
-        };
-      });
-
-      const encounterActions = playback.turnResult.actions
-        .filter((a) => characterSlugs.includes(a.characterSlug))
-        .map((a) => ({
-          characterSlug: a.characterSlug,
-          narration: a.narration,
-          dialogue: a.dialogue,
-          actionType: a.actionType,
-        }));
-
-      let locationName = loc?.name ?? locationSlug;
-      let locationDescription = loc?.description ?? "";
-      if (encounterType === "crossover" && secondLoc) {
-        locationName = `between ${loc?.name ?? locationSlug} and ${secondLoc.name}`;
-        locationDescription = `A crossing point on the path between ${loc?.name ?? locationSlug} (${loc?.description ?? ""}) and ${secondLoc.name} (${secondLoc.description})`;
-      } else if (encounterType === "near-miss") {
-        locationName = loc?.name ?? locationSlug;
-        locationDescription = `${loc?.description ?? ""} — one character has just arrived as the other departs`;
-      }
-
-      const res = await fetch("/api/simulation/encounter", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          seriesId,
-          turn: playback.turnResult.turn,
-          locationName,
-          locationDescription,
-          encounterType,
-          characters: encounterChars,
-          actions: encounterActions,
-          recentTurns: simTurnLog.slice(-3).map((t) => ({
-            turn: t.turn,
-            worldNarration: t.worldNarration,
-          })),
-        }),
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        setEncounterConversation(data.conversation);
-      }
-    } catch (err) {
-      console.error("Encounter generation error:", err);
-    } finally {
-      setEncounterLoading(false);
-    }
-  }, [scenario, worldMap, playback.turnResult, playback.characterUpdates, seriesId, simTurnLog]);
-
-  // Advance playback to next character or encounter
+  // Advance playback to next action, encounter, after-effects, or commit
   const advancePlayback = useCallback(() => {
     if (playback.current.phase === "playing" && playback.turnResult) {
       const nextIndex = playback.current.actionIndex + 1;
-      const totalActions = playback.turnResult.actions.length;
-
-      if (nextIndex < totalActions) {
+      if (nextIndex < playback.turnResult.actions.length) {
         setPlayback((prev) => ({
           ...prev,
           current: { phase: "playing", actionIndex: nextIndex },
         }));
-      } else {
-        // Detect all encounter types
-        const allEncounters: { locationSlug: string; characterSlugs: string[]; encounterType: EncounterType; secondLocationSlug?: string }[] = [];
-        const encounteredPairs = new Set<string>(); // avoid duplicating char pairs
-
-        // 1. Convergence: multiple characters end at the same location
-        const locationGroups = new Map<string, string[]>();
-        for (const char of playback.characterUpdates) {
-          const list = locationGroups.get(char.locationSlug) || [];
-          list.push(char.characterSlug);
-          locationGroups.set(char.locationSlug, list);
-        }
-        Array.from(locationGroups.entries()).forEach(([locSlug, slugs]) => {
-          if (slugs.length > 1) {
-            allEncounters.push({ locationSlug: locSlug, characterSlugs: slugs, encounterType: "convergence" });
-            for (let si = 0; si < slugs.length; si++) {
-              for (let sj = si + 1; sj < slugs.length; sj++) {
-                encounteredPairs.add([slugs[si], slugs[sj]].sort().join(":"));
-              }
-            }
-          }
-        });
-
-        // Build movement map: slug -> { from, to }
-        const movements = new Map<string, { from: string; to: string }>();
-        for (const action of playback.turnResult.actions) {
-          if (action.actionType === "move" && action.targetLocation) {
-            const prevLoc = simCharacters.find((c) => c.characterSlug === action.characterSlug)?.locationSlug;
-            if (prevLoc && prevLoc !== action.targetLocation) {
-              movements.set(action.characterSlug, { from: prevLoc, to: action.targetLocation });
-            }
-          }
-        }
-
-        const movingChars = Array.from(movements.entries());
-
-        // 2. Crossover: A moves X→Y, B moves Y→X (they swap and pass each other)
-        for (let i = 0; i < movingChars.length; i++) {
-          for (let j = i + 1; j < movingChars.length; j++) {
-            const [slugA, moveA] = movingChars[i];
-            const [slugB, moveB] = movingChars[j];
-            const pairKey = [slugA, slugB].sort().join(":");
-            if (encounteredPairs.has(pairKey)) continue;
-
-            if (moveA.from === moveB.to && moveA.to === moveB.from) {
-              // Full swap — they crossed on the same edge
-              allEncounters.push({
-                locationSlug: moveA.from,
-                secondLocationSlug: moveA.to,
-                characterSlugs: [slugA, slugB],
-                encounterType: "crossover",
-              });
-              encounteredPairs.add(pairKey);
-            }
-          }
-        }
-
-        // 3. Near-miss: A arrives at Y, B was at Y and left this turn
-        for (const [slugA, moveA] of movingChars) {
-          for (const [slugB, moveB] of movingChars) {
-            if (slugA === slugB) continue;
-            const pairKey = [slugA, slugB].sort().join(":");
-            if (encounteredPairs.has(pairKey)) continue;
-
-            // A arrives at location that B just left
-            if (moveA.to === moveB.from) {
-              allEncounters.push({
-                locationSlug: moveA.to,
-                characterSlugs: [slugA, slugB],
-                encounterType: "near-miss",
-              });
-              encounteredPairs.add(pairKey);
-            }
-          }
-        }
-
-        if (allEncounters.length > 0) {
-          encounterQueueRef.current = allEncounters.slice(1);
-          const first = allEncounters[0];
-          setPlayback((prev) => ({
-            ...prev,
-            current: {
-              phase: "encounter",
-              locationSlug: first.locationSlug,
-              characterSlugs: first.characterSlugs,
-              encounterType: first.encounterType,
-              secondLocationSlug: first.secondLocationSlug,
-            },
-          }));
-          generateEncounterConversation(first.locationSlug, first.characterSlugs, first.encounterType, first.secondLocationSlug);
-        } else {
-          commitTurnResult();
-        }
-      }
-    } else if (playback.current.phase === "encounter") {
-      const remaining = encounterQueueRef.current;
-      if (remaining.length > 0) {
-        const next = remaining.shift()!;
+      } else if (playback.encounters.length > 0) {
+        // Move to first pre-generated encounter
         setPlayback((prev) => ({
           ...prev,
-          current: {
-            phase: "encounter",
-            locationSlug: next.locationSlug,
-            characterSlugs: next.characterSlugs,
-            encounterType: next.encounterType,
-            secondLocationSlug: next.secondLocationSlug,
-          },
+          current: { phase: "encounter", encounterIndex: 0 },
         }));
-        generateEncounterConversation(next.locationSlug, next.characterSlugs, next.encounterType, next.secondLocationSlug);
       } else {
-        setEncounterConversation(null);
         commitTurnResult();
       }
+    } else if (playback.current.phase === "encounter") {
+      const nextIdx = playback.current.encounterIndex + 1;
+      if (nextIdx < playback.encounters.length) {
+        setPlayback((prev) => ({
+          ...prev,
+          current: { phase: "encounter", encounterIndex: nextIdx },
+        }));
+      } else if (playback.relationshipDeltas.length > 0) {
+        // Show after-effects phase
+        setPlayback((prev) => ({
+          ...prev,
+          current: { phase: "after-effects" },
+        }));
+      } else {
+        commitTurnResult();
+      }
+    } else if (playback.current.phase === "after-effects") {
+      commitTurnResult();
     }
   }, [playback, commitTurnResult]);
 
@@ -646,7 +661,8 @@ export default function WorldPage() {
       return action?.targetLocation || charCurrentLoc || null;
     }
     if (playback.current.phase === "encounter") {
-      return playback.current.locationSlug;
+      const enc = playback.encounters[playback.current.encounterIndex];
+      return enc?.locationSlug ?? null;
     }
     return null;
   })();
@@ -795,8 +811,9 @@ export default function WorldPage() {
         <div className="absolute bottom-6 left-6 z-20">
           <button
             onClick={handleStartSimulation}
-            className="px-4 py-2 rounded-full bg-violet-600/80 backdrop-blur-sm border border-violet-400/20 text-white text-sm hover:bg-violet-500/80 transition-all"
+            className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-violet-600/20 hover:bg-violet-600/30 border border-violet-500/30 text-violet-300 hover:text-white text-sm font-medium shadow-[0_0_20px_rgba(139,92,246,0.2)] hover:shadow-[0_0_30px_rgba(139,92,246,0.4)] transition-all duration-300"
           >
+            <PlayIcon className="w-5 h-5" />
             Begin Simulation
           </button>
         </div>
@@ -840,6 +857,7 @@ export default function WorldPage() {
           onViewTurn={setViewingTurn}
           roleplayCharacters={roleplayCharacters}
           onToggleRoleplay={handleToggleRoleplay}
+          relationships={relationships}
         />
       )}
 
@@ -900,22 +918,20 @@ export default function WorldPage() {
 
       {/* Encounter playback box */}
       {playback.current.phase === "encounter" && playback.turnResult && (() => {
-        const locSlug = playback.current.locationSlug;
-        const loc = worldMap.locations.find((l) => l.slug === locSlug);
-        const secondLocSlug = playback.current.phase === "encounter" ? playback.current.secondLocationSlug : undefined;
-        const secondLoc = secondLocSlug
-          ? worldMap.locations.find((l) => l.slug === secondLocSlug)
+        const enc = playback.encounters[playback.current.encounterIndex];
+        if (!enc) return null;
+        const loc = worldMap.locations.find((l) => l.slug === enc.locationSlug);
+        const secondLoc = enc.secondLocationSlug
+          ? worldMap.locations.find((l) => l.slug === enc.secondLocationSlug)
           : null;
-        const charSlugs = playback.current.characterSlugs;
-        const eType = playback.current.encounterType;
-        const displayLocationName = eType === "crossover" && secondLoc
-          ? `${loc?.name ?? locSlug} ↔ ${secondLoc.name}`
-          : loc?.name ?? locSlug;
+        const displayLocationName = enc.encounterType === "crossover" && secondLoc
+          ? `${loc?.name ?? enc.locationSlug} ↔ ${secondLoc.name}`
+          : loc?.name ?? enc.locationSlug;
         return (
           <EncounterPlaybackBox
             locationName={displayLocationName}
-            encounterType={eType}
-            characters={charSlugs.map((slug) => {
+            encounterType={enc.encounterType}
+            characters={enc.characterSlugs.map((slug: string) => {
               const sc = scenario?.characters.find((c) => c.slug === slug);
               const state = playback.characterUpdates.find((c) => c.characterSlug === slug);
               return {
@@ -926,14 +942,61 @@ export default function WorldPage() {
               };
             })}
             actions={playback.turnResult.actions.filter((a) =>
-              charSlugs.includes(a.characterSlug),
+              enc.characterSlugs.includes(a.characterSlug),
             )}
-            conversation={encounterConversation}
-            conversationLoading={encounterLoading}
+            conversation={enc.conversation}
+            conversationLoading={enc.loading}
             onAdvance={advancePlayback}
           />
         );
       })()}
+
+      {/* After-effects phase: relationship changes */}
+      {playback.current.phase === "after-effects" && playback.relationshipDeltas.length > 0 && (
+        <div
+          className="fixed bottom-14 inset-x-0 z-40 flex justify-center pointer-events-none"
+        >
+          <div
+            className="bg-[#0f0f18]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden animate-fade-in pointer-events-auto"
+            onClick={advancePlayback}
+          >
+            <div className="flex items-start gap-4 p-4">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-[9px] uppercase tracking-widest text-violet-400">After Effects</span>
+                  <span className="text-sm font-semibold text-white">Relationship Changes</span>
+                </div>
+
+                <div className="space-y-1.5">
+                  {playback.relationshipDeltas.map((delta, i) => {
+                    const nameA = scenario?.characters.find((c) => c.slug === delta.characterA)?.name ?? delta.characterA;
+                    const nameB = scenario?.characters.find((c) => c.slug === delta.characterB)?.name ?? delta.characterB;
+                    const isPositive = delta.delta > 0;
+                    return (
+                      <div key={i} className="flex items-center justify-between text-sm py-1 px-2 rounded bg-white/[0.02]">
+                        <span className="text-slate-300">{nameA} ↔ {nameB}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-slate-500">{delta.reason}</span>
+                          <span className={`font-medium ${isPositive ? "text-emerald-400" : "text-rose-400"}`}>
+                            {isPositive ? "+" : ""}{delta.delta}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <button
+                onClick={(e) => { e.stopPropagation(); advancePlayback(); }}
+                className="px-3 py-1 text-xs font-medium rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition-colors flex-shrink-0 mt-1"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

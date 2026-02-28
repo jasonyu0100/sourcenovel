@@ -31,7 +31,6 @@ interface WorldMapProps {
 }
 
 // Metro map constants
-const HIT_RADIUS = 30;
 const MIN_ZOOM = 0.3;
 const MAX_ZOOM = 3;
 const NEUTRAL_COLOR = "#94a3b8";
@@ -461,15 +460,31 @@ export function WorldMap({
     (clientX: number, clientY: number): WorldMapLocation | null => {
       const coords = getMapCoords(clientX, clientY);
       if (!coords) return null;
+      const halfCW = CELL_W * 0.5;
+      const halfCH = CELL_H * 0.5;
+      // Check smallest tiles first so larger tiles don't steal clicks from overlapping labels
+      // But iterate all and pick the closest match
+      let best: WorldMapLocation | null = null;
+      let bestDist = Infinity;
       for (const loc of locations) {
         const pos = getNodePos(loc.slug);
+        const size = tileSizeMap.get(loc.slug) ?? 1;
+        const dhw = halfCW * size;
+        const dhh = halfCH * size;
         const dx = coords.mx - pos.x;
         const dy = coords.my - pos.y;
-        if (dx * dx + dy * dy < HIT_RADIUS * HIT_RADIUS) return loc;
+        // Point-in-diamond test: |dx/dhw| + |dy/dhh| <= 1
+        if (Math.abs(dx) / dhw + Math.abs(dy) / dhh <= 1) {
+          const dist = Math.abs(dx) + Math.abs(dy);
+          if (dist < bestDist) {
+            bestDist = dist;
+            best = loc;
+          }
+        }
       }
-      return null;
+      return best;
     },
-    [getMapCoords, locations, getNodePos],
+    [getMapCoords, locations, getNodePos, tileSizeMap],
   );
 
   // --- Draw (with animation loop for hover arcs) ---

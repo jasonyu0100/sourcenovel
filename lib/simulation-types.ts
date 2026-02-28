@@ -17,6 +17,20 @@ export interface ScenarioData {
   characters: ScenarioCharacter[];
 }
 
+// --- Relationship tracking ---
+
+export interface RelationshipMap {
+  // key: "charA:charB" (sorted alphabetically), value: -100 to 100
+  [pairKey: string]: number;
+}
+
+export interface RelationshipDelta {
+  characterA: string;
+  characterB: string;
+  delta: number;
+  reason: string;
+}
+
 // --- Runtime simulation state ---
 
 export interface SimCharacterState {
@@ -57,6 +71,27 @@ export interface CharacterAIResponse {
   mood: string;
 }
 
+// --- Encounter pre-generation ---
+
+export interface ConversationLine {
+  speaker: string;
+  speakerSlug: string;
+  line: string;
+  type: "dialogue" | "action" | "thought";
+}
+
+export interface EncounterDescriptor {
+  locationSlug: string;
+  characterSlugs: string[];
+  encounterType: EncounterType;
+  secondLocationSlug?: string;
+}
+
+export interface PreGeneratedEncounter extends EncounterDescriptor {
+  conversation: ConversationLine[] | null;
+  loading: boolean;
+}
+
 // --- Turn playback state machine ---
 
 export type EncounterType = "convergence" | "crossover" | "near-miss";
@@ -64,13 +99,16 @@ export type EncounterType = "convergence" | "crossover" | "near-miss";
 export type PlaybackPhase =
   | { phase: "idle" }
   | { phase: "playing"; actionIndex: number }
-  | { phase: "encounter"; locationSlug: string; characterSlugs: string[]; encounterType: EncounterType; secondLocationSlug?: string }
+  | { phase: "encounter"; encounterIndex: number }
+  | { phase: "after-effects" }
   | { phase: "done" };
 
 export interface PlaybackState {
   current: PlaybackPhase;
   turnResult: SimTurnResult | null;
   characterUpdates: SimCharacterState[];
+  encounters: PreGeneratedEncounter[];
+  relationshipDeltas: RelationshipDelta[];
   pendingResult: {
     turn: number;
     characterUpdates: { characterSlug: string; locationSlug: string; status: string; mood: string; lastAction?: string }[];
