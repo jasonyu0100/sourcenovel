@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import type { SimAction } from "@/lib/simulation-types";
 
@@ -16,7 +16,7 @@ interface PlayerActionModalProps {
   onCancel: () => void;
 }
 
-type ActionType = "move" | "interact" | "speak" | "wait";
+type ActionType = "move" | "interact";
 
 export function PlayerActionModal({
   characterSlug,
@@ -29,19 +29,13 @@ export function PlayerActionModal({
   onConfirm,
   onCancel,
 }: PlayerActionModalProps) {
-  const [actionType, setActionType] = useState<ActionType>("wait");
+  const [actionType, setActionType] = useState<ActionType>("interact");
   const [moveTarget, setMoveTarget] = useState<string>(availableMoves[0]?.slug ?? "");
   const [interactTarget, setInteractTarget] = useState<string>(nearbyCharacters[0]?.slug ?? "");
   const [dialogue, setDialogue] = useState("");
   const [imageError, setImageError] = useState(false);
   const dialogueRef = useRef<HTMLTextAreaElement>(null);
 
-  // Focus dialogue textarea when speak is selected
-  useEffect(() => {
-    if (actionType === "speak") {
-      dialogueRef.current?.focus();
-    }
-  }, [actionType]);
 
   const handleConfirm = () => {
     let target: string | null = null;
@@ -59,15 +53,16 @@ export function PlayerActionModal({
         narration = `${characterName} sets off toward ${moveLoc?.name ?? moveTarget}.`;
         break;
       case "interact":
-        target = interactTarget;
-        targetCharacter = interactTarget;
-        const interactChar = nearbyCharacters.find((c) => c.slug === interactTarget);
-        actionDetail = `interact → ${interactTarget}`;
-        narration = `${characterName} turns to ${interactChar?.name ?? interactTarget}.`;
-        break;
-      case "wait":
-        actionDetail = "wait";
-        narration = `${characterName} remains still, taking in the surroundings.`;
+        if (interactTarget) {
+          target = interactTarget;
+          targetCharacter = interactTarget;
+          const interactChar = nearbyCharacters.find((c) => c.slug === interactTarget);
+          actionDetail = `interact → ${interactTarget}`;
+          narration = `${characterName} turns to ${interactChar?.name ?? interactTarget}.`;
+        } else {
+          actionDetail = "interact";
+          narration = `${characterName} takes in the surroundings of ${locationName}.`;
+        }
         break;
     }
 
@@ -92,16 +87,14 @@ export function PlayerActionModal({
   const canConfirm = (() => {
     switch (actionType) {
       case "move": return !!moveTarget;
-      case "interact": return !!interactTarget;
-      case "wait": return true;
+      case "interact": return true;
       default: return true;
     }
   })();
 
   const actions: { type: ActionType; label: string; description: string; disabled?: boolean }[] = [
+    { type: "interact", label: "Interact", description: "Interact with the location and/or nearby characters" },
     { type: "move", label: "Move", description: "Travel to a connected location" },
-    { type: "interact", label: "Interact", description: "Engage with someone nearby", disabled: nearbyCharacters.length === 0 },
-    { type: "wait", label: "Wait", description: "Observe and stay put" },
   ];
 
   return (
@@ -144,7 +137,7 @@ export function PlayerActionModal({
           {/* Action type */}
           <div>
             <label className="text-[10px] uppercase tracking-widest text-slate-500 mb-2 block">Action</label>
-            <div className="grid grid-cols-3 gap-1.5">
+            <div className="grid grid-cols-2 gap-1.5">
               {actions.map((a) => (
                 <button
                   key={a.type}
@@ -189,10 +182,21 @@ export function PlayerActionModal({
           )}
 
           {/* Interact targets */}
-          {actionType === "interact" && (
+          {actionType === "interact" && nearbyCharacters.length > 0 && (
             <div>
-              <label className="text-[10px] uppercase tracking-widest text-slate-500 mb-2 block">Character</label>
+              <label className="text-[10px] uppercase tracking-widest text-slate-500 mb-2 block">Character (optional)</label>
               <div className="space-y-1.5">
+                <button
+                  onClick={() => setInteractTarget("")}
+                  className={`w-full text-left px-3 py-2 rounded-lg border text-sm transition-colors ${
+                    interactTarget === ""
+                      ? "bg-amber-500/10 border-amber-500/25 text-amber-200"
+                      : "bg-white/[0.02] border-white/[0.05] text-slate-300 hover:bg-white/[0.05]"
+                  }`}
+                >
+                  <span className="font-medium">Location only</span>
+                  <span className="text-[10px] text-slate-500 ml-2">interact with surroundings</span>
+                </button>
                 {nearbyCharacters.map((char) => (
                   <button
                     key={char.slug}

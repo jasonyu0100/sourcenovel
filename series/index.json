@@ -1,18 +1,5 @@
 [
   {
-    "id": "ignition",
-    "title": "Ignition",
-    "genre": "Supernatural Romance",
-    "description": "At Apex Academy, your Flame Class determines everything. The ranking measures emotional control — Class-S students are ice, Class-D students burn. She's Class-D.",
-    "author": {
-      "name": "Jason Yu",
-      "email": "jasonyu1111@outlook.com"
-    },
-    "cover": "cover.jpg",
-    "background": "background.jpg",
-    "donationLink": "https://buymeacoffee.com/jasonyu"
-  },
-  {
     "id": "the-ninth-terrace",
     "title": "The Ninth Terrace",
     "genre": "Sci-Fi Progression",

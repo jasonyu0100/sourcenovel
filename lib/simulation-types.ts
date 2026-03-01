@@ -12,23 +12,10 @@ export interface ScenarioCharacter {
 
 export interface ScenarioData {
   id: string;
+  arcNum: number;
   name: string;
   description: string;
   characters: ScenarioCharacter[];
-}
-
-// --- Relationship tracking ---
-
-export interface RelationshipMap {
-  // key: "charA:charB" (sorted alphabetically), value: -100 to 100
-  [pairKey: string]: number;
-}
-
-export interface RelationshipDelta {
-  characterA: string;
-  characterB: string;
-  delta: number;
-  reason: string;
 }
 
 // --- Runtime simulation state ---
@@ -44,7 +31,7 @@ export interface SimCharacterState {
 
 export interface SimAction {
   characterSlug: string;
-  actionType: "move" | "interact" | "speak" | "wait";
+  actionType: "move" | "interact";
   actionDetail: string;
   targetLocation?: string;
   targetCharacter?: string;
@@ -60,55 +47,26 @@ export interface SimTurnResult {
   worldNarration: string; // synthesized prose summary of the turn
 }
 
-// --- AI response shape ---
+// --- Movement phase (phase 1) ---
 
-export interface CharacterAIResponse {
-  action: "move" | "interact" | "speak" | "wait";
-  target: string | null;
-  dialogue: string | null;
-  innerThought: string | null;
-  narration: string;
-  mood: string;
-}
-
-// --- Encounter pre-generation ---
-
-export interface ConversationLine {
-  speaker: string;
-  speakerSlug: string;
-  line: string;
-  type: "dialogue" | "action" | "thought";
-}
-
-export interface EncounterDescriptor {
-  locationSlug: string;
-  characterSlugs: string[];
-  encounterType: EncounterType;
-  secondLocationSlug?: string;
-}
-
-export interface PreGeneratedEncounter extends EncounterDescriptor {
-  conversation: ConversationLine[] | null;
-  loading: boolean;
+export interface MovementDecision {
+  characterSlug: string;
+  decision: "move" | "stay";
+  targetLocation?: string;
+  reasoning: string;
 }
 
 // --- Turn playback state machine ---
 
-export type EncounterType = "convergence" | "crossover" | "near-miss";
-
 export type PlaybackPhase =
   | { phase: "idle" }
   | { phase: "playing"; actionIndex: number }
-  | { phase: "encounter"; encounterIndex: number }
-  | { phase: "after-effects" }
   | { phase: "done" };
 
 export interface PlaybackState {
   current: PlaybackPhase;
   turnResult: SimTurnResult | null;
   characterUpdates: SimCharacterState[];
-  encounters: PreGeneratedEncounter[];
-  relationshipDeltas: RelationshipDelta[];
   pendingResult: {
     turn: number;
     characterUpdates: { characterSlug: string; locationSlug: string; status: string; mood: string; lastAction?: string }[];

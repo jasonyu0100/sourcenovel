@@ -77,11 +77,9 @@ export function TurnPlaybackBox({
       ? `Traveling to ${resolvedTarget}`
       : action.actionType === "interact" && resolvedTargetChar
         ? `Interacting with ${resolvedTargetChar}`
-        : action.actionType === "speak"
-          ? "Speaking"
-          : action.actionType === "wait"
-            ? "Observing"
-            : action.actionDetail;
+        : action.actionType === "interact"
+          ? `Interacting at ${characterLocation}`
+          : action.actionDetail;
 
   return (
     <div className="fixed bottom-14 inset-x-0 z-40 flex justify-center pointer-events-none">

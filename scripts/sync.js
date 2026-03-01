@@ -160,7 +160,9 @@ function generateManifest(seriesPath) {
   const arcsDir = path.join(seriesPath, "arcs");
   for (const num of listDirs(arcsDir)) {
     const arcPath = path.join(arcsDir, num);
-    const files = listFiles(arcPath, ".md");
+    const mdFiles = listFiles(arcPath, ".md");
+    const jsonFiles = listFiles(arcPath, ".json");
+    const files = [...mdFiles, ...jsonFiles].sort();
     const arcSourcesDir = path.join(seriesPath, "sources", num);
     const sources = listFiles(arcSourcesDir, ".md");
     manifest.arcs.push({ number: parseInt(num), files, sources });

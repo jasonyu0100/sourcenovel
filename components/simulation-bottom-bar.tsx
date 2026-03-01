@@ -262,7 +262,6 @@ interface SimulationBottomBarProps {
   onViewTurn: (turn: number | null) => void;
   roleplayCharacters: Set<string>;
   onToggleRoleplay: (charSlug: string) => void;
-  relationships: { [pairKey: string]: number };
 }
 
 export function SimulationBottomBar({
@@ -284,12 +283,14 @@ export function SimulationBottomBar({
   onViewTurn,
   roleplayCharacters,
   onToggleRoleplay,
-  relationships,
 }: SimulationBottomBarProps) {
-  const [panel, setPanel] = useState<"log" | "characters" | "relations" | null>(null);
-  const [focusedChar, setFocusedChar] = useState<string | null>(null);
+  const [panel, setPanel] = useState<"log" | "characters" | null>(null);
   const [detailTurn, setDetailTurn] = useState<SimTurnResult | null>(null);
   const [influenceTarget, setInfluenceTarget] = useState<string | null>(null);
+  const [narrativeExpanded, setNarrativeExpanded] = useState(true);
+
+  // Latest turn for narrative display
+  const latestTurn = turnLog.length > 0 ? turnLog[turnLog.length - 1] : null;
 
   // Resolving elapsed timer
   const [resolvingElapsed, setResolvingElapsed] = useState(0);
@@ -373,12 +374,60 @@ export function SimulationBottomBar({
     ? characters.find((c) => c.characterSlug === influenceTarget)
     : null;
 
-  const togglePanel = (target: "log" | "characters" | "relations") => {
+  const togglePanel = (target: "log" | "characters") => {
     setPanel((prev) => (prev === target ? null : target));
   };
 
   return (
     <>
+      {/* ─── Narrative Panel (shows latest turn prose) ─── */}
+      {latestTurn && !isProcessing && (
+        <div className={`fixed bottom-12 inset-x-0 z-20 transition-all duration-300 ${
+          narrativeExpanded ? "max-h-[50vh]" : "max-h-0"
+        } overflow-hidden`}>
+          <div className="bg-[#0a0a12]/95 backdrop-blur-xl border-t border-white/[0.07]">
+            <div className="max-w-3xl mx-auto px-6 py-4 max-h-[50vh] overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/10">
+              {/* World narration */}
+              <p className="text-sm text-slate-200 leading-relaxed whitespace-pre-line mb-4">
+                {latestTurn.worldNarration}
+              </p>
+
+              {/* Per-character narration cards */}
+              <div className="space-y-3">
+                {latestTurn.actions.map((action: SimAction, i: number) => {
+                  const targetLocName = action.targetLocation
+                    ? locationMap.get(action.targetLocation)?.name ?? action.targetLocation
+                    : null;
+                  return (
+                    <div key={i} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-4 py-3">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="text-xs font-medium text-white">{charName(action.characterSlug)}</span>
+                        <span className="text-[9px] uppercase tracking-wider text-slate-600">
+                          {action.actionType === "move" && targetLocName
+                            ? `→ ${targetLocName}`
+                            : action.mood}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-400 leading-relaxed">{action.narration}</p>
+                      {action.dialogue && (
+                        <p className="text-xs text-amber-300/80 italic mt-1.5 pl-3 border-l-2 border-amber-500/30">
+                          &ldquo;{action.dialogue}&rdquo;
+                        </p>
+                      )}
+                      {action.innerThought && (
+                        <p className="text-[10px] text-slate-600 italic mt-1 pl-3 border-l-2 border-slate-800">
+                          {action.innerThought}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ─── Bottom HUD Strip ─── */}
       <div className="fixed bottom-0 inset-x-0 z-30 bg-[#0a0a12]/90 backdrop-blur-xl border-t border-white/[0.07]">
         <div className="px-4 h-12 flex items-center gap-2">
@@ -459,6 +508,20 @@ export function SimulationBottomBar({
 
           {/* Right: Action buttons */}
           <div className="flex items-center gap-1.5 ml-2">
+            {/* Narrative toggle */}
+            {latestTurn && (
+              <button
+                onClick={() => setNarrativeExpanded((p) => !p)}
+                className={`h-8 px-2.5 text-[10px] uppercase tracking-wider rounded-md border transition-colors ${
+                  narrativeExpanded
+                    ? "bg-violet-500/15 border-violet-500/30 text-violet-300"
+                    : "bg-white/[0.03] border-white/[0.07] text-slate-500 hover:text-slate-300 hover:bg-white/[0.06]"
+                }`}
+              >
+                Story
+              </button>
+            )}
+
             {/* History panel toggle */}
             <button
               onClick={() => togglePanel("log")}
@@ -483,21 +546,6 @@ export function SimulationBottomBar({
               }`}
             >
               Characters{activeInfluences > 0 ? ` ✦${activeInfluences}` : ""}
-            </button>
-
-            {/* Relations panel toggle */}
-            <button
-              onClick={() => {
-                togglePanel("relations");
-                if (panel === "relations") setFocusedChar(null);
-              }}
-              className={`h-8 px-2.5 text-[10px] uppercase tracking-wider rounded-md border transition-colors ${
-                panel === "relations"
-                  ? "bg-violet-500/15 border-violet-500/30 text-violet-300"
-                  : "bg-white/[0.03] border-white/[0.07] text-slate-500 hover:text-slate-300 hover:bg-white/[0.06]"
-              }`}
-            >
-              Relations
             </button>
 
             {/* Divider */}
@@ -697,140 +745,6 @@ export function SimulationBottomBar({
           </div>
         </RightPanel>
       )}
-
-      {panel === "relations" && (() => {
-        const pairs = Object.entries(relationships)
-          .filter(([, score]) => score !== 0)
-          .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
-
-        // Get all characters involved in relationships
-        const involvedSlugs = new Set<string>();
-        for (const [key] of pairs) {
-          const [a, b] = key.split(":");
-          involvedSlugs.add(a);
-          involvedSlugs.add(b);
-        }
-
-        // Focused view: filter pairs for selected character
-        const displayPairs = focusedChar
-          ? pairs.filter(([key]) => {
-              const [a, b] = key.split(":");
-              return a === focusedChar || b === focusedChar;
-            })
-          : pairs;
-
-        return (
-          <RightPanel
-            title={focusedChar ? charName(focusedChar) : "Relationships"}
-            onClose={() => { setPanel(null); setFocusedChar(null); }}
-          >
-            <div className="p-3 space-y-2">
-              {/* Back button when focused */}
-              {focusedChar && (
-                <button
-                  onClick={() => setFocusedChar(null)}
-                  className="flex items-center gap-1.5 text-[10px] text-slate-500 hover:text-slate-300 mb-2 transition-colors"
-                >
-                  ← All relationships
-                </button>
-              )}
-
-              {/* Focused character portrait */}
-              {focusedChar && (
-                <div className="flex items-center gap-3 mb-3 p-3 rounded-lg border border-violet-500/20 bg-violet-500/5">
-                  <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 relative border border-white/15">
-                    <Image
-                      src={`/series/${seriesId}/world/characters/${focusedChar}.jpg`}
-                      alt={charName(focusedChar)}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div>
-                    <span className="text-sm font-medium text-white">{charName(focusedChar)}</span>
-                    <p className="text-[10px] text-slate-500">{displayPairs.length} connection{displayPairs.length !== 1 ? "s" : ""}</p>
-                  </div>
-                </div>
-              )}
-
-              {displayPairs.length === 0 ? (
-                <p className="text-xs text-slate-600 text-center py-8">No relationships formed yet.</p>
-              ) : (
-                displayPairs.map(([key, score]) => {
-                  const [slugA, slugB] = key.split(":");
-                  const nameA = charName(slugA);
-                  const nameB = charName(slugB);
-                  const isPositive = score > 0;
-                  const absScore = Math.abs(score);
-                  const barWidth = Math.min(absScore, 100);
-                  // When focused, show the "other" character
-                  const otherSlug = focusedChar
-                    ? (slugA === focusedChar ? slugB : slugA)
-                    : null;
-
-                  return (
-                    <button
-                      key={key}
-                      onClick={() => {
-                        if (focusedChar) {
-                          setFocusedChar(otherSlug);
-                        } else {
-                          setFocusedChar(slugA);
-                        }
-                      }}
-                      className="w-full text-left p-3 rounded-lg border border-white/[0.04] bg-white/[0.01] hover:border-white/10 hover:bg-white/[0.02] transition-colors"
-                    >
-                      {/* Avatars + names */}
-                      <div className="flex items-center gap-2.5 mb-2">
-                        <div className="flex -space-x-1.5 flex-shrink-0">
-                          <div className="w-7 h-7 rounded-full overflow-hidden relative border border-white/15">
-                            <Image
-                              src={`/series/${seriesId}/world/characters/${focusedChar ? (otherSlug ?? slugA) : slugA}.jpg`}
-                              alt={focusedChar ? charName(otherSlug ?? slugA) : nameA}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                          {!focusedChar && (
-                            <div className="w-7 h-7 rounded-full overflow-hidden relative border border-white/15">
-                              <Image
-                                src={`/series/${seriesId}/world/characters/${slugB}.jpg`}
-                                alt={nameB}
-                                fill
-                                className="object-cover"
-                              />
-                            </div>
-                          )}
-                        </div>
-                        <span className="text-xs text-slate-300 flex-1 min-w-0 truncate">
-                          {focusedChar ? charName(otherSlug ?? "") : `${nameA} ↔ ${nameB}`}
-                        </span>
-                        <span className={`text-xs font-medium tabular-nums ${isPositive ? "text-emerald-400" : "text-rose-400"}`}>
-                          {isPositive ? "+" : ""}{score}
-                        </span>
-                      </div>
-
-                      {/* Score bar */}
-                      <div className="h-1 bg-white/[0.04] rounded-full overflow-hidden relative">
-                        {/* Center marker */}
-                        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/10" />
-                        {/* Bar from center */}
-                        <div
-                          className={`absolute top-0 bottom-0 rounded-full ${isPositive ? "bg-emerald-500/60" : "bg-rose-500/60"}`}
-                          style={{
-                            left: isPositive ? "50%" : `${50 - barWidth / 2}%`,
-                            width: `${barWidth / 2}%`,
-                          }}
-                        />
-                      </div>
-                    </button>
-                  );
-                })
-              )}
-            </div>
-          </RightPanel>
-        );
-      })()}
 
       {/* ─── Modals ─── */}
 

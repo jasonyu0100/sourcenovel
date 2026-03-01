@@ -139,24 +139,17 @@ function computeGridLayout(
     return anchors;
   };
 
-  // Count how many occupied cells border a candidate anchor position (compactness score)
-  const compactnessScore = (ac: number, ar: number, size: number) => {
-    let score = 0;
-    // Check cells just outside the N×N block on all 4 sides
-    for (let i = 0; i < size; i++) {
-      if (occupied.has(cellKey(ac - 1, ar + i))) score++;     // left
-      if (occupied.has(cellKey(ac + size, ar + i))) score++;   // right
-      if (occupied.has(cellKey(ac + i, ar - 1))) score++;     // top
-      if (occupied.has(cellKey(ac + i, ar + size))) score++;   // bottom
-    }
-    return score;
-  };
-
   // Place root at origin
   const rootSize = sizeMap.get(rootSlug) ?? 2;
+  const rootCenterCol = (rootSize - 1) / 2;
+  const rootCenterRow = (rootSize - 1) / 2;
   markOccupied(0, 0, rootSize, rootSlug);
   gridCoords.set(rootSlug, { col: 0, row: 0 });
   positions.set(rootSlug, tileCenterPixel(0, 0, rootSize));
+
+  // Track each node's outward direction from root (for fractal branching)
+  const nodeDirection = new Map<string, number>(); // slug → angle from root
+  nodeDirection.set(rootSlug, 0);
 
   const queue: string[] = [rootSlug];
   const visited = new Set<string>([rootSlug]);
@@ -171,33 +164,56 @@ function computeGridLayout(
     const unplaced = Array.from(neighbors).filter((n) => !visited.has(n));
     if (unplaced.length === 0) continue;
 
+    // Parent's center in grid coords
+    const parentCenterCol = parentAnchor.col + (parentSize - 1) / 2;
+    const parentCenterRow = parentAnchor.row + (parentSize - 1) / 2;
+
+    // Parent's outward direction from root
+    const parentDir = nodeDirection.get(parentSlug) ?? 0;
+    const isRoot = parentSlug === rootSlug;
+
     for (let ci = 0; ci < unplaced.length; ci++) {
       const childSlug = unplaced[ci];
       const childSize = sizeMap.get(childSlug) ?? 2;
+
+      // Compute ideal outward direction for this child
+      let idealAngle: number;
+      if (isRoot) {
+        // Root's children fan out evenly in all directions
+        idealAngle = (ci / unplaced.length) * Math.PI * 2 - Math.PI / 2;
+      } else {
+        // Non-root: continue in parent's outward direction with sibling spread
+        const spreadRange = Math.PI * 0.6; // siblings fan ±54° from parent direction
+        const spreadStep = unplaced.length > 1
+          ? spreadRange / (unplaced.length - 1)
+          : 0;
+        idealAngle = parentDir - spreadRange / 2 + ci * spreadStep;
+      }
 
       // Get all edge-adjacent positions and filter to those that fit
       const candidates = edgeAdjacentAnchors(parentAnchor.col, parentAnchor.row, parentSize, childSize)
         .filter(({ col, row }) => canPlace(col, row, childSize));
 
       if (candidates.length > 0) {
-        // Score each candidate: maximize compactness, break ties with angular spread
-        const rootCenterCol = (rootSize - 1) / 2;
-        const rootCenterRow = (rootSize - 1) / 2;
-
-        // Ideal angle for this child (evenly distribute around parent)
-        const idealAngle = (ci / unplaced.length) * Math.PI * 2;
-
         const scored = candidates.map(({ col, row }) => {
-          const compact = compactnessScore(col, row, childSize);
-          // Child center relative to root center
           const childCenterCol = col + (childSize - 1) / 2;
           const childCenterRow = row + (childSize - 1) / 2;
-          const angle = Math.atan2(childCenterRow - rootCenterRow, childCenterCol - rootCenterCol);
-          // Angular difference from ideal (smaller = better spread)
+
+          // Direction from parent to this candidate
+          const angle = Math.atan2(childCenterRow - parentCenterRow, childCenterCol - parentCenterCol);
+
+          // Angular alignment with ideal outward direction (smaller diff = better)
           let angleDiff = Math.abs(angle - idealAngle);
           if (angleDiff > Math.PI) angleDiff = Math.PI * 2 - angleDiff;
-          // Primary: compactness (higher=better). Secondary: angular spread (lower diff=better)
-          return { col, row, score: compact * 10 - angleDiff };
+
+          // Distance from root center (further = better for tree spread)
+          const distFromRoot = Math.sqrt(
+            (childCenterCol - rootCenterCol) ** 2 +
+            (childCenterRow - rootCenterRow) ** 2,
+          );
+
+          // Primary: directional alignment. Secondary: distance from root
+          return { col, row, score: -angleDiff * 10 + distFromRoot, angle };
         });
         scored.sort((a, b) => b.score - a.score);
 
@@ -207,23 +223,46 @@ function computeGridLayout(
         positions.set(childSlug, tileCenterPixel(best.col, best.row, childSize));
         visited.add(childSlug);
         queue.push(childSlug);
+
+        // Record this child's outward direction for its own children
+        const bestCenterCol = best.col + (childSize - 1) / 2;
+        const bestCenterRow = best.row + (childSize - 1) / 2;
+        nodeDirection.set(
+          childSlug,
+          Math.atan2(bestCenterRow - rootCenterRow, bestCenterCol - rootCenterCol),
+        );
       } else {
-        // Fallback: scan outward in rings from parent anchor
+        // Fallback: scan outward from parent in ideal direction
         let placed = false;
-        for (let ring = 1; ring < 30 && !placed; ring++) {
-          for (let c = -ring; c <= ring && !placed; c++) {
-            for (let r = -ring; r <= ring && !placed; r++) {
+        const idealDx = Math.cos(idealAngle);
+        const idealDy = Math.sin(idealAngle);
+        for (let ring = 1; ring < 40 && !placed; ring++) {
+          // Try the ideal direction first, then spiral outward
+          const tryOrder: { col: number; row: number }[] = [];
+          for (let c = -ring; c <= ring; c++) {
+            for (let r = -ring; r <= ring; r++) {
               if (Math.abs(c) !== ring && Math.abs(r) !== ring) continue;
-              const ac = parentAnchor.col + c;
-              const ar = parentAnchor.row + r;
-              if (canPlace(ac, ar, childSize)) {
-                markOccupied(ac, ar, childSize, childSlug);
-                gridCoords.set(childSlug, { col: ac, row: ar });
-                positions.set(childSlug, tileCenterPixel(ac, ar, childSize));
-                visited.add(childSlug);
-                queue.push(childSlug);
-                placed = true;
-              }
+              tryOrder.push({ col: parentAnchor.col + c, row: parentAnchor.row + r });
+            }
+          }
+          // Sort by alignment with ideal direction
+          tryOrder.sort((a, b) => {
+            const da = a.col * idealDx + a.row * idealDy;
+            const db = b.col * idealDx + b.row * idealDy;
+            return db - da;
+          });
+          for (const { col, row } of tryOrder) {
+            if (canPlace(col, row, childSize)) {
+              markOccupied(col, row, childSize, childSlug);
+              gridCoords.set(childSlug, { col, row });
+              positions.set(childSlug, tileCenterPixel(col, row, childSize));
+              visited.add(childSlug);
+              queue.push(childSlug);
+              const cc = col + (childSize - 1) / 2;
+              const cr = row + (childSize - 1) / 2;
+              nodeDirection.set(childSlug, Math.atan2(cr - rootCenterRow, cc - rootCenterCol));
+              placed = true;
+              break;
             }
           }
         }
@@ -231,11 +270,11 @@ function computeGridLayout(
     }
   }
 
-  // Handle disconnected nodes — find nearest free spot to existing tiles
+  // Handle disconnected nodes — place along the outward spiral
   for (const loc of locations) {
     if (!visited.has(loc.slug)) {
       const s = sizeMap.get(loc.slug) ?? 2;
-      for (let ring = 1; ring < 30; ring++) {
+      for (let ring = 1; ring < 40; ring++) {
         let found = false;
         for (let c = -ring; c <= ring && !found; c++) {
           for (let r = -ring; r <= ring && !found; r++) {
@@ -445,15 +484,13 @@ export function WorldMap({
     (clientX: number, clientY: number) => {
       const rect = canvasRef.current?.getBoundingClientRect();
       if (!rect) return null;
-      const w = rect.width;
-      const h = rect.height;
       const sx = clientX - rect.left;
       const sy = clientY - rect.top;
-      const mx = (sx - pan.x - w / 2) / zoom + w / 2;
-      const my = (sy - pan.y - h / 2) / zoom + h / 2;
+      const mx = (sx - pan.x - canvasSize.width / 2) / zoom + canvasSize.width / 2;
+      const my = (sy - pan.y - canvasSize.height / 2) / zoom + canvasSize.height / 2;
       return { mx, my };
     },
-    [pan, zoom],
+    [pan, zoom, canvasSize],
   );
 
   const getNodeAtPosition = useCallback(
@@ -520,9 +557,9 @@ export function WorldMap({
 
     // Apply pan + zoom
     ctx.save();
-    ctx.translate(pan.x + w / 2, pan.y + h / 2);
+    ctx.translate(pan.x + canvasSize.width / 2, pan.y + canvasSize.height / 2);
     ctx.scale(zoom, zoom);
-    ctx.translate(-w / 2, -h / 2);
+    ctx.translate(-canvasSize.width / 2, -canvasSize.height / 2);
 
     // Connected slugs for hover highlighting (computed early for tile dimming)
     const hoveredConnections = new Set<string>();
@@ -543,8 +580,9 @@ export function WorldMap({
 
     // --- Isometric grid with location image tiles ---
     {
-      const gridCx = w / 2;
-      const gridCy = h / 2;
+      // Use same center as nodePositions (canvasSize) for alignment
+      const gridCx = canvasSize.width / 2;
+      const gridCy = canvasSize.height / 2;
       const halfCW = CELL_W * 0.5;
       const halfCH = CELL_H * 0.5;
       const extent = 14;
@@ -592,13 +630,6 @@ export function WorldMap({
         const isDimmed = hoveredSlug && !isHovered && !isConnected;
 
         if (img && img.complete && img.naturalWidth > 0) {
-          // Drop shadow for 3D depth
-          ctx.save();
-          diamondPath(px + 3, py + 5, size);
-          ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-          ctx.fill();
-          ctx.restore();
-
           // Colored border (faction color)
           const clusterId = locToCluster.get(loc.slug) || "";
           const color = getColor(clusterId);

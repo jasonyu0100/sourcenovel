@@ -5,14 +5,16 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeftIcon, PlayIcon } from "@heroicons/react/24/outline";
 import type { WorldMapData } from "@/lib/world-types";
-import type { ScenarioData, SimCharacterState, SimTurnResult, SimAction, PlaybackState, PreGeneratedEncounter } from "@/lib/simulation-types";
-import { loadWorldMap, loadScenario, loadCharacterProfile } from "@/lib/world-data";
+import type { ScenarioData, SimCharacterState, SimTurnResult, SimAction, PlaybackState } from "@/lib/simulation-types";
+import { loadWorldMap, loadCharacterProfile, loadAvailableArcs, loadArcScenario, loadScenarioContext } from "@/lib/world-data";
+import type { ArcInfo } from "@/lib/world-data";
+import { loadInteractiveModule, loadSeriesContext, loadArcContext, loadChapterMemory } from "@/lib/episode-data";
+import { ArcSelectionModal } from "@/components/arc-selection-modal";
 import { WorldMap } from "@/components/world-map";
 import type { CharacterOnMap } from "@/components/world-map";
 import { WorldLocation } from "@/components/world-location";
 import { SimulationBottomBar } from "@/components/simulation-bottom-bar";
 import { TurnPlaybackBox } from "@/components/turn-playback-box";
-import { EncounterPlaybackBox } from "@/components/encounter-playback-box";
 import { PlayerActionModal } from "@/components/player-action-modal";
 
 type ViewState =
@@ -37,6 +39,25 @@ export default function WorldPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const characterProfilesRef = useRef<Map<string, string>>(new Map());
 
+  // Arc selection
+  const [arcList, setArcList] = useState<ArcInfo[]>([]);
+  const [showArcSelect, setShowArcSelect] = useState(false);
+
+  // Episode-style story context (loaded on simulation start)
+  const [interactiveModule, setInteractiveModule] = useState<string | null>(null);
+  const [seriesContext, setSeriesContext] = useState<string | null>(null);
+  const [arcContext, setArcContext] = useState<string | null>(null);
+  const [chapterMemory, setChapterMemory] = useState<string | null>(null);
+  const [scenarioContext, setScenarioContext] = useState<string | null>(null);
+
+  // Game history — accumulated recap of what has happened in the simulation
+  const [gameHistory, setGameHistory] = useState("");
+
+  // Streaming thinking steps from LLM reasoning (discrete sentences)
+  const [thinkingSteps, setThinkingSteps] = useState<string[]>([]);
+  const thinkingBufferRef = useRef("");
+
+
   // God-mode influence: charSlug -> directive text
   const [influences, setInfluences] = useState<Map<string, string>>(new Map());
 
@@ -60,27 +81,23 @@ export default function WorldPage() {
   // Character state history: turn -> character states (for history scrubbing)
   const charHistoryRef = useRef<Map<number, SimCharacterState[]>>(new Map());
 
-  // Relationship scores: "charA:charB" (sorted) -> score (-100 to 100)
-  const [relationships, setRelationships] = useState<{ [pairKey: string]: number }>({});
-
   // Turn playback state machine
   const [playback, setPlayback] = useState<PlaybackState>({
     current: { phase: "idle" },
     turnResult: null,
     characterUpdates: [],
-    encounters: [],
-    relationshipDeltas: [],
     pendingResult: null,
   });
   const isPlaybackActive = playback.current.phase !== "idle";
 
-  // Helper: make a deterministic pair key
-  const pairKey = (a: string, b: string) => [a, b].sort().join(":");
-
   useEffect(() => {
     async function load() {
-      const map = await loadWorldMap(seriesId);
+      const [map, arcs] = await Promise.all([
+        loadWorldMap(seriesId),
+        loadAvailableArcs(seriesId),
+      ]);
       if (map) setWorldMap(map);
+      setArcList(arcs);
       setLoading(false);
     }
     load();
@@ -98,16 +115,38 @@ export default function WorldPage() {
     setView({ mode: "map" });
   }, []);
 
-  // Start simulation (god-mode only — no player character)
-  const handleStartSimulation = useCallback(async () => {
-    const sc = await loadScenario(seriesId, "tensions-rising");
-    if (!sc || !worldMap) return;
+  // Open arc selection modal
+  const handleStartSimulation = useCallback(() => {
+    setShowArcSelect(true);
+  }, []);
 
-    // Load character profiles
-    for (const char of sc.characters) {
-      const profile = await loadCharacterProfile(seriesId, char.profile);
-      if (profile) characterProfilesRef.current.set(char.slug, profile);
-    }
+  // After user picks an arc, load everything and start
+  const handleArcSelected = useCallback(async (arcNum: number) => {
+    setShowArcSelect(false);
+    if (!worldMap) return;
+
+    const sc = await loadArcScenario(seriesId, arcNum);
+    if (!sc) return;
+
+    // Load character profiles + episode-style context in parallel
+    const [moduleRes, seriesRes, arcRes, memoryRes, scenarioMd, ...profileResults] = await Promise.all([
+      loadInteractiveModule(seriesId),
+      loadSeriesContext(seriesId),
+      loadArcContext(seriesId, arcNum),
+      loadChapterMemory(seriesId, 1),
+      loadScenarioContext(seriesId, arcNum),
+      ...sc.characters.map((char) => loadCharacterProfile(seriesId, char.profile)),
+    ]);
+
+    setInteractiveModule(moduleRes);
+    setSeriesContext(seriesRes);
+    setArcContext(arcRes);
+    setChapterMemory(memoryRes);
+    setScenarioContext(scenarioMd);
+
+    sc.characters.forEach((char, i) => {
+      if (profileResults[i]) characterProfilesRef.current.set(char.slug, profileResults[i] as string);
+    });
 
     const initialChars = sc.characters.map((c) => ({
       characterSlug: c.slug,
@@ -122,23 +161,86 @@ export default function WorldPage() {
     setSimCharacters(initialChars);
     setSimTurnLog([]);
     setInfluences(new Map());
+    setGameHistory("");
     setViewingTurn(null);
     charHistoryRef.current = new Map();
     charHistoryRef.current.set(0, initialChars);
     setSimActive(true);
   }, [seriesId, worldMap]);
 
-  // Run AI phase + narration + playback (called after all player actions are collected)
+  // Helper: flush complete sentences from thinking buffer into steps
+  const flushThinkingBuffer = useCallback(() => {
+    const buf = thinkingBufferRef.current;
+    if (!buf) return;
+
+    // Split on sentence-ending punctuation followed by space/newline, or double newlines
+    const sentencePattern = /(?<=[.!?])\s+|(?:\n\n+)/g;
+    const parts = buf.split(sentencePattern);
+
+    if (parts.length > 1) {
+      // All but last are complete sentences — push them
+      const complete = parts.slice(0, -1).map((s) => s.trim()).filter((s) => s.length > 10);
+      if (complete.length > 0) {
+        setThinkingSteps((prev) => [...prev, ...complete]);
+      }
+      thinkingBufferRef.current = parts[parts.length - 1];
+    }
+  }, []);
+
+  // Helper: read SSE stream for thinking + result events
+  const readSSEStream = useCallback(async (res: Response): Promise<{ turn: number; actions: SimAction[]; worldNarration: string } | null> => {
+    const reader = res.body!.getReader();
+    const decoder = new TextDecoder();
+    let sseBuffer = "";
+    let currentEvent = "";
+    let finalResult: { turn: number; actions: SimAction[]; worldNarration: string } | null = null;
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      sseBuffer += decoder.decode(value, { stream: true });
+      const lines = sseBuffer.split("\n");
+      sseBuffer = lines.pop()!;
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.startsWith("event: ")) {
+          currentEvent = trimmed.slice(7);
+        } else if (trimmed.startsWith("data: ") && currentEvent) {
+          try {
+            const raw = trimmed.slice(6);
+            if (currentEvent === "thinking") {
+              thinkingBufferRef.current += raw;
+              flushThinkingBuffer();
+            } else if (currentEvent === "result") {
+              finalResult = JSON.parse(raw);
+            }
+          } catch (e) {
+            console.error("SSE parse error:", e, "raw:", trimmed.slice(6, 200));
+          }
+          currentEvent = "";
+        }
+      }
+    }
+
+    // Flush any remaining buffer as a final step
+    const remaining = thinkingBufferRef.current.trim();
+    if (remaining.length > 10) {
+      setThinkingSteps((prev) => [...prev, remaining]);
+    }
+    thinkingBufferRef.current = "";
+
+    return finalResult;
+  }, [flushThinkingBuffer]);
+
+  // Run two-phase AI turn: movement → narration (called after all player actions are collected)
   const runAIPhaseAndPlayback = useCallback(async (collectedPlayerActions: Map<string, SimAction>) => {
     if (!scenario || !worldMap) return;
 
     try {
-      const nextTurn = simTurn + 1;
-
       const characterContexts = scenario.characters.map((sc) => {
-        const state = simCharacters.find(
-          (c) => c.characterSlug === sc.slug,
-        );
+        const state = simCharacters.find((c) => c.characterSlug === sc.slug);
         return {
           slug: sc.slug,
           name: sc.name,
@@ -159,153 +261,140 @@ export default function WorldPage() {
         connections: l.connections,
       }));
 
-      const recentTurns = simTurnLog.slice(-5).map((t) => ({
-        turn: t.turn,
-        worldNarration: t.worldNarration,
-      }));
+      // Convert influences map to plain object
+      const influenceObj: Record<string, string> = {};
+      influences.forEach((v, k) => { influenceObj[k] = v; });
 
-      // Resolve AI characters in parallel, use collected actions for player characters
-      const characterPromises = characterContexts.map(async (char) => {
-        // If this character has a player-submitted action, use it directly
-        const playerAction = collectedPlayerActions.get(char.slug);
-        if (playerAction) return playerAction;
+      // Extract player movement decisions from their actions
+      const playerMovements = Array.from(collectedPlayerActions.values())
+        .filter((a) => a.actionType === "move" && a.targetLocation)
+        .map((a) => ({
+          characterSlug: a.characterSlug,
+          decision: "move" as const,
+          targetLocation: a.targetLocation,
+        }));
 
-        const influence = influences.get(char.slug);
-        const res = await fetch("/api/simulation/character-turn", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            seriesId,
-            turn: simTurn,
-            character: char,
-            allCharacters: characterContexts,
-            locations: locationInfos,
-            recentTurns,
-            influence: influence || undefined,
-          }),
-        });
+      // Players who chose interact are staying
+      const playerStays = Array.from(collectedPlayerActions.values())
+        .filter((a) => a.actionType === "interact" || !a.targetLocation)
+        .map((a) => ({
+          characterSlug: a.characterSlug,
+          decision: "stay" as const,
+          targetLocation: undefined,
+        }));
 
-        if (!res.ok) {
-          console.error(`Character turn failed for ${char.slug}:`, await res.text());
-          return {
-            characterSlug: char.slug,
-            actionType: "wait" as const,
-            actionDetail: "wait",
-            narration: `${char.name} remains where they are, observing.`,
-            mood: char.mood,
-          };
-        }
+      const allPlayerMovements = [...playerMovements, ...playerStays];
 
-        return res.json();
-      });
-
-      const allActions: SimAction[] = await Promise.all(characterPromises);
-
-      // Synthesize world narration
-      const narrateRes = await fetch("/api/simulation/narrate", {
+      // --- Phase 1: Movement (non-streaming, fast) ---
+      const movementRes = await fetch("/api/simulation/character-turn", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          seriesId,
-          turn: nextTurn,
-          actions: allActions.map((a) => ({
-            characterSlug: a.characterSlug,
-            characterName: scenario.characters.find((sc) => sc.slug === a.characterSlug)?.name ?? a.characterSlug,
-            actionType: a.actionType,
-            narration: a.narration,
-            dialogue: a.dialogue,
-            targetLocation: a.targetLocation,
-            targetCharacter: a.targetCharacter,
-            mood: a.mood,
-          })),
-          recentTurns,
+          turn: simTurn,
+          characters: characterContexts,
+          locations: locationInfos,
+          gameHistory,
+          influences: influenceObj,
+          playerMovements: allPlayerMovements.length > 0 ? allPlayerMovements : undefined,
+          scenarioContext,
+          arcContext,
+          seriesContext,
         }),
       });
 
-      let worldNarration = "The Terrace turns quietly.";
-
-      if (narrateRes.ok) {
-        const narrateResult = await narrateRes.json();
-        worldNarration = narrateResult.worldNarration;
+      if (!movementRes.ok) {
+        console.error("Movement phase failed:", await movementRes.text());
+        setIsProcessing(false);
+        return;
       }
 
-      // Build character updates (apply movement)
-      const characterUpdates = simCharacters.map((c) => {
-        const action = allActions.find((a) => a.characterSlug === c.characterSlug);
-        const newLocation =
-          action?.actionType === "move" && action.targetLocation
-            ? action.targetLocation
-            : c.locationSlug;
+      const movementResult = await movementRes.json();
+      const movements: { characterSlug: string; decision: "move" | "stay"; targetLocation?: string; reasoning: string }[] = movementResult.movements;
+      const nextTurn: number = movementResult.turn;
 
+      // Apply movements to get resolved positions
+      const resolvedCharacters = characterContexts.map((c) => {
+        const movement = movements.find((m) => m.characterSlug === c.slug);
+        const newLocation = movement?.decision === "move" && movement.targetLocation
+          ? movement.targetLocation
+          : c.locationSlug;
         return {
           ...c,
           locationSlug: newLocation,
+          movedFrom: newLocation !== c.locationSlug ? c.locationSlug : undefined,
+        };
+      });
+
+      // Build player actions for narration phase (interactions only, movement already resolved)
+      const playerActions = Array.from(collectedPlayerActions.values()).map((a) => ({
+        characterSlug: a.characterSlug,
+        actionType: a.actionType,
+        actionDetail: a.actionDetail,
+        targetLocation: a.targetLocation,
+        targetCharacter: a.targetCharacter,
+        dialogue: a.dialogue,
+        innerThought: a.innerThought,
+        narration: a.narration,
+        mood: a.mood,
+      }));
+
+      // --- Phase 2: Narration (streaming with thinking) ---
+      setThinkingSteps([]); thinkingBufferRef.current = "";
+
+      const narrationRes = await fetch("/api/simulation/after-effects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          turn: simTurn,
+          characters: resolvedCharacters,
+          locations: locationInfos,
+          gameHistory,
+          influences: influenceObj,
+          playerActions: playerActions.length > 0 ? playerActions : undefined,
+          interactiveModule,
+          seriesContext,
+          arcContext,
+          chapterMemory,
+          scenarioContext,
+        }),
+      });
+
+      if (!narrationRes.ok) {
+        console.error("Narration phase failed:", await narrationRes.text());
+        setIsProcessing(false);
+        setThinkingSteps([]); thinkingBufferRef.current = "";
+        return;
+      }
+
+      const narrationResult = await readSSEStream(narrationRes);
+      setThinkingSteps([]); thinkingBufferRef.current = "";
+
+      if (!narrationResult) {
+        console.error("No result from narration stream");
+        setIsProcessing(false);
+        return;
+      }
+
+      const allActions: SimAction[] = narrationResult.actions;
+      const worldNarration: string = narrationResult.worldNarration;
+
+      // Append to game history
+      const turnSummary = `**Turn ${nextTurn}:** ${worldNarration}`;
+      setGameHistory((prev) => prev ? `${prev}\n\n${turnSummary}` : turnSummary);
+
+      // Build character updates from resolved positions + narration moods
+      const characterUpdates = simCharacters.map((c) => {
+        const resolved = resolvedCharacters.find((r) => r.slug === c.characterSlug);
+        const action = allActions.find((a) => a.characterSlug === c.characterSlug);
+
+        return {
+          ...c,
+          locationSlug: resolved?.locationSlug ?? c.locationSlug,
           status: "idle" as const,
           mood: action?.mood ?? c.mood,
           lastAction: action?.actionDetail,
         };
       });
-
-      // --- Detect all encounters immediately ---
-      const allEncounters: PreGeneratedEncounter[] = [];
-      const encounteredPairs = new Set<string>();
-
-      // 1. Convergence: multiple characters end at the same location
-      const locationGroups = new Map<string, string[]>();
-      for (const char of characterUpdates) {
-        const list = locationGroups.get(char.locationSlug) || [];
-        list.push(char.characterSlug);
-        locationGroups.set(char.locationSlug, list);
-      }
-      for (const [locSlug, slugs] of Array.from(locationGroups.entries())) {
-        if (slugs.length > 1) {
-          allEncounters.push({ locationSlug: locSlug, characterSlugs: slugs, encounterType: "convergence", conversation: null, loading: true });
-          for (let si = 0; si < slugs.length; si++) {
-            for (let sj = si + 1; sj < slugs.length; sj++) {
-              encounteredPairs.add(pairKey(slugs[si], slugs[sj]));
-            }
-          }
-        }
-      }
-
-      // Build movement map
-      const movements = new Map<string, { from: string; to: string }>();
-      for (const action of allActions) {
-        if (action.actionType === "move" && action.targetLocation) {
-          const prevLoc = simCharacters.find((c) => c.characterSlug === action.characterSlug)?.locationSlug;
-          if (prevLoc && prevLoc !== action.targetLocation) {
-            movements.set(action.characterSlug, { from: prevLoc, to: action.targetLocation });
-          }
-        }
-      }
-      const movingChars = Array.from(movements.entries());
-
-      // 2. Crossover
-      for (let i = 0; i < movingChars.length; i++) {
-        for (let j = i + 1; j < movingChars.length; j++) {
-          const [slugA, moveA] = movingChars[i];
-          const [slugB, moveB] = movingChars[j];
-          const pk = pairKey(slugA, slugB);
-          if (encounteredPairs.has(pk)) continue;
-          if (moveA.from === moveB.to && moveA.to === moveB.from) {
-            allEncounters.push({ locationSlug: moveA.from, secondLocationSlug: moveA.to, characterSlugs: [slugA, slugB], encounterType: "crossover", conversation: null, loading: true });
-            encounteredPairs.add(pk);
-          }
-        }
-      }
-
-      // 3. Near-miss
-      for (const [slugA, moveA] of movingChars) {
-        for (const [slugB, moveB] of movingChars) {
-          if (slugA === slugB) continue;
-          const pk = pairKey(slugA, slugB);
-          if (encounteredPairs.has(pk)) continue;
-          if (moveA.to === moveB.from) {
-            allEncounters.push({ locationSlug: moveA.to, characterSlugs: [slugA, slugB], encounterType: "near-miss", conversation: null, loading: true });
-            encounteredPairs.add(pk);
-          }
-        }
-      }
 
       const turnResult = { turn: nextTurn, actions: allActions, worldNarration };
       const pendingResult = {
@@ -321,116 +410,19 @@ export default function WorldPage() {
         worldNarration,
       };
 
-      // Start playback immediately — encounters generate in background
+      // Start playback
       setPlayback({
         current: { phase: "playing", actionIndex: 0 },
         turnResult,
         characterUpdates,
-        encounters: allEncounters,
-        relationshipDeltas: [],
         pendingResult,
       });
-
-      // --- Fire all encounter generations in parallel (background) ---
-      if (allEncounters.length > 0) {
-        const encounterPromises = allEncounters.map(async (enc, idx) => {
-          try {
-            const loc = worldMap.locations.find((l) => l.slug === enc.locationSlug);
-            const secondLoc = enc.secondLocationSlug ? worldMap.locations.find((l) => l.slug === enc.secondLocationSlug) : null;
-            const encounterChars = enc.characterSlugs.map((slug) => {
-              const sc = scenario.characters.find((c) => c.slug === slug);
-              return {
-                slug,
-                name: sc?.name ?? slug,
-                profile: characterProfilesRef.current.get(slug) ?? sc?.personality ?? "",
-                personality: sc?.personality ?? "",
-                faction: sc?.faction ?? null,
-                mood: characterUpdates.find((c) => c.characterSlug === slug)?.mood ?? "neutral",
-                goals: sc?.goals ?? [],
-                lastAction: characterUpdates.find((c) => c.characterSlug === slug)?.lastAction,
-              };
-            });
-
-            const encounterActions = allActions
-              .filter((a) => enc.characterSlugs.includes(a.characterSlug))
-              .map((a) => ({ characterSlug: a.characterSlug, narration: a.narration, dialogue: a.dialogue, actionType: a.actionType }));
-
-            let locationName = loc?.name ?? enc.locationSlug;
-            let locationDescription = loc?.description ?? "";
-            if (enc.encounterType === "crossover" && secondLoc) {
-              locationName = `between ${loc?.name ?? enc.locationSlug} and ${secondLoc.name}`;
-              locationDescription = `A crossing point between ${loc?.name} (${loc?.description ?? ""}) and ${secondLoc.name} (${secondLoc.description})`;
-            } else if (enc.encounterType === "near-miss") {
-              locationDescription = `${loc?.description ?? ""} — one character has just arrived as the other departs`;
-            }
-
-            const res = await fetch("/api/simulation/encounter", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                seriesId,
-                turn: nextTurn,
-                locationName,
-                locationDescription,
-                encounterType: enc.encounterType,
-                characters: encounterChars,
-                actions: encounterActions,
-                recentTurns: simTurnLog.slice(-3).map((t) => ({ turn: t.turn, worldNarration: t.worldNarration })),
-                relationships,
-              }),
-            });
-
-            if (res.ok) {
-              const data = await res.json();
-              return { idx, conversation: data.conversation };
-            }
-          } catch (err) {
-            console.error(`Encounter ${idx} generation error:`, err);
-          }
-          return { idx, conversation: [] };
-        });
-
-        // As each encounter resolves, update playback state
-        for (const promise of encounterPromises) {
-          promise.then(({ idx, conversation }) => {
-            setPlayback((prev) => {
-              const updated = [...prev.encounters];
-              updated[idx] = { ...updated[idx], conversation, loading: false };
-              return { ...prev, encounters: updated };
-            });
-          });
-        }
-
-        // After ALL encounters resolve, fire after-effects
-        Promise.all(encounterPromises).then(async (results) => {
-          const completedEncounters = allEncounters.map((enc, i) => ({
-            encounterType: enc.encounterType,
-            characterSlugs: enc.characterSlugs,
-            characterNames: enc.characterSlugs.map((s) => scenario.characters.find((c) => c.slug === s)?.name ?? s),
-            conversation: results[i]?.conversation ?? null,
-          }));
-
-          try {
-            const res = await fetch("/api/simulation/after-effects", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ encounters: completedEncounters, currentRelationships: relationships }),
-            });
-            if (res.ok) {
-              const { deltas } = await res.json();
-              setPlayback((prev) => ({ ...prev, relationshipDeltas: deltas }));
-            }
-          } catch (err) {
-            console.error("After-effects error:", err);
-          }
-        });
-      }
     } catch (err) {
       console.error("Turn error:", err);
     } finally {
       setIsProcessing(false);
     }
-  }, [scenario, worldMap, simTurn, simCharacters, simTurnLog, influences, seriesId, relationships, pairKey]);
+  }, [scenario, worldMap, simTurn, simCharacters, influences, seriesId, gameHistory, interactiveModule, seriesContext, arcContext, chapterMemory, scenarioContext, readSSEStream]);
 
   // Show the next player action modal, or proceed to AI phase if all collected
   const showNextPlayerAction = useCallback((roleplaySlugs: string[], index: number) => {
@@ -544,23 +536,10 @@ export default function WorldPage() {
     });
   }, []);
 
-  // Commit turn result after playback finishes (including applying relationship deltas)
+  // Commit turn result after playback finishes
   const commitTurnResult = useCallback(() => {
     if (!playback.pendingResult) return;
     const result = playback.pendingResult;
-
-    // Apply relationship deltas
-    if (playback.relationshipDeltas.length > 0) {
-      setRelationships((prev) => {
-        const next = { ...prev };
-        for (const delta of playback.relationshipDeltas) {
-          const key = pairKey(delta.characterA, delta.characterB);
-          const current = next[key] ?? 0;
-          next[key] = Math.max(-100, Math.min(100, current + delta.delta));
-        }
-        return next;
-      });
-    }
 
     setSimTurn(result.turn);
     setSimCharacters(playback.characterUpdates);
@@ -577,13 +556,11 @@ export default function WorldPage() {
       current: { phase: "idle" },
       turnResult: null,
       characterUpdates: [],
-      encounters: [],
-      relationshipDeltas: [],
       pendingResult: null,
     });
-  }, [playback, pairKey]);
+  }, [playback]);
 
-  // Advance playback to next action, encounter, after-effects, or commit
+  // Advance playback to next action or commit
   const advancePlayback = useCallback(() => {
     if (playback.current.phase === "playing" && playback.turnResult) {
       const nextIndex = playback.current.actionIndex + 1;
@@ -592,40 +569,13 @@ export default function WorldPage() {
           ...prev,
           current: { phase: "playing", actionIndex: nextIndex },
         }));
-      } else if (playback.encounters.length > 0) {
-        // Move to first pre-generated encounter
-        setPlayback((prev) => ({
-          ...prev,
-          current: { phase: "encounter", encounterIndex: 0 },
-        }));
       } else {
         commitTurnResult();
       }
-    } else if (playback.current.phase === "encounter") {
-      const nextIdx = playback.current.encounterIndex + 1;
-      if (nextIdx < playback.encounters.length) {
-        setPlayback((prev) => ({
-          ...prev,
-          current: { phase: "encounter", encounterIndex: nextIdx },
-        }));
-      } else if (playback.relationshipDeltas.length > 0) {
-        // Show after-effects phase
-        setPlayback((prev) => ({
-          ...prev,
-          current: { phase: "after-effects" },
-        }));
-      } else {
-        commitTurnResult();
-      }
-    } else if (playback.current.phase === "after-effects") {
-      commitTurnResult();
     }
   }, [playback, commitTurnResult]);
 
   // Compute progressive character positions during playback
-  // Characters update to their new position once their action index is reached.
-  // The map handles the visual animation via movingCharacters — static positions
-  // should always reflect the destination so characters land correctly.
   const playbackCharacters = (() => {
     if (playback.current.phase === "idle" || !playback.turnResult) return simCharacters;
 
@@ -649,20 +599,13 @@ export default function WorldPage() {
   })();
 
   // Camera focus target during playback
-  // For move actions, focus on the destination so the camera pans alongside the character
   const focusLocation = (() => {
     if (playback.current.phase === "playing" && playback.turnResult) {
       const action = playback.turnResult.actions[playback.current.actionIndex];
       const charCurrentLoc = simCharacters.find(
         (c) => c.characterSlug === action?.characterSlug,
       )?.locationSlug;
-      // For moves: focus on destination (camera and character animate together)
-      // For non-moves: focus on character's current location
       return action?.targetLocation || charCurrentLoc || null;
-    }
-    if (playback.current.phase === "encounter") {
-      const enc = playback.encounters[playback.current.encounterIndex];
-      return enc?.locationSlug ?? null;
     }
     return null;
   })();
@@ -695,10 +638,10 @@ export default function WorldPage() {
 
     const prevChars = prevTurn !== null
       ? charHistoryRef.current.get(prevTurn)
-      : (currTurn !== null ? simCharacters : null); // going from present to history
+      : (currTurn !== null ? simCharacters : null);
     const currChars = currTurn !== null
       ? charHistoryRef.current.get(currTurn)
-      : simCharacters; // going back to present
+      : simCharacters;
 
     if (!prevChars || !currChars || prevTurn === currTurn) {
       setHistoryMoving([]);
@@ -721,7 +664,6 @@ export default function WorldPage() {
 
   // Combine playback movement + history scrubbing movement
   const movingCharacters = (() => {
-    // During playback: single character moving
     if (playback.current.phase === "playing" && playback.turnResult) {
       const action = playback.turnResult.actions[playback.current.actionIndex];
       if (action?.actionType === "move" && action.targetLocation) {
@@ -738,7 +680,6 @@ export default function WorldPage() {
       }
       return [];
     }
-    // During history scrubbing: multiple characters may move
     return historyMoving;
   })();
 
@@ -795,7 +736,7 @@ export default function WorldPage() {
 
   return (
     <div className="fixed inset-0 bg-[#0a0a0f]">
-      {/* Back to series (hidden during playback — legend occupies top-left) */}
+      {/* Back to series (hidden during playback) */}
       {view.mode === "map" && !isPlaybackActive && (
         <Link
           href={`/${seriesId}`}
@@ -819,7 +760,7 @@ export default function WorldPage() {
         </div>
       )}
 
-      {/* Map view — full width now (no sidebar) */}
+      {/* Map view */}
       {view.mode === "map" && (
         <div className="absolute inset-0">
           <WorldMap
@@ -857,7 +798,15 @@ export default function WorldPage() {
           onViewTurn={setViewingTurn}
           roleplayCharacters={roleplayCharacters}
           onToggleRoleplay={handleToggleRoleplay}
-          relationships={relationships}
+        />
+      )}
+
+      {/* Arc selection modal */}
+      {showArcSelect && (
+        <ArcSelectionModal
+          arcs={arcList}
+          onSelect={handleArcSelected}
+          onCancel={() => setShowArcSelect(false)}
         />
       )}
 
@@ -885,6 +834,31 @@ export default function WorldPage() {
           onBack={handleBackToMap}
           onNavigate={handleNavigate}
         />
+      )}
+
+      {/* Thinking toast — non-blocking bar above bottom HUD */}
+      {isProcessing && (
+        <div className="absolute bottom-14 inset-x-0 z-30 flex justify-center pointer-events-none">
+          <div className="max-w-lg w-full mx-4 bg-[#0f0f18]/95 backdrop-blur-md border border-violet-500/15 rounded-xl px-4 py-3 shadow-lg">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 rounded-full bg-violet-400 animate-pulse shrink-0" />
+              <div className="flex-1 min-w-0">
+                {thinkingSteps.length > 0 ? (
+                  <p className="text-xs text-slate-300 leading-relaxed truncate">
+                    {thinkingSteps[thinkingSteps.length - 1]}
+                  </p>
+                ) : (
+                  <p className="text-xs text-slate-500">Resolving turn...</p>
+                )}
+              </div>
+              {thinkingSteps.length > 0 && (
+                <span className="text-[9px] text-slate-600 tabular-nums shrink-0">
+                  {thinkingSteps.length}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Turn playback: VN-style bottom dialogue box */}
@@ -915,88 +889,6 @@ export default function WorldPage() {
           />
         );
       })()}
-
-      {/* Encounter playback box */}
-      {playback.current.phase === "encounter" && playback.turnResult && (() => {
-        const enc = playback.encounters[playback.current.encounterIndex];
-        if (!enc) return null;
-        const loc = worldMap.locations.find((l) => l.slug === enc.locationSlug);
-        const secondLoc = enc.secondLocationSlug
-          ? worldMap.locations.find((l) => l.slug === enc.secondLocationSlug)
-          : null;
-        const displayLocationName = enc.encounterType === "crossover" && secondLoc
-          ? `${loc?.name ?? enc.locationSlug} ↔ ${secondLoc.name}`
-          : loc?.name ?? enc.locationSlug;
-        return (
-          <EncounterPlaybackBox
-            locationName={displayLocationName}
-            encounterType={enc.encounterType}
-            characters={enc.characterSlugs.map((slug: string) => {
-              const sc = scenario?.characters.find((c) => c.slug === slug);
-              const state = playback.characterUpdates.find((c) => c.characterSlug === slug);
-              return {
-                slug,
-                name: sc?.name ?? slug,
-                image: `/series/${seriesId}/world/characters/${slug}.jpg`,
-                mood: state?.mood ?? "neutral",
-              };
-            })}
-            actions={playback.turnResult.actions.filter((a) =>
-              enc.characterSlugs.includes(a.characterSlug),
-            )}
-            conversation={enc.conversation}
-            conversationLoading={enc.loading}
-            onAdvance={advancePlayback}
-          />
-        );
-      })()}
-
-      {/* After-effects phase: relationship changes */}
-      {playback.current.phase === "after-effects" && playback.relationshipDeltas.length > 0 && (
-        <div
-          className="fixed bottom-14 inset-x-0 z-40 flex justify-center pointer-events-none"
-        >
-          <div
-            className="bg-[#0f0f18]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden animate-fade-in pointer-events-auto"
-            onClick={advancePlayback}
-          >
-            <div className="flex items-start gap-4 p-4">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-[9px] uppercase tracking-widest text-violet-400">After Effects</span>
-                  <span className="text-sm font-semibold text-white">Relationship Changes</span>
-                </div>
-
-                <div className="space-y-1.5">
-                  {playback.relationshipDeltas.map((delta, i) => {
-                    const nameA = scenario?.characters.find((c) => c.slug === delta.characterA)?.name ?? delta.characterA;
-                    const nameB = scenario?.characters.find((c) => c.slug === delta.characterB)?.name ?? delta.characterB;
-                    const isPositive = delta.delta > 0;
-                    return (
-                      <div key={i} className="flex items-center justify-between text-sm py-1 px-2 rounded bg-white/[0.02]">
-                        <span className="text-slate-300">{nameA} ↔ {nameB}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-slate-500">{delta.reason}</span>
-                          <span className={`font-medium ${isPositive ? "text-emerald-400" : "text-rose-400"}`}>
-                            {isPositive ? "+" : ""}{delta.delta}
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <button
-                onClick={(e) => { e.stopPropagation(); advancePlayback(); }}
-                className="px-3 py-1 text-xs font-medium rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition-colors flex-shrink-0 mt-1"
-              >
-                Continue
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
